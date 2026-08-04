@@ -1,0 +1,207 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    },
+    {
+     "children": [
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Logo",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{1, 0}, {0.699999988, 0}",
+        "TextColor3": "0.392157, 0.862745, 1",
+        "LayoutOrder": 0,
+        "Text": "AETHER\nHARVESTER",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 48,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBlack",
+        "BackgroundTransparency": 1,
+        "Position": "{0, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Top",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Subtitle",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{1, 0}, {0.300000012, 0}",
+        "TextColor3": "0.54902, 0.588235, 0.666667",
+        "LayoutOrder": 0,
+        "Text": "SIMULATOR",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 20,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 1,
+        "Position": "{0, 0}, {0.699999988, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "LogoContainer",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 1,
+      "Position": "{0.25, 0}, {0.150000006, 0}",
+      "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{0.5, 0}, {0.300000012, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      }
+     ],
+     "class": "TextButton",
+     "name": "PlayButton",
+     "props": {
+      "Visible": true,
+      "TextWrapped": true,
+      "AnchorPoint": "0, 0",
+      "ZIndex": 10,
+      "BorderSizePixel": 0,
+      "Size": "{0.349999994, 0}, {0.0799999982, 0}",
+      "TextColor3": "0.0509804, 0.105882, 0.164706",
+      "LayoutOrder": 0,
+      "Text": "PLAY",
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "TextSize": 22,
+      "Rotation": 0,
+      "Font": "Enum.Font.GothamBold",
+      "BackgroundTransparency": 0,
+      "Position": "{0.324999988, 0}, {0.720000029, 0}",
+      "TextXAlignment": "Enum.TextXAlignment.Center",
+      "TextYAlignment": "Enum.TextYAlignment.Center",
+      "TextScaled": true,
+      "BackgroundColor3": "1, 0.717647, 0.301961"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      }
+     ],
+     "class": "TextButton",
+     "name": "SettingsButton",
+     "props": {
+      "Visible": true,
+      "TextWrapped": true,
+      "AnchorPoint": "0, 0",
+      "ZIndex": 10,
+      "BorderSizePixel": 0,
+      "Size": "{0.200000003, 0}, {0.0500000007, 0}",
+      "TextColor3": "0.901961, 0.921569, 0.960784",
+      "LayoutOrder": 0,
+      "Text": "SETTINGS",
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "TextSize": 16,
+      "Rotation": 0,
+      "Font": "Enum.Font.Gotham",
+      "BackgroundTransparency": 0,
+      "Position": "{0.400000006, 0}, {0.819999993, 0}",
+      "TextXAlignment": "Enum.TextXAlignment.Center",
+      "TextYAlignment": "Enum.TextYAlignment.Center",
+      "TextScaled": true,
+      "BackgroundColor3": "0.0392157, 0.0392157, 0.0705882"
+     }
+    },
+    {
+     "children": [],
+     "class": "TextLabel",
+     "name": "LoadingText",
+     "props": {
+      "Visible": true,
+      "TextWrapped": true,
+      "AnchorPoint": "0, 0",
+      "ZIndex": 1,
+      "BorderSizePixel": 1,
+      "Size": "{0.300000012, 0}, {0.0299999993, 0}",
+      "TextColor3": "0.54902, 0.588235, 0.666667",
+      "LayoutOrder": 0,
+      "Text": "Click PLAY to begin",
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "TextSize": 18,
+      "Rotation": 0,
+      "Font": "Enum.Font.Gotham",
+      "BackgroundTransparency": 1,
+      "Position": "{0.349999994, 0}, {0.660000026, 0}",
+      "TextXAlignment": "Enum.TextXAlignment.Center",
+      "TextYAlignment": "Enum.TextYAlignment.Center",
+      "TextScaled": true,
+      "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+     }
+    }
+   ],
+   "class": "Frame",
+   "name": "Background",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0,
+    "Position": "{0, 0}, {0, 0}",
+    "BackgroundColor3": "0.0509804, 0.105882, 0.164706",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{1, 0}, {1, 0}"
+   }
+  }
+ ],
+ "class": "ScreenGui",
+ "name": "StartingScreen",
+ "props": []
+}

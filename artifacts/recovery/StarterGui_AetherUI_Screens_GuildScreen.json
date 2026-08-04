@@ -1,0 +1,351 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    }
+   ],
+   "class": "Frame",
+   "name": "Background",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0.15000000596046448,
+    "Position": "{0, 0}, {0, 0}",
+    "BackgroundColor3": "0.0509804, 0.105882, 0.164706",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{1, 0}, {1, 0}"
+   }
+  },
+  {
+   "children": [
+    {
+     "class": "UICorner",
+     "name": "UICorner",
+     "children": []
+    },
+    {
+     "class": "UIStroke",
+     "name": "UIStroke",
+     "children": []
+    },
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    },
+    {
+     "children": [
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Title",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.5, 0}, {1, 0}",
+        "TextColor3": "0.392157, 0.862745, 1",
+        "LayoutOrder": 0,
+        "Text": "GUILD",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 24,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0199999996, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "CloseButton",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.0799999982, 0}, {0.5, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "\u2715",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 0,
+        "Position": "{0.920000017, 0}, {0.25, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.0784314, 0.0862745, 0.137255"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "TitleBar",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0, 0}, {0, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, 0}, {0.0700000003, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "GuildName",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.400000006, 0}, {0.400000006, 0}",
+        "TextColor3": "1, 0.717647, 0.301961",
+        "LayoutOrder": 0,
+        "Text": "No Guild",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 18,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0500000007, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "GuildLevel",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.400000006, 0}, {0.400000006, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "Lv. 1",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 1,
+        "Position": "{0.550000012, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        },
+        {
+         "children": [
+          {
+           "class": "UIGradient",
+           "name": "UIGradient",
+           "children": []
+          }
+         ],
+         "class": "Frame",
+         "name": "GuildXPFill",
+         "props": {
+          "Visible": true,
+          "LayoutOrder": 0,
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "AnchorPoint": "0, 0",
+          "Rotation": 0,
+          "BackgroundTransparency": 0,
+          "Position": "{0, 0}, {0, 0}",
+          "BackgroundColor3": "1, 0.717647, 0.301961",
+          "ZIndex": 1,
+          "BorderSizePixel": 0,
+          "Size": "{0.300000012, 0}, {1, 0}"
+         }
+        }
+       ],
+       "class": "Frame",
+       "name": "GuildXPBar",
+       "props": {
+        "Visible": true,
+        "LayoutOrder": 0,
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "AnchorPoint": "0, 0",
+        "Rotation": 0,
+        "BackgroundTransparency": 0,
+        "Position": "{0.0500000007, 0}, {0.550000012, 0}",
+        "BackgroundColor3": "0.14902, 0.164706, 0.235294",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.899999976, 0}, {0.300000012, 0}"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "GuildInfo",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0.00999999978, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, -20}, {0.150000006, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIListLayout",
+       "name": "UIListLayout",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "EmptyState",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.800000012, 0}, {0.100000001, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "No guild members",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 1,
+        "Position": "{0.100000001, 0}, {0.400000006, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      }
+     ],
+     "class": "ScrollingFrame",
+     "name": "MemberList",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 1,
+      "Position": "{0.00999999978, 0}, {0.230000004, 0}",
+      "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, -20}, {0.600000024, 0}"
+     }
+    }
+   ],
+   "class": "Frame",
+   "name": "MainFrame",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0,
+    "Position": "{0.150000006, 0}, {0.100000001, 0}",
+    "BackgroundColor3": "0.109804, 0.12549, 0.188235",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{0.699999988, 0}, {0.800000012, 0}"
+   }
+  }
+ ],
+ "class": "ScreenGui",
+ "name": "GuildScreen",
+ "props": []
+}

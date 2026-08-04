@@ -1,0 +1,329 @@
+{
+    "className":  "Folder",
+    "children":  [
+                     {
+                         "name":  "HarvestResource",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "NodeHarvested",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ChangeIsland",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PlayerDataLoaded",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RequestPlayerData",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "AddXP",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "LevelUp",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "UpgradePurchased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PurchaseUpgrade",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "EquipPet",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "UnequipPet",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "SummonPet",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ReleasePet",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "AcceptQuest",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CompleteQuest",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "QuestUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "AbandonQuest",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CreateTrade",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "AcceptTrade",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CancelTrade",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "TradeCompleted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "TradeCancelled",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CreateGuild",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "InviteToGuild",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "JoinGuild",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "LeaveGuild",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GuildCreated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GuildInvite",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GuildMemberJoined",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GuildMemberLeft",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CraftItem",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ItemCrafted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RequestRecipes",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CreateListing",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PurchaseListing",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CancelListing",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ListingCreated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ListingPurchased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ListingCancelled",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ClaimDailyReward",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "DailyRewardClaimed",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PurchaseBattlePassPremium",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "BattlePassLevelUp",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "BattlePassPremiumPurchased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "SendMail",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ReadMail",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "DeleteMail",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "MailReceived",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "MailUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "MailDeleted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "SendChatMessage",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ChatMessageReceived",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PurchaseCosmetic",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "EquipCosmetic",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CosmeticPurchased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CosmeticEquipped",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "AchievementUnlocked",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RequestAchievements",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ClaimReward",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RewardClaimed",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "OpenScreen",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "CloseScreen",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "UpdateHUD",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "EventStarted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "EventEnded",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RequestLeaderboard",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "LeaderboardUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PlayerLeveledUp",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "Error",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PetSummon",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "TradeCreated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "TameCreature",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PetReleased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GetPlayerData",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetInventory",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetQuests",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetUpgrades",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetPets",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetGuildInfo",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetMarketplaceListings",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetLeaderboard",
+                         "className":  "RemoteFunction"
+                     }
+                 ]
+}

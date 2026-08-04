@@ -1,0 +1,181 @@
+local CosmeticService = {}
+local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+
+CosmeticService.Cosmetics = {
+    ["hat_phoenix"] = {
+        Id = "hat_phoenix",
+        Name = "Phoenix Crown",
+        Type = "Hat",
+        Rarity = "Legendary",
+        Price = 5000,
+        Effect = "A flaming crown that hovers above the player",
+    },
+    ["wings_angel"] = {
+        Id = "wings_angel",
+        Name = "Angel Wings",
+        Type = "Wings",
+        Rarity = "Epic",
+        Price = 3000,
+        Effect = "Radiant white wings",
+    },
+    ["aura_golden"] = {
+        Id = "aura_golden",
+        Name = "Golden Aura",
+        Type = "Aura",
+        Rarity = "Rare",
+        Price = 1000,
+        Effect = "A golden glow around the player",
+    },
+    ["trail_stars"] = {
+        Id = "trail_stars",
+        Name = "Star Trail",
+        Type = "Trail",
+        Rarity = "Epic",
+        Price = 2000,
+        Effect = "Leaves a trail of stars",
+    },
+    ["pet_follower_glow"] = {
+        Id = "pet_follower_glow",
+        Name = "Glowing Pet",
+        Type = "PetEffect",
+        Rarity = "Rare",
+        Price = 1500,
+        Effect = "Your pet glows with aether energy",
+    },
+}
+
+function CosmeticService.Initialize()
+    print("[CosmeticService] Initializing...")
+
+    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
+    if not Remotes then
+        return
+    end
+
+    -- PurchaseCosmetic
+    local PurchaseCosmetic = Remotes:FindFirstChild("PurchaseCosmetic")
+    if PurchaseCosmetic then
+        PurchaseCosmetic.OnServerEvent:Connect(function(player, cosmeticId)
+            if type(cosmeticId) ~= "string" then
+                return
+            end
+            local success, message = CosmeticService.PurchaseCosmetic(player, cosmeticId)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Purchase failed")
+                end
+            end
+        end)
+    end
+
+    -- EquipCosmetic
+    local EquipCosmetic = Remotes:FindFirstChild("EquipCosmetic")
+    if EquipCosmetic then
+        EquipCosmetic.OnServerEvent:Connect(function(player, cosmeticId)
+            if type(cosmeticId) ~= "string" then
+                return
+            end
+            local success, message = CosmeticService.EquipCosmetic(player, cosmeticId)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Equip failed")
+                end
+            end
+        end)
+    end
+
+    print("[CosmeticService] Initialized")
+end
+
+function CosmeticService.GetCosmetic(cosmeticId)
+    return CosmeticService.Cosmetics[cosmeticId]
+end
+
+function CosmeticService.GetAllCosmetics()
+    return CosmeticService.Cosmetics
+end
+
+function CosmeticService.GetOwnedCosmetics(player)
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return {}
+    end
+    return data.Cosmetics or {}
+end
+
+function CosmeticService.PurchaseCosmetic(player, cosmeticId)
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false, "Player data not found"
+    end
+
+    local cosmetic = CosmeticService.Cosmetics[cosmeticId]
+    if not cosmetic then
+        return false, "Cosmetic not found"
+    end
+
+    if data.Currency.AetherShards < cosmetic.Price then
+        return false, "Not enough currency"
+    end
+
+    -- Deduct cost
+    PlayerDataService.RemoveCurrency(player, "AetherShards", cosmetic.Price)
+
+    -- Add to owned cosmetics
+    if not data.Cosmetics then
+        data.Cosmetics = {}
+    end
+    table.insert(data.Cosmetics, cosmeticId)
+
+    -- Notify client
+    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
+    if Remotes then
+        local CosmeticPurchased = Remotes:FindFirstChild("CosmeticPurchased")
+        if CosmeticPurchased then
+            CosmeticPurchased:FireClient(player, cosmeticId)
+        end
+    end
+
+    print("[CosmeticService] " .. player.Name .. " purchased " .. cosmetic.Name)
+    return true, "Purchased " .. cosmetic.Name
+end
+
+function CosmeticService.EquipCosmetic(player, cosmeticId)
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false
+    end
+
+    -- Check if owned
+    local owned = false
+    if data.Cosmetics then
+        for _, ownedId in ipairs(data.Cosmetics) do
+            if ownedId == cosmeticId then
+                owned = true
+                break
+            end
+        end
+    end
+
+    if not owned then
+        return false, "Cosmetic not owned"
+    end
+
+    -- Equip
+    data.EquippedCosmetic = cosmeticId
+
+    -- Notify client
+    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
+    if Remotes then
+        local CosmeticEquipped = Remotes:FindFirstChild("CosmeticEquipped")
+        if CosmeticEquipped then
+            CosmeticEquipped:FireClient(player, cosmeticId)
+        end
+    end
+
+    return true, "Cosmetic equipped"
+end
+
+return CosmeticService

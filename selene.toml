@@ -5,7 +5,10 @@ std = "roblox+testez"
 
 [lints]
 # Strictness
-global_usage = "deny"
+# global_usage: recovered live client scripts use a _G controller registry
+# (MinimapController etc.). Refactor to require-based wiring is backlogged
+# (ARCHITECTURE phase); lint relaxed until then.
+global_usage = "allow"
 if_same_then_else = "warn"
 incorrect_standard_library_use = "deny"
 shadowing = "allow"

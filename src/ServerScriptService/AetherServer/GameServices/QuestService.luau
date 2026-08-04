@@ -1,202 +1,272 @@
---
--- QuestService.luau
--- Manages quest tracking, objectives, and rewards
---
+-- QuestService
+local QuestService = {}
 
-local Players = game:GetService("Players")
-local DataStoreService = require(script.Parent.DataStoreService)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
+local QuestsData = require(game.ReplicatedStorage.AetherShared.Data.Quests)
+local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
--- Define quests (example structure)
-local QUESTS = {
-    ["FindFirstNode"] = {
-        name = "Find Your First Harvestable Node",
-        description = "Locate and harvest your first harvestable node.",
-        objectives = {
-            {
-                type = "harvest",
-                target = "Node1",
-                completed = false,
-                count = 1,
-            },
-        },
-        rewards = {
-            items = {
-                {
-                    itemId = "BasicHarvestingTool",
-                    quantity = 1,
-                },
-            },
-            xp = 100,
-        },
-    },
-    ["TameFirstCreature"] = {
-        name = "Tame Your First Creature",
-        description = "Find and tame a creature to start your adventure.",
-        objectives = {
-            {
-                type = "tame",
-                creatureId = "Rabbit",
-                completed = false,
-                count = 1,
-            },
-        },
-        rewards = {
-            items = {
-                {
-                    itemId = "CreatureTamingKit",
-                    quantity = 1,
-                },
-            },
-            xp = 150,
-        },
-    },
-}
+-- Active quests per player: userId -> { questId -> {Progress = {...}, Completed = bool} }
+local activeQuests = {}
 
--- Function to initialize player quests
-local function initializePlayerQuests(player: Player)
-    local playerData = player:GetAttribute("PlayerData") or {}
-    if not playerData.Quests then
-        playerData.Quests = {}
+function QuestService.GetActiveQuests(player)
+    return activeQuests[player.UserId] or {}
+end
+
+function QuestService.GetQuestData(questId)
+    return QuestsData.Get(questId)
+end
+
+function QuestService.AcceptQuest(player, questId)
+    local quest = QuestsData.Get(questId)
+    if not quest then
+        return false, "Quest not found"
     end
 
-    -- Assign default quests to new players
-    if #playerData.Quests == 0 then
-        for questId, quest in pairs(QUESTS) do
-            playerData.Quests[questId] = {
-                quest = quest,
-                progress = {},
-            }
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false, "No player data"
+    end
+
+    -- Check level requirement
+    if quest.LevelRequired and (data.Level or 1) < quest.LevelRequired then
+        return false, "Level " .. quest.LevelRequired .. " required"
+    end
+
+    -- Check not already active
+    activeQuests[player.UserId] = activeQuests[player.UserId] or {}
+    if activeQuests[player.UserId][questId] then
+        return false, "Quest already active"
+    end
+
+    -- Initialize progress
+    local progress = {}
+    for i, objective in ipairs(quest.Objectives or {}) do
+        progress[i] = 0
+    end
+
+    activeQuests[player.UserId][questId] = {
+        Id = questId,
+        Title = quest.Title,
+        Progress = progress,
+        Objectives = quest.Objectives,
+        Completed = false,
+        AcceptedAt = os.time(),
+    }
+
+    -- Sync to player data
+    data.Quests = data.Quests or {}
+    data.Quests[questId] = { Status = "Active", Progress = progress }
+
+    -- Notify client
+    QuestService.NotifyQuestUpdated(player, questId)
+
+    return true, "Quest accepted"
+end
+
+function QuestService.UpdateProgress(player, objectiveType, target, amount)
+    local quests = activeQuests[player.UserId]
+    if not quests then
+        return
+    end
+
+    for questId, quest in pairs(quests) do
+        if not quest.Completed then
+            local changed = false
+            for i, objective in ipairs(quest.Objectives or {}) do
+                local matches = false
+                if objective.Type == objectiveType then
+                    if objectiveType == "Harvest" then
+                        matches = (objective.ItemId == nil) or (objective.ItemId == target)
+                    elseif objectiveType == "Collect" then
+                        matches = (objective.ItemId == nil) or (objective.ItemId == target)
+                    elseif objectiveType == "Tame" then
+                        matches = (objective.CreatureId == nil) or (objective.CreatureId == target)
+                    elseif objectiveType == "Defeat" then
+                        matches = (objective.CreatureId == nil) or (objective.CreatureId == target)
+                    elseif objectiveType == "DefeatRarity" then
+                        matches = (objective.CreatureRarity ~= nil) and (objective.CreatureRarity == target)
+                    elseif objectiveType == "Visit" then
+                        matches = true
+                    else
+                        matches = true
+                    end
+                end
+
+                if matches then
+                    quest.Progress[i] = (quest.Progress[i] or 0) + amount
+                    changed = true
+                end
+            end
+
+            if changed then
+                -- Check completion
+                local allDone = true
+                for i, objective in ipairs(quest.Objectives or {}) do
+                    if (quest.Progress[i] or 0) < (objective.Amount or 1) then
+                        allDone = false
+                        break
+                    end
+                end
+
+                if allDone then
+                    quest.Completed = true
+                end
+
+                QuestService.NotifyQuestUpdated(player, questId)
+            end
+        end
+    end
+end
+
+function QuestService.CompleteQuest(player, questId)
+    local quests = activeQuests[player.UserId]
+    if not quests or not quests[questId] then
+        return false, "Quest not active"
+    end
+
+    local quest = quests[questId]
+    if not quest.Completed then
+        return false, "Quest not complete yet"
+    end
+
+    local questDef = QuestsData.Get(questId)
+    if not questDef then
+        return false, "Quest not found"
+    end
+
+    -- Grant rewards
+    if questDef.Rewards then
+        if questDef.Rewards.XP then
+            ProgressionService.AddXP(player, questDef.Rewards.XP)
+        end
+        if questDef.Rewards.Currency then
+            for currency, amount in pairs(questDef.Rewards.Currency) do
+                PlayerDataService.AddCurrency(player, currency, amount)
+            end
+        end
+        if questDef.Rewards.Items then
+            for _, itemId in ipairs(questDef.Rewards.Items) do
+                PlayerDataService.AddItem(player, itemId, 1)
+            end
         end
     end
 
-    player:SetAttribute("PlayerData", playerData)
+    -- Remove from active
+    quests[questId] = nil
+
+    -- Update player data
+    local data = PlayerDataService.GetData(player)
+    if data and data.Quests then
+        data.Quests[questId] = { Status = "Completed", CompletedAt = os.time() }
+    end
+
+    -- Notify client
+    QuestService.NotifyQuestUpdated(player, questId)
+
+    return true, "Quest complete!"
 end
 
--- Function to update quest progress
-local function updateQuestProgress(player: Player, questId: string, objectiveIndex: number, completed: boolean)
-    local playerData = player:GetAttribute("PlayerData") or {}
-    if not playerData.Quests then
-        return false, "Quests data not found."
+function QuestService.AbandonQuest(player, questId)
+    local quests = activeQuests[player.UserId]
+    if not quests or not quests[questId] then
+        return false, "Quest not active"
     end
 
-    local questData = playerData.Quests[questId]
-    if not questData then
-        return false, "Quest not found."
+    quests[questId] = nil
+
+    local data = PlayerDataService.GetData(player)
+    if data and data.Quests then
+        data.Quests[questId] = { Status = "Abandoned" }
     end
 
-    local quest = questData.quest
-    local progress = questData.progress
-    if not progress then
-        progress = {}
-        questData.progress = progress
+    QuestService.NotifyQuestUpdated(player, questId)
+    return true, "Quest abandoned"
+end
+
+function QuestService.NotifyQuestUpdated(player, questId)
+    local quests = activeQuests[player.UserId]
+    local Remotes = ReplicatedStorage.AetherShared.Remotes
+    if not Remotes then
+        return
     end
 
-    if not quest.objectives[objectiveIndex] then
-        return false, "Objective not found."
+    local QuestUpdated = Remotes:FindFirstChild("QuestUpdated")
+    if not QuestUpdated then
+        return
     end
 
-    local objective = quest.objectives[objectiveIndex]
-    objective.completed = completed
+    local quest = quests and quests[questId]
+    local questDef = QuestsData.Get(questId)
 
-    -- Check if all objectives are completed
-    local allCompleted = true
-    for _, obj in pairs(quest.objectives) do
-        if not obj.completed then
-            allCompleted = false
-            break
-        end
-    end
-
-    if allCompleted then
-        -- Quest completed, give rewards
-        giveQuestRewards(player, questId)
-    end
-
-    -- Save updated player data
-    DataStoreService.savePlayerData(player, {
-        Quests = playerData.Quests,
+    QuestUpdated:FireClient(player, {
+        Id = questId,
+        Title = questDef and questDef.Title or questId,
+        Status = quest and (quest.Completed and "ReadyToTurnIn" or "InProgress") or "Updated",
+        Progress = quest and quest.Progress or nil,
+        Objectives = quest and quest.Objectives or nil,
     })
-
-    return true, "Quest progress updated."
 end
 
--- Function to give quest rewards
-local function giveQuestRewards(player: Player, questId: string)
-    local playerData = player:GetAttribute("PlayerData") or {}
-    if not playerData.Quests then
-        return false, "Quests data not found."
+function QuestService.Initialize()
+    print("[QuestService] Initializing...")
+
+    local Remotes = ReplicatedStorage.AetherShared.Remotes
+    if not Remotes then
+        return
     end
 
-    local questData = playerData.Quests[questId]
-    if not questData then
-        return false, "Quest not found."
-    end
-
-    local quest = questData.quest
-
-    -- Give XP
-    local xpReward = quest.rewards.xp or 0
-    if xpReward > 0 then
-        -- Update player progression
-        local progressionData = playerData.Progression or {}
-        progressionData.xp = (progressionData.xp or 0) + xpReward
-        playerData.Progression = progressionData
-    end
-
-    -- Give items
-    local itemsReward = quest.rewards.items or {}
-    for _, item in pairs(itemsReward) do
-        -- Add items to player's inventory
-        local inventoryData = playerData.Inventory or {}
-        inventoryData[item.itemId] = (inventoryData[item.itemId] or 0) + item.quantity
-        playerData.Inventory = inventoryData
-    end
-
-    -- Save updated player data
-    DataStoreService.savePlayerData(player, {
-        Progression = playerData.Progression,
-        Inventory = playerData.Inventory,
-    })
-
-    -- Notify client that quest is completed
-    game:GetService("ReplicatedStorage"):FindFirstChild("QuestEvent"):FireClient(player, questId, true)
-
-    return true, "Quest rewards given."
-end
-
--- Function to handle remote events for quest updates
-local function handleQuestEvent(player: Player, questId: string, objectiveIndex: number, completed: boolean)
-    local success, message = updateQuestProgress(player, questId, objectiveIndex, completed)
-    if success then
-        game:GetService("ReplicatedStorage")
-            :FindFirstChild("QuestEvent")
-            :FireClient(player, questId, "progress_updated", message)
-    else
-        warn("Failed to update quest progress: " .. message)
-    end
-end
-
--- Initialize player quests for existing players
-for _, player in ipairs(Players:GetPlayers()) do
-    initializePlayerQuests(player)
-end
-
--- Connect to player added event
-Players.PlayerAdded:Connect(function(player)
-    initializePlayerQuests(player)
-
-    -- Connect to remote events
-    local questEvent = game:GetService("ReplicatedStorage"):FindFirstChild("QuestEvent")
-    if questEvent then
-        questEvent.OnServerEvent:Connect(function(player, questId, objectiveIndex, completed)
-            handleQuestEvent(player, questId, objectiveIndex, completed)
+    local AcceptQuest = Remotes:FindFirstChild("AcceptQuest")
+    if AcceptQuest then
+        AcceptQuest.OnServerEvent:Connect(function(player, questId)
+            if type(questId) ~= "string" then
+                return
+            end
+            local success, result = QuestService.AcceptQuest(player, questId)
+            if not success then
+                local ErrorRemote = Remotes:FindFirstChild("Error")
+                if ErrorRemote then
+                    ErrorRemote:FireClient(player, result)
+                end
+            end
         end)
     end
-end)
 
--- Export functions for use by other modules
-return {
-    initializePlayerQuests = initializePlayerQuests,
-    updateQuestProgress = updateQuestProgress,
-    giveQuestRewards = giveQuestRewards,
-}
+    local CompleteQuest = Remotes:FindFirstChild("CompleteQuest")
+    if CompleteQuest then
+        CompleteQuest.OnServerEvent:Connect(function(player, questId)
+            if type(questId) ~= "string" then
+                return
+            end
+            local success, result = QuestService.CompleteQuest(player, questId)
+            if not success then
+                local ErrorRemote = Remotes:FindFirstChild("Error")
+                if ErrorRemote then
+                    ErrorRemote:FireClient(player, result)
+                end
+            end
+        end)
+    end
+
+    local AbandonQuest = Remotes:FindFirstChild("AbandonQuest")
+    if AbandonQuest then
+        AbandonQuest.OnServerEvent:Connect(function(player, questId)
+            if type(questId) ~= "string" then
+                return
+            end
+            QuestService.AbandonQuest(player, questId)
+        end)
+    end
+
+    local GetQuests = Remotes:FindFirstChild("GetQuests")
+    if GetQuests then
+        GetQuests.OnServerInvoke = function(player)
+            return QuestService.GetActiveQuests(player)
+        end
+    end
+
+    print("[QuestService] Initialized with " .. tostring(next(QuestsData.GetAll())) and " quests available")
+end
+
+return QuestService

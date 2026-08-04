@@ -1,394 +1,193 @@
---
--- Creatures.luau
--- Creature database module for Aether Harvester Simulator
---
-
+-- Creatures data module
 local Creatures = {}
 
---[[
-    CREATURE STRUCTURE:
-    {
-        name = "CreatureName",
-        displayName = "Display Name",
-        description = "Description",
-        rarity = Enum.CreatureRarity,
-        type = Enum.CreatureType,
-        stats = {
-            health = 100,
-            maxHealth = 100,
-            attack = 10,
-            defense = 5,
-            speed = 5,
-            agility = 5,
-            intelligence = 5,
-            luck = 5
-        },
-        properties = {
-            weight = 50,
-            size = Enum.CreatureSize.Medium,
-            tamable = true,
-            breedable = true,
-            aggressive = false,
-            passive = true,
-            tamedByDefault = false
-        },
-        abilities = {
-            {
-                name = "AbilityName",
-                description = "Ability description",
-                cooldown = 5,
-                effect = function(creature, target)
-                    -- Ability effect logic
-                end
-            }
-        },
-        breeding = {
-            compatibleSpecies = {"Species1", "Species2"},
-            offspring = {
-                {
-                    name = "Offspring1",
-                    chance = 0.5
-                }
-            }
-        },
-        drops = {
-            {
-                itemName = "Item1",
-                minQuantity = 1,
-                maxQuantity = 3,
-                chance = 0.7
-            }
-        },
-        taming = {
-            requiredItems = {
-                {
-                    itemName = "Item1",
-                    quantity = 1
-                }
-            },
-            successChance = 0.7
-        },
-        training = {
-            stats = {
-                health = {
-                    base = 10,
-                    growth = 0.5
-                },
-                attack = {
-                    base = 5,
-                    growth = 0.3
-                }
-            }
-        }
-    }
-]]
-
--- Rarity enum
-local CreatureRarity = Enum.create("CreatureRarity", {
-    Common = 1,
-    Uncommon = 2,
-    Rare = 3,
-    Epic = 4,
-    Legendary = 5,
-})
-
--- Creature type enum
-local CreatureType = Enum.create("CreatureType", {
-    Mammal = 1,
-    Bird = 2,
-    Reptile = 3,
-    Insect = 4,
-    Mythical = 5,
-})
-
--- Creature size enum
-local CreatureSize = Enum.create("CreatureSize", {
-    Small = 1,
-    Medium = 2,
-    Large = 3,
-})
-
--- Base creatures
-Creatures.Rabbit = {
-    name = "Rabbit",
-    displayName = "Rabbit",
-    description = "A small, fast creature that can be tamed.",
-    rarity = CreatureRarity.Common,
-    type = CreatureType.Mammal,
-    stats = {
-        health = 30,
-        maxHealth = 30,
-        attack = 3,
-        defense = 2,
-        speed = 10,
-        agility = 15,
-        intelligence = 3,
-        luck = 5,
+Creatures.Database = {
+    ["cloud_sprite"] = {
+        Id = "cloud_sprite",
+        Name = "Cloud Sprite",
+        Description = "A tiny spirit of the clouds",
+        Type = "Spirit",
+        Rarity = "Common",
+        Level = 1,
+        Health = 30,
+        Damage = 5,
+        Speed = 12,
+        Loot = { "aether_shard", "crystal_fragment" },
+        Tameable = true,
+        Aggressive = false,
     },
-    properties = {
-        weight = 5,
-        size = CreatureSize.Small,
-        tamable = true,
-        breedable = true,
-        aggressive = false,
-        passive = true,
-        tamedByDefault = false,
+    ["crystal_fox"] = {
+        Id = "crystal_fox",
+        Name = "Crystal Fox",
+        Description = "A fox with fur that glitters like crystal",
+        Type = "Beast",
+        Rarity = "Rare",
+        Level = 10,
+        Health = 120,
+        Damage = 20,
+        Speed = 22,
+        Loot = { "crystal_fragment", "aether_shard" },
+        Tameable = true,
+        Aggressive = false,
     },
-    abilities = {
-        {
-            name = "Burrow",
-            description = "Quickly digs into the ground to hide.",
-            cooldown = 10,
-            effect = function(creature, target)
-                local humanoid = creature:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.WalkSpeed = humanoid.WalkSpeed * 2
-                    game:GetService("Debris"):AddItem(humanoid, 3)
-                end
-            end,
-        },
+    ["storm_hawk"] = {
+        Id = "storm_hawk",
+        Name = "Storm Hawk",
+        Description = "A hawk that rides the thunder",
+        Type = "Beast",
+        Rarity = "Uncommon",
+        Level = 8,
+        Health = 90,
+        Damage = 18,
+        Speed = 28,
+        Loot = { "aether_shard", "storm_essence" },
+        Tameable = true,
+        Aggressive = true,
     },
-    breeding = {
-        compatibleSpecies = { "Rabbit", "Fox" },
-        offspring = {
-            {
-                name = "Rabbit",
-                chance = 0.8,
-            },
-            {
-                name = "Fox",
-                chance = 0.2,
-            },
-        },
+    ["ember_drake"] = {
+        Id = "ember_drake",
+        Name = "Ember Drake",
+        Description = "A small drake born from volcanic energy",
+        Type = "Dragon",
+        Rarity = "Rare",
+        Level = 18,
+        Health = 220,
+        Damage = 40,
+        Speed = 18,
+        Loot = { "volcanic_ore", "storm_essence" },
+        Tameable = false,
+        Aggressive = true,
     },
-    drops = {
-        {
-            itemName = "AetherShard",
-            minQuantity = 1,
-            maxQuantity = 2,
-            chance = 0.3,
-        },
-        {
-            itemName = "Wood",
-            minQuantity = 1,
-            maxQuantity = 3,
-            chance = 1.0,
-        },
+    ["void_wraith"] = {
+        Id = "void_wraith",
+        Name = "Void Wraith",
+        Description = "A spectral being from the void",
+        Type = "Spirit",
+        Rarity = "Epic",
+        Level = 22,
+        Health = 280,
+        Damage = 55,
+        Speed = 24,
+        Loot = { "void_essence", "void_shard" },
+        Tameable = false,
+        Aggressive = true,
     },
-    taming = {
-        requiredItems = {
-            {
-                itemName = "Wood",
-                quantity = 1,
-            },
-        },
-        successChance = 0.7,
+    ["verdant_deer"] = {
+        Id = "verdant_deer",
+        Name = "Verdant Deer",
+        Description = "A peaceful deer of the forests",
+        Type = "Beast",
+        Rarity = "Common",
+        Level = 5,
+        Health = 80,
+        Damage = 10,
+        Speed = 14,
+        Loot = { "ancient_wood", "crystal_fragment" },
+        Tameable = true,
+        Aggressive = false,
     },
-    training = {
-        stats = {
-            health = {
-                base = 2,
-                growth = 0.2,
-            },
-            attack = {
-                base = 1,
-                growth = 0.1,
-            },
-            speed = {
-                base = 1,
-                growth = 0.2,
-            },
-        },
+    ["sky_whale"] = {
+        Id = "sky_whale",
+        Name = "Sky Whale",
+        Description = "A majestic whale that swims through clouds",
+        Type = "Leviathan",
+        Rarity = "Epic",
+        Level = 30,
+        Health = 1000,
+        Damage = 100,
+        Speed = 8,
+        Loot = { "aether_crystal", "storm_essence" },
+        Tameable = false,
+        Aggressive = false,
+    },
+    ["shadow_wolf"] = {
+        Id = "shadow_wolf",
+        Name = "Shadow Wolf",
+        Description = "A wolf shrouded in darkness",
+        Type = "Beast",
+        Rarity = "Rare",
+        Level = 15,
+        Health = 200,
+        Damage = 30,
+        Speed = 18,
+        Loot = { "shadow_fur", "wolf_tooth" },
+        Tameable = true,
+        Aggressive = true,
+    },
+    ["crystal_drake"] = {
+        Id = "crystal_drake",
+        Name = "Crystal Drake",
+        Description = "A drake made of living crystal",
+        Type = "Dragon",
+        Rarity = "Epic",
+        Level = 25,
+        Health = 500,
+        Damage = 80,
+        Speed = 20,
+        Loot = { "crystal_scale", "drake_egg" },
+        Tameable = false,
+        Aggressive = true,
+    },
+    ["sky_leviathan"] = {
+        Id = "sky_leviathan",
+        Name = "Sky Leviathan",
+        Description = "A massive creature of the skies",
+        Type = "Leviathan",
+        Rarity = "Legendary",
+        Level = 50,
+        Health = 2000,
+        Damage = 200,
+        Speed = 10,
+        Loot = { "leviathan_scale", "sky_essence" },
+        Tameable = false,
+        Aggressive = true,
+    },
+    ["aether_fox"] = {
+        Id = "aether_fox",
+        Name = "Aether Fox",
+        Description = "A mystical fox with aether powers",
+        Type = "Spirit",
+        Rarity = "Epic",
+        Level = 20,
+        Health = 300,
+        Damage = 50,
+        Speed = 25,
+        Loot = { "aether_fur", "spirit_crystal" },
+        Tameable = true,
+        Aggressive = false,
+    },
+    ["verdant_guardian"] = {
+        Id = "verdant_guardian",
+        Name = "Verdant Guardian",
+        Description = "An ancient protector of nature",
+        Type = "Elemental",
+        Rarity = "Epic",
+        Level = 30,
+        Health = 800,
+        Damage = 100,
+        Speed = 12,
+        Loot = { "verdant_bark", "guardian_seed" },
+        Tameable = false,
+        Aggressive = false,
     },
 }
 
-Creatures.Fox = {
-    name = "Fox",
-    displayName = "Fox",
-    description = "A cunning creature that can be tamed.",
-    rarity = CreatureRarity.Uncommon,
-    type = CreatureType.Mammal,
-    stats = {
-        health = 40,
-        maxHealth = 40,
-        attack = 5,
-        defense = 3,
-        speed = 12,
-        agility = 18,
-        intelligence = 8,
-        luck = 10,
-    },
-    properties = {
-        weight = 8,
-        size = CreatureSize.Small,
-        tamable = true,
-        breedable = true,
-        aggressive = false,
-        passive = true,
-        tamedByDefault = false,
-    },
-    abilities = {
-        {
-            name = "Stealth",
-            description = "Increases stealth and evasion.",
-            cooldown = 15,
-            effect = function(creature, target)
-                local humanoid = creature:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.WalkSpeed = humanoid.WalkSpeed * 1.2
-                    humanoid.JumpPower = humanoid.JumpPower * 1.1
-                    game:GetService("Debris"):AddItem(humanoid, 5)
-                end
-            end,
-        },
-    },
-    breeding = {
-        compatibleSpecies = { "Fox", "Rabbit" },
-        offspring = {
-            {
-                name = "Fox",
-                chance = 0.7,
-            },
-            {
-                name = "Rabbit",
-                chance = 0.3,
-            },
-        },
-    },
-    drops = {
-        {
-            itemName = "AetherShard",
-            minQuantity = 1,
-            maxQuantity = 2,
-            chance = 0.4,
-        },
-        {
-            itemName = "Stone",
-            minQuantity = 1,
-            maxQuantity = 2,
-            chance = 0.8,
-        },
-    },
-    taming = {
-        requiredItems = {
-            {
-                itemName = "Stone",
-                quantity = 1,
-            },
-        },
-        successChance = 0.8,
-    },
-    training = {
-        stats = {
-            health = {
-                base = 3,
-                growth = 0.3,
-            },
-            attack = {
-                base = 2,
-                growth = 0.2,
-            },
-            agility = {
-                base = 2,
-                growth = 0.3,
-            },
-        },
-    },
-}
-
--- Additional creatures (12 total)
-Creatures.Bird = {
-    name = "Bird",
-    displayName = "Bird",
-    description = "A small bird that can be tamed.",
-    rarity = CreatureRarity.Common,
-    type = CreatureType.Bird,
-    stats = {
-        health = 20,
-        maxHealth = 20,
-        attack = 2,
-        defense = 1,
-        speed = 15,
-        agility = 20,
-        intelligence = 4,
-        luck = 8,
-    },
-    properties = {
-        weight = 2,
-        size = CreatureSize.Small,
-        tamable = true,
-        breedable = true,
-        aggressive = false,
-        passive = true,
-        tamedByDefault = false,
-    },
-    abilities = {
-        {
-            name = "Fly",
-            description = "Allows the creature to fly.",
-            cooldown = 0,
-            effect = function(creature, target)
-                local humanoid = creature:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid.WalkSpeed = 20
-                    humanoid.PlatformStand = true
-                end
-            end,
-        },
-    },
-    drops = {
-        {
-            itemName = "Feather",
-            minQuantity = 1,
-            maxQuantity = 2,
-            chance = 1.0,
-        },
-    },
-    taming = {
-        requiredItems = {
-            {
-                itemName = "Wood",
-                quantity = 1,
-            },
-        },
-        successChance = 0.6,
-    },
-}
-
--- Function to get all creatures
 function Creatures.GetAll()
-    local allCreatures = {}
-    for name, creature in pairs(Creatures) do
-        table.insert(allCreatures, { name = name, creature = creature })
-    end
-    return allCreatures
+    return Creatures.Database
 end
 
--- Function to get creature by name
-function Creatures.Get(name)
-    return Creatures[name]
+function Creatures.Get(creatureId)
+    return Creatures.Database[creatureId]
 end
 
--- Function to get creatures by type
-function Creatures.GetByType(type)
-    local creatures = {}
-    for name, creature in pairs(Creatures) do
-        if creature.type == type then
-            table.insert(creatures, { name = name, creature = creature })
-        end
-    end
-    return creatures
-end
-
--- Function to get creatures by rarity
 function Creatures.GetByRarity(rarity)
-    local creatures = {}
-    for name, creature in pairs(Creatures) do
-        if creature.rarity == rarity then
-            table.insert(creatures, { name = name, creature = creature })
+    local results = {}
+    for _, creature in pairs(Creatures.Database) do
+        if creature.Rarity == rarity then
+            table.insert(results, creature)
         end
     end
-    return creatures
+    return results
 end
 
 return Creatures

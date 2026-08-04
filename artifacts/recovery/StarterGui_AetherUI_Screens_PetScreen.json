@@ -1,0 +1,642 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    }
+   ],
+   "class": "Frame",
+   "name": "Background",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0.15000000596046448,
+    "Position": "{0, 0}, {0, 0}",
+    "BackgroundColor3": "0.0509804, 0.105882, 0.164706",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{1, 0}, {1, 0}"
+   }
+  },
+  {
+   "children": [
+    {
+     "class": "UICorner",
+     "name": "UICorner",
+     "children": []
+    },
+    {
+     "class": "UIStroke",
+     "name": "UIStroke",
+     "children": []
+    },
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    },
+    {
+     "children": [
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Title",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.5, 0}, {1, 0}",
+        "TextColor3": "0.392157, 0.862745, 1",
+        "LayoutOrder": 0,
+        "Text": "PET COMPANION",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 24,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0199999996, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "CloseButton",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.0799999982, 0}, {0.5, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "\u2715",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 0,
+        "Position": "{0.920000017, 0}, {0.25, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.0784314, 0.0862745, 0.137255"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "TitleBar",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0, 0}, {0, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, 0}, {0.0700000003, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "PetListTitle",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{1, -10}, {0.0500000007, 0}",
+        "TextColor3": "0.54902, 0.588235, 0.666667",
+        "LayoutOrder": 0,
+        "Text": "YOUR PETS",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 14,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0500000007, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UIListLayout",
+         "name": "UIListLayout",
+         "children": []
+        },
+        {
+         "children": [
+          {
+           "class": "UICorner",
+           "name": "UICorner",
+           "children": []
+          },
+          {
+           "class": "UIStroke",
+           "name": "UIStroke",
+           "children": []
+          },
+          {
+           "class": "UIGradient",
+           "name": "UIGradient",
+           "children": []
+          },
+          {
+           "children": [],
+           "class": "ImageLabel",
+           "name": "PetIcon",
+           "props": {
+            "Visible": true,
+            "LayoutOrder": 0,
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "AnchorPoint": "0, 0",
+            "Rotation": 0,
+            "BackgroundTransparency": 1,
+            "Position": "{0.0199999996, 0}, {0.150000006, 0}",
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+            "ZIndex": 1,
+            "BorderSizePixel": 0,
+            "Size": "{0.150000006, 0}, {0.699999988, 0}"
+           }
+          },
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "PetName",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.600000024, 0}, {0.349999994, 0}",
+            "TextColor3": "0.901961, 0.921569, 0.960784",
+            "LayoutOrder": 0,
+            "Text": "Pet Name",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 14,
+            "Rotation": 0,
+            "Font": "Enum.Font.GothamMedium",
+            "BackgroundTransparency": 1,
+            "Position": "{0.200000003, 0}, {0.0500000007, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Left",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          },
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "PetLevel",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.600000024, 0}, {0.25, 0}",
+            "TextColor3": "1, 0.717647, 0.301961",
+            "LayoutOrder": 0,
+            "Text": "Lv. 1",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 12,
+            "Rotation": 0,
+            "Font": "Enum.Font.Gotham",
+            "BackgroundTransparency": 1,
+            "Position": "{0.200000003, 0}, {0.419999987, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Left",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          },
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "PetRarity",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.150000006, 0}, {0.300000012, 0}",
+            "TextColor3": "0.54902, 0.588235, 0.666667",
+            "LayoutOrder": 0,
+            "Text": "COMMON",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 10,
+            "Rotation": 0,
+            "Font": "Enum.Font.Gotham",
+            "BackgroundTransparency": 1,
+            "Position": "{0.829999983, 0}, {0.0500000007, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Right",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          },
+          {
+           "children": [
+            {
+             "class": "UICorner",
+             "name": "UICorner",
+             "children": []
+            },
+            {
+             "class": "UIStroke",
+             "name": "UIStroke",
+             "children": []
+            },
+            {
+             "class": "UIGradient",
+             "name": "UIGradient",
+             "children": []
+            }
+           ],
+           "class": "TextButton",
+           "name": "PetEquipBtn",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 0,
+            "Size": "{0.400000006, 0}, {0.300000012, 0}",
+            "TextColor3": "0.0509804, 0.105882, 0.164706",
+            "LayoutOrder": 0,
+            "Text": "Equip",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 12,
+            "Rotation": 0,
+            "Font": "Enum.Font.GothamMedium",
+            "BackgroundTransparency": 0,
+            "Position": "{0.579999983, 0}, {0.600000024, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Center",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "1, 0.717647, 0.301961"
+           }
+          },
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "PetActiveBadge",
+           "props": {
+            "Visible": false,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.150000006, 0}, {0.300000012, 0}",
+            "TextColor3": "0.298039, 0.686275, 0.313726",
+            "LayoutOrder": 0,
+            "Text": "EQUIPPED",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 10,
+            "Rotation": 0,
+            "Font": "Enum.Font.GothamBold",
+            "BackgroundTransparency": 1,
+            "Position": "{0.829999983, 0}, {0.600000024, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Right",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          }
+         ],
+         "class": "Frame",
+         "name": "PetTemplate",
+         "props": {
+          "Visible": false,
+          "LayoutOrder": 0,
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "AnchorPoint": "0, 0",
+          "Rotation": 0,
+          "BackgroundTransparency": 0,
+          "Position": "{0, 0}, {0, 0}",
+          "BackgroundColor3": "0.14902, 0.164706, 0.235294",
+          "ZIndex": 1,
+          "BorderSizePixel": 0,
+          "Size": "{0.899999976, 0}, {0.119999997, 0}"
+         }
+        }
+       ],
+       "class": "ScrollingFrame",
+       "name": "PetScroll",
+       "props": {
+        "Visible": true,
+        "LayoutOrder": 0,
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "AnchorPoint": "0, 0",
+        "Rotation": 0,
+        "BackgroundTransparency": 1,
+        "Position": "{0.0500000007, 0}, {0.0500000007, 0}",
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{1, -10}, {0.899999976, 0}"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "PetList",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{0.349999994, 0}, {0.829999983, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "DetailHeader",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{1, -10}, {0.0599999987, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "PET DETAILS",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0500000007, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UIListLayout",
+         "name": "UIListLayout",
+         "children": []
+        },
+        {
+         "children": [
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "StatLabel",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.400000006, 0}, {1, 0}",
+            "TextColor3": "0.54902, 0.588235, 0.666667",
+            "LayoutOrder": 0,
+            "Text": "ATK",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 12,
+            "Rotation": 0,
+            "Font": "Enum.Font.Gotham",
+            "BackgroundTransparency": 1,
+            "Position": "{0, 0}, {0, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Left",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          },
+          {
+           "children": [],
+           "class": "TextLabel",
+           "name": "StatValue",
+           "props": {
+            "Visible": true,
+            "TextWrapped": true,
+            "AnchorPoint": "0, 0",
+            "ZIndex": 1,
+            "BorderSizePixel": 1,
+            "Size": "{0.5, 0}, {1, 0}",
+            "TextColor3": "0.901961, 0.921569, 0.960784",
+            "LayoutOrder": 0,
+            "Text": "15",
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "TextSize": 12,
+            "Rotation": 0,
+            "Font": "Enum.Font.GothamBold",
+            "BackgroundTransparency": 1,
+            "Position": "{0.550000012, 0}, {0, 0}",
+            "TextXAlignment": "Enum.TextXAlignment.Left",
+            "TextYAlignment": "Enum.TextYAlignment.Center",
+            "TextScaled": true,
+            "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+           }
+          },
+          {
+           "children": [
+            {
+             "class": "UICorner",
+             "name": "UICorner",
+             "children": []
+            },
+            {
+             "children": [
+              {
+               "class": "UICorner",
+               "name": "UICorner",
+               "children": []
+              },
+              {
+               "class": "UIGradient",
+               "name": "UIGradient",
+               "children": []
+              }
+             ],
+             "class": "Frame",
+             "name": "StatBarFill",
+             "props": {
+              "Visible": true,
+              "LayoutOrder": 0,
+              "AutomaticSize": "Enum.AutomaticSize.None",
+              "AnchorPoint": "0, 0",
+              "Rotation": 0,
+              "BackgroundTransparency": 0,
+              "Position": "{0, 0}, {0, 0}",
+              "BackgroundColor3": "0.298039, 0.686275, 0.313726",
+              "ZIndex": 1,
+              "BorderSizePixel": 0,
+              "Size": "{0.699999988, 0}, {1, 0}"
+             }
+            }
+           ],
+           "class": "Frame",
+           "name": "StatBar",
+           "props": {
+            "Visible": true,
+            "LayoutOrder": 0,
+            "AutomaticSize": "Enum.AutomaticSize.None",
+            "AnchorPoint": "0, 0",
+            "Rotation": 0,
+            "BackgroundTransparency": 0,
+            "Position": "{0.550000012, 0}, {0.5, 0}",
+            "BackgroundColor3": "0.14902, 0.164706, 0.235294",
+            "ZIndex": 1,
+            "BorderSizePixel": 0,
+            "Size": "{0.5, 0}, {0.400000006, 0}"
+           }
+          }
+         ],
+         "class": "Frame",
+         "name": "StatRow",
+         "props": {
+          "Visible": false,
+          "LayoutOrder": 0,
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "AnchorPoint": "0, 0",
+          "Rotation": 0,
+          "BackgroundTransparency": 1,
+          "Position": "{0, 0}, {0, 0}",
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+          "ZIndex": 1,
+          "BorderSizePixel": 0,
+          "Size": "{1, 0}, {0.119999997, 0}"
+         }
+        }
+       ],
+       "class": "Frame",
+       "name": "DetailStats",
+       "props": {
+        "Visible": true,
+        "LayoutOrder": 0,
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "AnchorPoint": "0, 0",
+        "Rotation": 0,
+        "BackgroundTransparency": 1,
+        "Position": "{0.0500000007, 0}, {0.0599999987, 0}",
+        "BackgroundColor3": "0, 0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{1, -10}, {0.850000024, -10}"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "PetDetail",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0.370000005, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{0.600000024, 0}, {0.829999983, 0}"
+     }
+    }
+   ],
+   "class": "Frame",
+   "name": "Panel",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0,
+    "Position": "{0.150000006, 0}, {0.100000001, 0}",
+    "BackgroundColor3": "0.109804, 0.12549, 0.188235",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{0.699999988, 0}, {0.800000012, 0}"
+   }
+  }
+ ],
+ "class": "ScreenGui",
+ "name": "PetScreen",
+ "props": []
+}

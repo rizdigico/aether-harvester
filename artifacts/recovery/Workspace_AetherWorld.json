@@ -1,0 +1,394 @@
+{
+ "class": "Folder",
+ "name": "AetherWorld",
+ "children": [
+  {
+   "class": "Folder",
+   "name": "Islands",
+   "children": [
+    {
+     "name": "FloatingMarket",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_1",
+     "class": "Model"
+    },
+    {
+     "name": "EmberPeaks",
+     "class": "Model"
+    },
+    {
+     "name": "SkySanctum",
+     "class": "Model"
+    },
+    {
+     "name": "CloudGardens",
+     "class": "Model"
+    },
+    {
+     "name": "Tree_3",
+     "class": "Model"
+    },
+    {
+     "name": "AncientRuins",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalSpires",
+     "class": "Model"
+    },
+    {
+     "name": "VoidRifts",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalNode_3",
+     "class": "Model"
+    },
+    {
+     "name": "VerdantIsle",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalNode_4",
+     "class": "Model"
+    },
+    {
+     "name": "Tree_2",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalNode_1",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalNode_2",
+     "class": "Model"
+    },
+    {
+     "name": "OreNode_1",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_2",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_10",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_6",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_8",
+     "class": "Model"
+    },
+    {
+     "name": "OreNode_4",
+     "class": "Model"
+    },
+    {
+     "name": "Rock_1",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalCanyons",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_9",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_5",
+     "class": "Model"
+    },
+    {
+     "name": "HerbNode_2",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_7",
+     "class": "Model"
+    },
+    {
+     "name": "StormPeaks",
+     "class": "Model"
+    },
+    {
+     "name": "HerbNode_3",
+     "class": "Model"
+    },
+    {
+     "name": "Rock_2",
+     "class": "Model"
+    },
+    {
+     "name": "Tree_1",
+     "class": "Model"
+    },
+    {
+     "name": "HerbNode_1",
+     "class": "Model"
+    },
+    {
+     "name": "OreNode_2",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_4",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_11",
+     "class": "Model"
+    },
+    {
+     "name": "AetherNode_3",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalNode_5",
+     "class": "Model"
+    },
+    {
+     "name": "OreNode_3",
+     "class": "Model"
+    },
+    {
+     "name": "HerbNode_4",
+     "class": "Model"
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Props",
+   "children": [
+    {
+     "name": "CrystalTree_4",
+     "class": "Part"
+    },
+    {
+     "name": "AetherFlower_5",
+     "class": "Part"
+    },
+    {
+     "name": "FloatingRock_1",
+     "class": "Part"
+    },
+    {
+     "name": "MushroomCluster_1",
+     "class": "Part"
+    },
+    {
+     "name": "GlowingOrb_4",
+     "class": "Part"
+    },
+    {
+     "name": "GlowingOrb_2",
+     "class": "Part"
+    },
+    {
+     "name": "AncientPillar_1",
+     "class": "Part"
+    },
+    {
+     "name": "MushroomCluster_2",
+     "class": "Part"
+    },
+    {
+     "name": "AncientPillar_4",
+     "class": "Part"
+    },
+    {
+     "name": "MushroomCluster_4",
+     "class": "Part"
+    },
+    {
+     "name": "AncientPillar_5",
+     "class": "Part"
+    },
+    {
+     "name": "AncientPillar_3",
+     "class": "Part"
+    },
+    {
+     "name": "AetherFlower_4",
+     "class": "Part"
+    },
+    {
+     "name": "AetherFlower_3",
+     "class": "Part"
+    },
+    {
+     "name": "FloatingRock_3",
+     "class": "Part"
+    },
+    {
+     "name": "GlowingOrb_1",
+     "class": "Part"
+    },
+    {
+     "name": "CrystalTree_3",
+     "class": "Part"
+    },
+    {
+     "name": "MushroomCluster_5",
+     "class": "Part"
+    },
+    {
+     "name": "AetherFlower_1",
+     "class": "Part"
+    },
+    {
+     "name": "FloatingRock_5",
+     "class": "Part"
+    },
+    {
+     "name": "FloatingRock_2",
+     "class": "Part"
+    },
+    {
+     "name": "GlowingOrb_5",
+     "class": "Part"
+    },
+    {
+     "name": "CrystalTree_2",
+     "class": "Part"
+    },
+    {
+     "name": "MushroomCluster_3",
+     "class": "Part"
+    },
+    {
+     "name": "FloatingRock_4",
+     "class": "Part"
+    },
+    {
+     "name": "AncientPillar_2",
+     "class": "Part"
+    },
+    {
+     "name": "CrystalTree_1",
+     "class": "Part"
+    },
+    {
+     "name": "AetherFlower_2",
+     "class": "Part"
+    },
+    {
+     "name": "GlowingOrb_3",
+     "class": "Part"
+    },
+    {
+     "name": "CrystalTree_5",
+     "class": "Part"
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Creatures",
+   "children": [
+    {
+     "name": "EmberDragon_3",
+     "class": "Model"
+    },
+    {
+     "name": "SkyWhale_1",
+     "class": "Model"
+    },
+    {
+     "name": "AetherWolf_3",
+     "class": "Model"
+    },
+    {
+     "name": "EmberDragon_1",
+     "class": "Model"
+    },
+    {
+     "name": "SkyWhale_3",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalFox_3",
+     "class": "Model"
+    },
+    {
+     "name": "SkyWhale_2",
+     "class": "Model"
+    },
+    {
+     "name": "CloudSprite_2",
+     "class": "Model"
+    },
+    {
+     "name": "EmberDragon_2",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalFox_1",
+     "class": "Model"
+    },
+    {
+     "name": "AetherWolf_2",
+     "class": "Model"
+    },
+    {
+     "name": "AetherWolf_1",
+     "class": "Model"
+    },
+    {
+     "name": "VerdantDeer_2",
+     "class": "Model"
+    },
+    {
+     "name": "CrystalFox_2",
+     "class": "Model"
+    },
+    {
+     "name": "CloudSprite_1",
+     "class": "Model"
+    },
+    {
+     "name": "VerdantDeer_3",
+     "class": "Model"
+    },
+    {
+     "name": "VerdantDeer_1",
+     "class": "Model"
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Portals",
+   "children": [
+    {
+     "name": "Portal_5",
+     "class": "Part"
+    },
+    {
+     "name": "Portal_1",
+     "class": "Part"
+    },
+    {
+     "name": "Portal_4",
+     "class": "Part"
+    },
+    {
+     "name": "Portal_3",
+     "class": "Part"
+    },
+    {
+     "name": "Portal_2",
+     "class": "Part"
+    }
+   ]
+  }
+ ]
+}

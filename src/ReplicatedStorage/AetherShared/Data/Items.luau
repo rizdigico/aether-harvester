@@ -1,311 +1,396 @@
---
--- Items.luau
--- Item database module for Aether Harvester Simulator
---
-
+-- Items data module
 local Items = {}
 
---[[
-    ITEM STRUCTURE:
-    {
-        name = "ItemName",
-        displayName = "Display Name",
-        description = "Description",
-        rarity = Enum.ItemRarity,
-        type = Enum.ItemType,
-        value = 0,
-        stackable = false,
-        maxStack = 99,
-        icon = "rbxassetid://123456789",
-        properties = {
-            durability = 100,
-            weight = 0.5,
-            -- Additional properties
-        },
-        abilities = {
-            {
-                name = "AbilityName",
-                description = "Ability description",
-                cooldown = 5,
-                effect = function(player, item)
-                    -- Ability effect logic
-                end
-            }
-        },
-        recipes = {
-            {
-                name = "RecipeName",
-                ingredients = {
-                    {
-                        itemName = "Ingredient1",
-                        quantity = 1
-                    }
-                },
-                result = {
-                    itemName = "ResultItem",
-                    quantity = 1
-                }
-            }
-        }
-    }
-]]
+Items.Database = {
 
--- Rarity enum
-local ItemRarity = Enum.create("ItemRarity", {
-    Common = 1,
-    Uncommon = 2,
-    Rare = 3,
-    Epic = 4,
-    Legendary = 5,
-})
-
--- Item type enum
-local ItemType = Enum.create("ItemType", {
-    Tool = 1,
-    Resource = 2,
-    Consumable = 3,
-    CraftingMaterial = 4,
-    Currency = 5,
-    Misc = 6,
-})
-
--- Base items
-Items.AetherShard = {
-    name = "AetherShard",
-    displayName = "Aether Shard",
-    description = "A fragment of the Aether, used for crafting and alchemy.",
-    rarity = ItemRarity.Common,
-    type = ItemType.Resource,
-    value = 5,
-    stackable = true,
-    maxStack = 999,
-    icon = "rbxassetid://123456789",
-    properties = {
-        durability = nil,
-        weight = 0.1,
+    ["shadow_fur"] = {
+        ["Type"] = "Material",
+        ["Description"] = "Fur from a shadow wolf",
+        ["Id"] = "shadow_fur",
+        ["Color"] = Color3.fromRGB(90, 90, 110),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Shadow Fur",
+        ["Value"] = 50,
+        ["MaxStack"] = 100,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["basic_pickaxe"] = {
+        ["Durability"] = 100,
+        ["Type"] = "Tool",
+        ["Description"] = "A simple pickaxe for basic mining",
+        ["Power"] = 10,
+        ["Id"] = "basic_pickaxe",
+        ["Color"] = Color3.fromRGB(128, 128, 128),
+        ["Rarity"] = "Common",
+        ["MaxStack"] = 1,
+        ["Name"] = "Basic Pickaxe",
+        ["Value"] = 10,
+        ["Speed"] = 1,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["aether_shard"] = {
+        ["Type"] = "Resource",
+        ["Description"] = "A crystallized piece of pure Aether energy",
+        ["Id"] = "aether_shard",
+        ["Color"] = Color3.fromRGB(100, 200, 255),
+        ["Rarity"] = "Common",
+        ["Name"] = "Aether Shard",
+        ["Value"] = 1,
+        ["MaxStack"] = 999,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["drake_egg"] = {
+        ["Type"] = "Material",
+        ["Description"] = "An egg from a crystal drake",
+        ["Id"] = "drake_egg",
+        ["Color"] = Color3.fromRGB(170, 120, 220),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Drake Egg",
+        ["Value"] = 300,
+        ["MaxStack"] = 1,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["aether_pickaxe"] = {
+        ["Durability"] = 1000,
+        ["Type"] = "Tool",
+        ["Description"] = "A legendary pickaxe powered by pure Aether",
+        ["Power"] = 100,
+        ["Id"] = "aether_pickaxe",
+        ["Color"] = Color3.fromRGB(100, 200, 255),
+        ["Rarity"] = "Legendary",
+        ["MaxStack"] = 1,
+        ["Name"] = "Aether Pickaxe",
+        ["Value"] = 2000,
+        ["Speed"] = 3,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["volcanic_ore"] = {
+        ["Type"] = "Resource",
+        ["Description"] = "Heated ore from the heart of a volcano",
+        ["Id"] = "volcanic_ore",
+        ["Color"] = Color3.fromRGB(255, 100, 50),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Volcanic Ore",
+        ["Value"] = 25,
+        ["MaxStack"] = 200,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["lucky_charm"] = {
+        ["Type"] = "Consumable",
+        ["Description"] = "+20% rare drop chance",
+        ["Id"] = "lucky_charm",
+        ["Color"] = Color3.fromRGB(255, 215, 0),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Lucky Charm",
+        ["Value"] = 250,
+        ["MaxStack"] = 10,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["spirit_crystal"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A crystal containing spirit energy",
+        ["Id"] = "spirit_crystal",
+        ["Color"] = Color3.fromRGB(220, 180, 255),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Spirit Crystal",
+        ["Value"] = 100,
+        ["MaxStack"] = 50,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["crystal_scale"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A scale from a crystal drake",
+        ["Id"] = "crystal_scale",
+        ["Color"] = Color3.fromRGB(160, 220, 255),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Crystal Scale",
+        ["Value"] = 200,
+        ["MaxStack"] = 50,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["crystal_fragment"] = {
+        ["Type"] = "Resource",
+        ["Description"] = "A shimmering fragment from a crystal formation",
+        ["Id"] = "crystal_fragment",
+        ["Color"] = Color3.fromRGB(200, 100, 255),
+        ["Rarity"] = "Uncommon",
+        ["Name"] = "Crystal Fragment",
+        ["Value"] = 5,
+        ["MaxStack"] = 500,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["verdant_bark"] = {
+        ["Type"] = "Material",
+        ["Description"] = "Bark from an ancient tree",
+        ["Id"] = "verdant_bark",
+        ["Color"] = Color3.fromRGB(80, 140, 70),
+        ["Rarity"] = "Uncommon",
+        ["Name"] = "Verdant Bark",
+        ["Value"] = 30,
+        ["MaxStack"] = 100,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["iron_pickaxe"] = {
+        ["Durability"] = 250,
+        ["Type"] = "Tool",
+        ["Description"] = "A sturdy iron pickaxe for serious miners",
+        ["Power"] = 25,
+        ["Id"] = "iron_pickaxe",
+        ["Color"] = Color3.fromRGB(192, 192, 192),
+        ["Rarity"] = "Uncommon",
+        ["MaxStack"] = 1,
+        ["Name"] = "Iron Pickaxe",
+        ["Value"] = 50,
+        ["Speed"] = 1.5,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["pet_food"] = {
+        ["Type"] = "Consumable",
+        ["Description"] = "Nourishment for your pets",
+        ["Id"] = "pet_food",
+        ["Color"] = Color3.fromRGB(139, 90, 43),
+        ["Rarity"] = "Common",
+        ["Name"] = "Pet Food",
+        ["Value"] = 10,
+        ["MaxStack"] = 200,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["energy_potion"] = {
+        ["Type"] = "Consumable",
+        ["Description"] = "Restores 50 energy",
+        ["Id"] = "energy_potion",
+        ["Color"] = Color3.fromRGB(100, 255, 100),
+        ["Rarity"] = "Common",
+        ["Name"] = "Energy Potion",
+        ["Value"] = 25,
+        ["MaxStack"] = 50,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["ancient_relic"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A relic from an ancient civilization",
+        ["Id"] = "ancient_relic",
+        ["Color"] = Color3.fromRGB(200, 150, 100),
+        ["Rarity"] = "Legendary",
+        ["Name"] = "Ancient Relic",
+        ["Value"] = 5000,
+        ["MaxStack"] = 1,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["wolf_tooth"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A sharp tooth from a wolf",
+        ["Id"] = "wolf_tooth",
+        ["Color"] = Color3.fromRGB(220, 220, 230),
+        ["Rarity"] = "Common",
+        ["Name"] = "Wolf Tooth",
+        ["Value"] = 5,
+        ["MaxStack"] = 200,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["aether_crystal"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A rare crystal pulsing with energy",
+        ["Id"] = "aether_crystal",
+        ["Color"] = Color3.fromRGB(150, 100, 255),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Aether Crystal",
+        ["Value"] = 150,
+        ["MaxStack"] = 100,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["leviathan_scale"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A massive scale from a sky leviathan",
+        ["Id"] = "leviathan_scale",
+        ["Color"] = Color3.fromRGB(50, 180, 220),
+        ["Rarity"] = "Legendary",
+        ["Name"] = "Leviathan Scale",
+        ["Value"] = 1000,
+        ["MaxStack"] = 20,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["sky_essence"] = {
+        ["Type"] = "Material",
+        ["Description"] = "Essence from the skies",
+        ["Id"] = "sky_essence",
+        ["Color"] = Color3.fromRGB(160, 220, 255),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Sky Essence",
+        ["Value"] = 400,
+        ["MaxStack"] = 30,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["harvest_boost"] = {
+        ["Type"] = "Consumable",
+        ["Description"] = "+50% harvest speed for 30 minutes",
+        ["Id"] = "harvest_boost",
+        ["Color"] = Color3.fromRGB(255, 150, 50),
+        ["Rarity"] = "Rare",
+        ["Name"] = "Harvest Boost",
+        ["Value"] = 100,
+        ["MaxStack"] = 20,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["ancient_wood"] = {
+        ["Type"] = "Resource",
+        ["Description"] = "Wood from the ancient trees of the Cloud Gardens",
+        ["Id"] = "ancient_wood",
+        ["Color"] = Color3.fromRGB(139, 90, 43),
+        ["Rarity"] = "Common",
+        ["Name"] = "Ancient Wood",
+        ["Value"] = 2,
+        ["MaxStack"] = 999,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["island_deed"] = {
+        ["Type"] = "Special",
+        ["Description"] = "Claim ownership of an island",
+        ["Id"] = "island_deed",
+        ["Color"] = Color3.fromRGB(100, 200, 100),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Island Deed",
+        ["Value"] = 5000,
+        ["MaxStack"] = 1,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["aether_fur"] = {
+        ["Type"] = "Material",
+        ["Description"] = "Fur infused with aether energy",
+        ["Id"] = "aether_fur",
+        ["Color"] = Color3.fromRGB(120, 200, 255),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Aether Fur",
+        ["Value"] = 150,
+        ["MaxStack"] = 50,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["void_essence"] = {
+        ["Type"] = "Resource",
+        ["Description"] = "Ethereal essence from the Void Rifts",
+        ["Id"] = "void_essence",
+        ["Color"] = Color3.fromRGB(100, 0, 150),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Void Essence",
+        ["Value"] = 100,
+        ["MaxStack"] = 100,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["portal_key"] = {
+        ["Type"] = "Special",
+        ["Description"] = "Opens a portal to a special realm",
+        ["Id"] = "portal_key",
+        ["Color"] = Color3.fromRGB(150, 0, 255),
+        ["Rarity"] = "Legendary",
+        ["Name"] = "Portal Key",
+        ["Value"] = 10000,
+        ["MaxStack"] = 1,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["crystal_pickaxe"] = {
+        ["Durability"] = 500,
+        ["Type"] = "Tool",
+        ["Description"] = "A pickaxe infused with crystal energy",
+        ["Power"] = 50,
+        ["Id"] = "crystal_pickaxe",
+        ["Color"] = Color3.fromRGB(200, 100, 255),
+        ["Rarity"] = "Rare",
+        ["MaxStack"] = 1,
+        ["Name"] = "Crystal Pickaxe",
+        ["Value"] = 200,
+        ["Speed"] = 2,
+        ["Stackable"] = false,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["guardian_seed"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A seed from the verdant guardian",
+        ["Id"] = "guardian_seed",
+        ["Color"] = Color3.fromRGB(60, 200, 120),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Guardian Seed",
+        ["Value"] = 250,
+        ["MaxStack"] = 30,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["void_shard"] = {
+        ["Type"] = "Material",
+        ["Description"] = "A shard from the void realm",
+        ["Id"] = "void_shard",
+        ["Color"] = Color3.fromRGB(100, 0, 150),
+        ["Rarity"] = "Legendary",
+        ["Name"] = "Void Shard",
+        ["Value"] = 1000,
+        ["MaxStack"] = 20,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
+    },
+    ["storm_essence"] = {
+        ["Type"] = "Material",
+        ["Description"] = "Essence captured from a storm",
+        ["Id"] = "storm_essence",
+        ["Color"] = Color3.fromRGB(255, 200, 50),
+        ["Rarity"] = "Epic",
+        ["Name"] = "Storm Essence",
+        ["Value"] = 300,
+        ["MaxStack"] = 50,
+        ["Stackable"] = true,
+        ["Icon"] = "rbxassetid://0",
     },
 }
 
-Items.WoodenPickaxe = {
-    name = "WoodenPickaxe",
-    displayName = "Wooden Pickaxe",
-    description = "A basic pickaxe for mining.",
-    rarity = ItemRarity.Common,
-    type = ItemType.Tool,
-    value = 20,
-    stackable = false,
-    maxStack = 1,
-    icon = "rbxassetid://987654321",
-    properties = {
-        durability = 100,
-        weight = 1.5,
-        miningSpeed = 1.0,
-        miningPower = 10,
-    },
-    abilities = {
-        {
-            name = "MiningBoost",
-            description = "Increases mining speed by 10% for 5 seconds.",
-            cooldown = 30,
-            effect = function(player, item)
-                local character = player.Character
-                if character then
-                    local humanoid = character:FindFirstChildOfClass("Humanoid")
-                    if humanoid then
-                        local miningSpeed = humanoid:GetAttribute("MiningSpeed") or 1.0
-                        humanoid:SetAttribute("MiningSpeed", miningSpeed * 1.1)
-                        game:GetService("Debris"):AddItem(humanoid, 5)
-                    end
-                end
-            end,
-        },
-    },
-}
-
--- Additional items (30+)
-Items.CopperOre = {
-    name = "CopperOre",
-    displayName = "Copper Ore",
-    description = "A raw copper ore.",
-    rarity = ItemRarity.Common,
-    type = ItemType.Resource,
-    value = 10,
-    stackable = true,
-    maxStack = 99,
-    icon = "rbxassetid://987654320",
-    properties = {
-        durability = nil,
-        weight = 0.2,
-    },
-}
-
-Items.IronOre = {
-    name = "IronOre",
-    displayName = "Iron Ore",
-    description = "A raw iron ore.",
-    rarity = ItemRarity.Uncommon,
-    type = ItemType.Resource,
-    value = 20,
-    stackable = true,
-    maxStack = 99,
-    icon = "rbxassetid://987654319",
-    properties = {
-        durability = nil,
-        weight = 0.3,
-    },
-}
-
-Items.GoldOre = {
-    name = "GoldOre",
-    displayName = "Gold Ore",
-    description = "A raw gold ore.",
-    rarity = ItemRarity.Rare,
-    type = ItemType.Resource,
-    value = 50,
-    stackable = true,
-    maxStack = 99,
-    icon = "rbxassetid://987654318",
-    properties = {
-        durability = nil,
-        weight = 0.4,
-    },
-}
-
-Items.Stone = {
-    name = "Stone",
-    displayName = "Stone",
-    description = "A basic building material.",
-    rarity = ItemRarity.Common,
-    type = ItemType.CraftingMaterial,
-    value = 2,
-    stackable = true,
-    maxStack = 999,
-    icon = "rbxassetid://987654317",
-    properties = {
-        durability = nil,
-        weight = 0.1,
-    },
-}
-
-Items.Wood = {
-    name = "Wood",
-    displayName = "Wood",
-    description = "A basic building material.",
-    rarity = ItemRarity.Common,
-    type = ItemType.CraftingMaterial,
-    value = 3,
-    stackable = true,
-    maxStack = 999,
-    icon = "rbxassetid://987654316",
-    properties = {
-        durability = nil,
-        weight = 0.2,
-    },
-}
-
-Items.HealthPotion = {
-    name = "HealthPotion",
-    displayName = "Health Potion",
-    description = "Restores 25% of maximum health.",
-    rarity = ItemRarity.Uncommon,
-    type = ItemType.Consumable,
-    value = 15,
-    stackable = true,
-    maxStack = 99,
-    icon = "rbxassetid://987654315",
-    properties = {
-        durability = nil,
-        weight = 0.1,
-        healAmount = 25,
-    },
-    abilities = {
-        {
-            name = "Heal",
-            description = "Restores health.",
-            cooldown = 0,
-            effect = function(player, item)
-                local character = player.Character
-                if character then
-                    local humanoid = character:FindFirstChildOfClass("Humanoid")
-                    if humanoid then
-                        local maxHealth = humanoid.MaxHealth
-                        local currentHealth = humanoid.Health
-                        humanoid.Health = currentHealth + (maxHealth * item.properties.healAmount / 100)
-                    end
-                end
-            end,
-        },
-    },
-}
-
-Items.ManaPotion = {
-    name = "ManaPotion",
-    displayName = "Mana Potion",
-    description = "Restores 25% of maximum mana.",
-    rarity = ItemRarity.Uncommon,
-    type = ItemType.Consumable,
-    value = 15,
-    stackable = true,
-    maxStack = 99,
-    icon = "rbxassetid://987654314",
-    properties = {
-        durability = nil,
-        weight = 0.1,
-        manaAmount = 25,
-    },
-    abilities = {
-        {
-            name = "RestoreMana",
-            description = "Restores mana.",
-            cooldown = 0,
-            effect = function(player, item)
-                local character = player.Character
-                if character then
-                    local humanoid = character:FindFirstChildOfClass("Humanoid")
-                    if humanoid then
-                        local mana = humanoid:GetAttribute("Mana") or 0
-                        humanoid:SetAttribute("Mana", mana + (100 * item.properties.manaAmount / 100))
-                    end
-                end
-            end,
-        },
-    },
-}
-
--- Function to get all items
-function Items.GetAll()
-    local allItems = {}
-    for name, item in pairs(Items) do
-        table.insert(allItems, { name = name, item = item })
-    end
-    return allItems
+function Items.GetItem(itemId)
+    return Items.Database[itemId]
 end
 
--- Function to get item by name
-function Items.Get(name)
-    return Items[name]
+function Items.GetAllItems()
+    return Items.Database
 end
 
--- Function to get items by type
-function Items.GetByType(type)
-    local items = {}
-    for name, item in pairs(Items) do
-        if item.type == type then
-            table.insert(items, { name = name, item = item })
+function Items.GetItemsByType(itemType)
+    local results = {}
+    for _, item in pairs(Items.Database) do
+        if item.Type == itemType then
+            table.insert(results, item)
         end
     end
-    return items
+    return results
 end
 
--- Function to get items by rarity
-function Items.GetByRarity(rarity)
-    local items = {}
-    for name, item in pairs(Items) do
-        if item.rarity == rarity then
-            table.insert(items, { name = name, item = item })
+function Items.GetItemsByRarity(rarity)
+    local results = {}
+    for _, item in pairs(Items.Database) do
+        if item.Rarity == rarity then
+            table.insert(results, item)
         end
     end
-    return items
+    return results
 end
 
 return Items

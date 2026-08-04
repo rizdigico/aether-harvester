@@ -1,0 +1,494 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    }
+   ],
+   "class": "Frame",
+   "name": "Background",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0.15000000596046448,
+    "Position": "{0, 0}, {0, 0}",
+    "BackgroundColor3": "0.0509804, 0.105882, 0.164706",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{1, 0}, {1, 0}"
+   }
+  },
+  {
+   "children": [
+    {
+     "class": "UICorner",
+     "name": "UICorner",
+     "children": []
+    },
+    {
+     "class": "UIStroke",
+     "name": "UIStroke",
+     "children": []
+    },
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    },
+    {
+     "children": [
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Title",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.5, 0}, {1, 0}",
+        "TextColor3": "0.392157, 0.862745, 1",
+        "LayoutOrder": 0,
+        "Text": "INVENTORY",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 24,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0199999996, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "CloseButton",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.0799999982, 0}, {0.5, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "\u2715",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 0,
+        "Position": "{0.920000017, 0}, {0.25, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.0784314, 0.0862745, 0.137255"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "TitleBar",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0, 0}, {0, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, 0}, {0.0700000003, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UICorner",
+       "name": "UICorner",
+       "children": []
+      },
+      {
+       "class": "UIStroke",
+       "name": "UIStroke",
+       "children": []
+      },
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "TabItems",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.25, 0}, {0.800000012, 0}",
+        "TextColor3": "0.0509804, 0.105882, 0.164706",
+        "LayoutOrder": 0,
+        "Text": "ITEMS",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 14,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 0.30000001192092896,
+        "Position": "{0, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.392157, 0.862745, 1"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "TabEquipment",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.25, 0}, {0.800000012, 0}",
+        "TextColor3": "0.0509804, 0.105882, 0.164706",
+        "LayoutOrder": 0,
+        "Text": "EQUIPMENT",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 14,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 0.800000011920929,
+        "Position": "{0.25, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.901961, 0.921569, 0.960784"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "TabResources",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.25, 0}, {0.800000012, 0}",
+        "TextColor3": "0.0509804, 0.105882, 0.164706",
+        "LayoutOrder": 0,
+        "Text": "RESOURCES",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 14,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 0.800000011920929,
+        "Position": "{0.5, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.901961, 0.921569, 0.960784"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "TabCrafting",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.25, 0}, {0.800000012, 0}",
+        "TextColor3": "0.0509804, 0.105882, 0.164706",
+        "LayoutOrder": 0,
+        "Text": "CRAFTING",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 14,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamMedium",
+        "BackgroundTransparency": 0.800000011920929,
+        "Position": "{0.75, 0}, {0.100000001, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.901961, 0.921569, 0.960784"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "TabBar",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0.00999999978, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, -20}, {0.0500000007, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UIGridLayout",
+       "name": "UIGridLayout",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "EmptyState",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.800000012, 0}, {0.100000001, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "Your inventory is empty",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 18,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 1,
+        "Position": "{0.100000001, 0}, {0.400000006, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        },
+        {
+         "class": "UIGradient",
+         "name": "UIGradient",
+         "children": []
+        },
+        {
+         "children": [
+          {
+           "class": "UICorner",
+           "name": "UICorner",
+           "children": []
+          }
+         ],
+         "class": "ImageLabel",
+         "name": "Icon",
+         "props": {
+          "Visible": true,
+          "LayoutOrder": 0,
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "AnchorPoint": "0, 0",
+          "Rotation": 0,
+          "BackgroundTransparency": 1,
+          "Position": "{0.324999988, 0}, {0.0500000007, 0}",
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+          "ZIndex": 1,
+          "BorderSizePixel": 0,
+          "Size": "{0.349999994, 0}, {0.349999994, 0}"
+         }
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "ItemName",
+         "props": {
+          "Visible": true,
+          "TextWrapped": false,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.800000012, 0}, {0.200000003, 0}",
+          "TextColor3": "0.901961, 0.921569, 0.960784",
+          "LayoutOrder": 0,
+          "Text": "Item Name",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 11,
+          "Rotation": 0,
+          "Font": "Enum.Font.GothamMedium",
+          "BackgroundTransparency": 1,
+          "Position": "{0.100000001, 0}, {0.419999987, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Left",
+          "TextYAlignment": "Enum.TextYAlignment.Center",
+          "TextScaled": false,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "ItemCount",
+         "props": {
+          "Visible": true,
+          "TextWrapped": false,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.800000012, 0}, {0.200000003, 0}",
+          "TextColor3": "0.54902, 0.588235, 0.666667",
+          "LayoutOrder": 0,
+          "Text": "x1",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 10,
+          "Rotation": 0,
+          "Font": "Enum.Font.Gotham",
+          "BackgroundTransparency": 1,
+          "Position": "{0.100000001, 0}, {0.649999976, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Left",
+          "TextYAlignment": "Enum.TextYAlignment.Center",
+          "TextScaled": false,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        }
+       ],
+       "class": "Frame",
+       "name": "ItemTemplate",
+       "props": {
+        "Visible": false,
+        "LayoutOrder": 0,
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "AnchorPoint": "0, 0",
+        "Rotation": 0,
+        "BackgroundTransparency": 0,
+        "Position": "{0, 0}, {0, 0}",
+        "BackgroundColor3": "0.109804, 0.12549, 0.188235",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.200000003, 0}, {0.200000003, 0}"
+       }
+      }
+     ],
+     "class": "ScrollingFrame",
+     "name": "Content",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 1,
+      "Position": "{0.00999999978, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, -20}, {0.829999983, -10}"
+     }
+    }
+   ],
+   "class": "Frame",
+   "name": "Panel",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0,
+    "Position": "{0.150000006, 0}, {0.125, 0}",
+    "BackgroundColor3": "0.109804, 0.12549, 0.188235",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{0.699999988, 0}, {0.75, 0}"
+   }
+  }
+ ],
+ "class": "ScreenGui",
+ "name": "InventoryScreen",
+ "props": []
+}

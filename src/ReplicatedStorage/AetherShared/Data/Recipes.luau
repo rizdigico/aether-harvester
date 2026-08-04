@@ -1,307 +1,83 @@
---
--- Recipes.luau
--- Crafting recipes module for Aether Harvester Simulator
---
-
+-- Recipes data module
+-- Single source of truth for crafting recipes, mirroring CraftingService.Recipes
 local Recipes = {}
 
---[[
-    RECIPE STRUCTURE:
-    {
-        name = "RecipeName",
-        displayName = "Display Name",
-        description = "Description",
-        result = {
-            itemName = "ResultItem",
-            quantity = 1
+Recipes.Database = {
+    ["crystal_pickaxe"] = {
+        Id = "crystal_pickaxe",
+        Name = "Crystal Pickaxe",
+        ResultItemId = "crystal_pickaxe",
+        Ingredients = {
+            { ItemId = "crystal_fragment", Amount = 10 },
+            { ItemId = "aether_shard", Amount = 50 },
         },
-        ingredients = {
-            {
-                itemName = "Ingredient1",
-                quantity = 1
-            },
-            {
-                itemName = "Ingredient2",
-                quantity = 2
-            }
-        },
-        levelRequirement = 1,
-        craftingTime = 5,
-        energyCost = 0,
-        successChance = 1.0,
-        failureEffects = {
-            {
-                itemName = "Ash",
-                quantity = 1
-            }
-        }
-    }
-]]
-
--- Base recipes
-Recipes.WoodenPickaxe = {
-    name = "WoodenPickaxe",
-    displayName = "Wooden Pickaxe",
-    description = "A basic pickaxe for mining.",
-    result = {
-        itemName = "WoodenPickaxe",
-        quantity = 1,
+        RequiredLevel = 10,
+        CraftingTime = 5,
     },
-    ingredients = {
-        {
-            itemName = "Wood",
-            quantity = 5,
+    ["aether_pickaxe"] = {
+        Id = "aether_pickaxe",
+        Name = "Aether Pickaxe",
+        ResultItemId = "aether_pickaxe",
+        Ingredients = {
+            { ItemId = "aether_crystal", Amount = 5 },
+            { ItemId = "storm_essence", Amount = 3 },
+            { ItemId = "void_shard", Amount = 1 },
         },
-        {
-            itemName = "Stone",
-            quantity = 3,
-        },
+        RequiredLevel = 25,
+        CraftingTime = 15,
     },
-    levelRequirement = 1,
-    craftingTime = 5,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
-Recipes.StoneAxe = {
-    name = "StoneAxe",
-    displayName = "Stone Axe",
-    description = "A basic axe for chopping.",
-    result = {
-        itemName = "StoneAxe",
-        quantity = 1,
+    ["pet_food"] = {
+        Id = "pet_food",
+        Name = "Pet Food",
+        ResultItemId = "pet_food",
+        Ingredients = {
+            { ItemId = "ancient_wood", Amount = 5 },
+            { ItemId = "aether_shard", Amount = 10 },
+        },
+        RequiredLevel = 5,
+        CraftingTime = 3,
     },
-    ingredients = {
-        {
-            itemName = "Stone",
-            quantity = 8,
+    ["energy_potion"] = {
+        Id = "energy_potion",
+        Name = "Energy Potion",
+        ResultItemId = "energy_potion",
+        Ingredients = {
+            { ItemId = "crystal_fragment", Amount = 3 },
+            { ItemId = "aether_shard", Amount = 15 },
         },
-        {
-            itemName = "Wood",
-            quantity = 3,
-        },
+        RequiredLevel = 3,
+        CraftingTime = 2,
     },
-    levelRequirement = 2,
-    craftingTime = 7,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
-Recipes.CopperSword = {
-    name = "CopperSword",
-    displayName = "Copper Sword",
-    description = "A basic sword for combat.",
-    result = {
-        itemName = "CopperSword",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "CopperOre",
-            quantity = 5,
+    ["harvest_boost"] = {
+        Id = "harvest_boost",
+        Name = "Harvest Boost",
+        ResultItemId = "harvest_boost",
+        Ingredients = {
+            { ItemId = "storm_essence", Amount = 2 },
+            { ItemId = "aether_crystal", Amount = 1 },
         },
-        {
-            itemName = "Wood",
-            quantity = 3,
-        },
-    },
-    levelRequirement = 3,
-    craftingTime = 10,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
-Recipes.IronPickaxe = {
-    name = "IronPickaxe",
-    displayName = "Iron Pickaxe",
-    description = "A stronger pickaxe for mining.",
-    result = {
-        itemName = "IronPickaxe",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "IronOre",
-            quantity = 8,
-        },
-        {
-            itemName = "Wood",
-            quantity = 5,
-        },
-    },
-    levelRequirement = 4,
-    craftingTime = 12,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
-Recipes.HealthPotion = {
-    name = "HealthPotion",
-    displayName = "Health Potion",
-    description = "Restores 25% of maximum health.",
-    result = {
-        itemName = "HealthPotion",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "AetherShard",
-            quantity = 2,
-        },
-        {
-            itemName = "Water",
-            quantity = 1,
-        },
-    },
-    levelRequirement = 2,
-    craftingTime = 8,
-    energyCost = 0,
-    successChance = 0.95,
-    failureEffects = {
-        {
-            itemName = "Ash",
-            quantity = 1,
-        },
+        RequiredLevel = 15,
+        CraftingTime = 10,
     },
 }
 
-Recipes.ManaPotion = {
-    name = "ManaPotion",
-    displayName = "Mana Potion",
-    description = "Restores 25% of maximum mana.",
-    result = {
-        itemName = "ManaPotion",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "AetherShard",
-            quantity = 3,
-        },
-        {
-            itemName = "Water",
-            quantity = 1,
-        },
-    },
-    levelRequirement = 3,
-    craftingTime = 10,
-    energyCost = 0,
-    successChance = 0.95,
-    failureEffects = {
-        {
-            itemName = "Ash",
-            quantity = 1,
-        },
-    },
-}
-
-Recipes.Workbench = {
-    name = "Workbench",
-    displayName = "Workbench",
-    description = "A crafting station for building and crafting.",
-    result = {
-        itemName = "Workbench",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "Wood",
-            quantity = 15,
-        },
-        {
-            itemName = "Stone",
-            quantity = 10,
-        },
-    },
-    levelRequirement = 3,
-    craftingTime = 20,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
--- Additional recipes
-Recipes.Furnace = {
-    name = "Furnace",
-    displayName = "Furnace",
-    description = "A smelting station for turning ores into metals.",
-    result = {
-        itemName = "Furnace",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "Stone",
-            quantity = 12,
-        },
-        {
-            itemName = "IronOre",
-            quantity = 5,
-        },
-    },
-    levelRequirement = 5,
-    craftingTime = 30,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
-Recipes.ArmorSet = {
-    name = "ArmorSet",
-    displayName = "Basic Armor Set",
-    description = "A set of basic armor for protection.",
-    result = {
-        itemName = "ArmorSet",
-        quantity = 1,
-    },
-    ingredients = {
-        {
-            itemName = "Leather",
-            quantity = 10,
-        },
-        {
-            itemName = "IronOre",
-            quantity = 5,
-        },
-    },
-    levelRequirement = 4,
-    craftingTime = 15,
-    energyCost = 0,
-    successChance = 1.0,
-}
-
--- Function to get all recipes
 function Recipes.GetAll()
-    local allRecipes = {}
-    for name, recipe in pairs(Recipes) do
-        table.insert(allRecipes, { name = name, recipe = recipe })
-    end
-    return allRecipes
+    return Recipes.Database
 end
 
--- Function to get recipe by name
-function Recipes.Get(name)
-    return Recipes[name]
+function Recipes.Get(recipeId)
+    return Recipes.Database[recipeId]
 end
 
--- Function to check if player can craft recipe
-function Recipes.CanCraft(player, recipeName)
-    local playerLevel = player:GetAttribute("Level") or 1
-    local recipe = Recipes[recipeName]
-    if not recipe then
-        return false, "Recipe not found."
+function Recipes.GetAvailable(playerLevel)
+    local available = {}
+    playerLevel = playerLevel or 1
+    for _, recipe in pairs(Recipes.Database) do
+        if playerLevel >= recipe.RequiredLevel then
+            table.insert(available, recipe)
+        end
     end
-    if playerLevel < recipe.levelRequirement then
-        return false, string.format("You need level %d to craft this.", recipe.levelRequirement)
-    end
-    return true
-end
-
--- Function to get ingredients for recipe
-function Recipes.GetIngredients(recipeName)
-    local recipe = Recipes[recipeName]
-    if not recipe then
-        return nil, "Recipe not found."
-    end
-    return recipe.ingredients
+    return available
 end
 
 return Recipes

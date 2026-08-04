@@ -1,0 +1,68 @@
+-- Aether Harvester Simulator - Server Main
+-- Initializes all game services
+
+local ServerMain = {}
+
+local Services = {}
+
+function ServerMain.Initialize()
+    print("[ServerMain] Initializing Aether Harvester Simulator...")
+
+    -- Initialize services in dependency order
+    Services.WorldManager = require(game.ServerScriptService.AetherServer.GameServices.WorldManager)
+    Services.NodeManager = require(game.ServerScriptService.AetherServer.GameServices.NodeManager)
+    Services.PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+    Services.QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
+    Services.CreatureService = require(game.ServerScriptService.AetherServer.GameServices.CreatureService)
+    Services.EconomyService = require(game.ServerScriptService.AetherServer.GameServices.EconomyService)
+    Services.PetService = require(game.ServerScriptService.AetherServer.GameServices.PetService)
+    Services.AchievementService = require(game.ServerScriptService.AetherServer.GameServices.AchievementService)
+    Services.UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
+    Services.TradingService = require(game.ServerScriptService.AetherServer.GameServices.TradingService)
+    Services.GuildService = require(game.ServerScriptService.AetherServer.GameServices.GuildService)
+    Services.EventService = require(game.ServerScriptService.AetherServer.GameServices.EventService)
+    Services.CraftingService = require(game.ServerScriptService.AetherServer.GameServices.CraftingService)
+    Services.DailyRewardsService = require(game.ServerScriptService.AetherServer.GameServices.DailyRewardsService)
+    Services.MailService = require(game.ServerScriptService.AetherServer.GameServices.MailService)
+    Services.ChatService = require(game.ServerScriptService.AetherServer.GameServices.ChatService)
+    Services.AnalyticsService = require(game.ServerScriptService.AetherServer.GameServices.AnalyticsService)
+    Services.AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+    Services.CosmeticService = require(game.ServerScriptService.AetherServer.GameServices.CosmeticService)
+    Services.BattlePassService = require(game.ServerScriptService.AetherServer.GameServices.BattlePassService)
+    Services.MarketplaceService = require(game.ServerScriptService.AetherServer.GameServices.MarketplaceService)
+    Services.LeaderboardService = require(game.ServerScriptService.AetherServer.GameServices.LeaderboardService)
+    Services.ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
+    Services.RewardService = require(game.ServerScriptService.AetherServer.GameServices.RewardService)
+
+    -- Initialize each service
+    for _, service in pairs(Services) do
+        if service.Initialize then
+            service.Initialize()
+        end
+    end
+
+    -- Setup player joining
+    game.Players.PlayerAdded:Connect(function(player)
+        Services.PlayerDataService.OnPlayerAdded(player)
+        Services.AchievementService.CheckAllAchievements(player)
+    end)
+
+    -- Process players already in the game (Studio play mode, script reloads)
+    for _, player in ipairs(game.Players:GetPlayers()) do
+        Services.PlayerDataService.OnPlayerAdded(player)
+        Services.AchievementService.CheckAllAchievements(player)
+    end
+
+    -- Setup player leaving
+    game.Players.PlayerRemoving:Connect(function(player)
+        Services.PlayerDataService.OnPlayerRemoving(player)
+    end)
+
+    print("[ServerMain] Server initialized successfully!")
+end
+
+function ServerMain.GetService(serviceName)
+    return Services[serviceName]
+end
+
+return ServerMain

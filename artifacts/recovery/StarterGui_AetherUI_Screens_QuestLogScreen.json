@@ -1,0 +1,340 @@
+{
+ "children": [
+  {
+   "children": [
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    }
+   ],
+   "class": "Frame",
+   "name": "Background",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0.15000000596046448,
+    "Position": "{0, 0}, {0, 0}",
+    "BackgroundColor3": "0.0509804, 0.105882, 0.164706",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{1, 0}, {1, 0}"
+   }
+  },
+  {
+   "children": [
+    {
+     "class": "UICorner",
+     "name": "UICorner",
+     "children": []
+    },
+    {
+     "class": "UIStroke",
+     "name": "UIStroke",
+     "children": []
+    },
+    {
+     "class": "UIGradient",
+     "name": "UIGradient",
+     "children": []
+    },
+    {
+     "children": [
+      {
+       "class": "UIGradient",
+       "name": "UIGradient",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "Title",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.5, 0}, {1, 0}",
+        "TextColor3": "0.392157, 0.862745, 1",
+        "LayoutOrder": 0,
+        "Text": "QUEST LOG",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 24,
+        "Rotation": 0,
+        "Font": "Enum.Font.GothamBold",
+        "BackgroundTransparency": 1,
+        "Position": "{0.0199999996, 0}, {0, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Left",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        }
+       ],
+       "class": "TextButton",
+       "name": "CloseButton",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.0799999982, 0}, {0.5, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "\u2715",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 16,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 0,
+        "Position": "{0.920000017, 0}, {0.25, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.0784314, 0.0862745, 0.137255"
+       }
+      }
+     ],
+     "class": "Frame",
+     "name": "TitleBar",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 0,
+      "Position": "{0, 0}, {0, 0}",
+      "BackgroundColor3": "0.0784314, 0.0862745, 0.137255",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, 0}, {0.0700000003, 0}"
+     }
+    },
+    {
+     "children": [
+      {
+       "class": "UIListLayout",
+       "name": "UIListLayout",
+       "children": []
+      },
+      {
+       "children": [],
+       "class": "TextLabel",
+       "name": "EmptyState",
+       "props": {
+        "Visible": true,
+        "TextWrapped": true,
+        "AnchorPoint": "0, 0",
+        "ZIndex": 1,
+        "BorderSizePixel": 1,
+        "Size": "{0.800000012, 0}, {0.100000001, 0}",
+        "TextColor3": "0.901961, 0.921569, 0.960784",
+        "LayoutOrder": 0,
+        "Text": "No active quests",
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "TextSize": 18,
+        "Rotation": 0,
+        "Font": "Enum.Font.Gotham",
+        "BackgroundTransparency": 1,
+        "Position": "{0.100000001, 0}, {0.400000006, 0}",
+        "TextXAlignment": "Enum.TextXAlignment.Center",
+        "TextYAlignment": "Enum.TextYAlignment.Center",
+        "TextScaled": true,
+        "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+       }
+      },
+      {
+       "children": [
+        {
+         "class": "UICorner",
+         "name": "UICorner",
+         "children": []
+        },
+        {
+         "class": "UIStroke",
+         "name": "UIStroke",
+         "children": []
+        },
+        {
+         "class": "UIGradient",
+         "name": "UIGradient",
+         "children": []
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "QuestName",
+         "props": {
+          "Visible": true,
+          "TextWrapped": true,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.699999988, 0}, {1, 0}",
+          "TextColor3": "0.901961, 0.921569, 0.960784",
+          "LayoutOrder": 0,
+          "Text": "Quest Title",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 14,
+          "Rotation": 0,
+          "Font": "Enum.Font.GothamMedium",
+          "BackgroundTransparency": 1,
+          "Position": "{0.0199999996, 0}, {0, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Left",
+          "TextYAlignment": "Enum.TextYAlignment.Center",
+          "TextScaled": true,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "QuestProgress",
+         "props": {
+          "Visible": true,
+          "TextWrapped": true,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.25, 0}, {1, 0}",
+          "TextColor3": "1, 0.717647, 0.301961",
+          "LayoutOrder": 0,
+          "Text": "0/5",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 12,
+          "Rotation": 0,
+          "Font": "Enum.Font.GothamBold",
+          "BackgroundTransparency": 1,
+          "Position": "{0.720000029, 0}, {0, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Right",
+          "TextYAlignment": "Enum.TextYAlignment.Center",
+          "TextScaled": true,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "QuestDesc",
+         "props": {
+          "Visible": true,
+          "TextWrapped": true,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.899999976, 0}, {0.300000012, 0}",
+          "TextColor3": "0.54902, 0.588235, 0.666667",
+          "LayoutOrder": 0,
+          "Text": "Description text...",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 12,
+          "Rotation": 0,
+          "Font": "Enum.Font.Gotham",
+          "BackgroundTransparency": 1,
+          "Position": "{0.0199999996, 0}, {0.5, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Left",
+          "TextYAlignment": "Enum.TextYAlignment.Top",
+          "TextScaled": true,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        },
+        {
+         "children": [],
+         "class": "TextLabel",
+         "name": "QuestCheck",
+         "props": {
+          "Visible": false,
+          "TextWrapped": true,
+          "AnchorPoint": "0, 0",
+          "ZIndex": 1,
+          "BorderSizePixel": 1,
+          "Size": "{0.0799999982, 0}, {0.400000006, 0}",
+          "TextColor3": "0.298039, 0.686275, 0.313726",
+          "LayoutOrder": 0,
+          "Text": "\u2713",
+          "AutomaticSize": "Enum.AutomaticSize.None",
+          "TextSize": 12,
+          "Rotation": 0,
+          "Font": "Enum.Font.GothamBold",
+          "BackgroundTransparency": 1,
+          "Position": "{0.899999976, 0}, {0.300000012, 0}",
+          "TextXAlignment": "Enum.TextXAlignment.Center",
+          "TextYAlignment": "Enum.TextYAlignment.Center",
+          "TextScaled": true,
+          "BackgroundColor3": "0.639216, 0.635294, 0.647059"
+         }
+        }
+       ],
+       "class": "Frame",
+       "name": "QuestTemplate",
+       "props": {
+        "Visible": false,
+        "LayoutOrder": 0,
+        "AutomaticSize": "Enum.AutomaticSize.None",
+        "AnchorPoint": "0, 0",
+        "Rotation": 0,
+        "BackgroundTransparency": 0,
+        "Position": "{0, 0}, {0, 0}",
+        "BackgroundColor3": "0.14902, 0.164706, 0.235294",
+        "ZIndex": 1,
+        "BorderSizePixel": 0,
+        "Size": "{0.949999988, 0}, {0.0599999987, 0}"
+       }
+      }
+     ],
+     "class": "ScrollingFrame",
+     "name": "QuestList",
+     "props": {
+      "Visible": true,
+      "LayoutOrder": 0,
+      "AutomaticSize": "Enum.AutomaticSize.None",
+      "AnchorPoint": "0, 0",
+      "Rotation": 0,
+      "BackgroundTransparency": 1,
+      "Position": "{0.00999999978, 0}, {0.0700000003, 0}",
+      "BackgroundColor3": "0.639216, 0.635294, 0.647059",
+      "ZIndex": 1,
+      "BorderSizePixel": 0,
+      "Size": "{1, -20}, {0.829999983, -10}"
+     }
+    }
+   ],
+   "class": "Frame",
+   "name": "Panel",
+   "props": {
+    "Visible": true,
+    "LayoutOrder": 0,
+    "AutomaticSize": "Enum.AutomaticSize.None",
+    "AnchorPoint": "0, 0",
+    "Rotation": 0,
+    "BackgroundTransparency": 0,
+    "Position": "{0.150000006, 0}, {0.125, 0}",
+    "BackgroundColor3": "0.109804, 0.12549, 0.188235",
+    "ZIndex": 1,
+    "BorderSizePixel": 0,
+    "Size": "{0.699999988, 0}, {0.75, 0}"
+   }
+  }
+ ],
+ "class": "ScreenGui",
+ "name": "QuestLogScreen",
+ "props": []
+}
