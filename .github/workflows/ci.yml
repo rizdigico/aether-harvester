@@ -18,6 +18,7 @@ jobs:
           curl -LsSf -o rokit.zip https://github.com/rojo-rbx/rokit/releases/download/v1.2.0/rokit-1.2.0-linux-x86_64.zip
           unzip -o rokit.zip -d .rokit-bin
           echo "$GITHUB_WORKSPACE/.rokit-bin" >> "$GITHUB_PATH"
+          echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
           ./.rokit-bin/rokit --version
 
       - name: Install tools
