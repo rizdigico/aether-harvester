@@ -37,10 +37,6 @@
       "$className": "Workspace",
       "$properties": {
         "FilteringEnabled": true
-      },
-      "AetherWorld": {
-        "$className": "Folder",
-        "$path": "src/Workspace/AetherWorld"
       }
     }
   }

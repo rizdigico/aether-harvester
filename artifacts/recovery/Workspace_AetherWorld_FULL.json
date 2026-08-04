@@ -1,0 +1,4208 @@
+{
+ "class": "Folder",
+ "name": "AetherWorld",
+ "children": [
+  {
+   "class": "Folder",
+   "name": "Islands",
+   "children": [
+    {
+     "class": "Model",
+     "name": "FloatingMarket",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Tier1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 73, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "68, 8, 68"
+      },
+      {
+       "canCollide": true,
+       "color": "0.666667, 0.490196, 0.294118",
+       "class": "Part",
+       "name": "Cap",
+       "anchored": true,
+       "mat": "Enum.Material.WoodPlanks",
+       "cframe": "200, 81.5999985, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "74, 1.2000000476837158, 74"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.333333, 0.196078",
+       "class": "Part",
+       "name": "Counter1",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "222, 82.8000031, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 1.2000000476837158, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.784314, 0.313726",
+       "class": "Part",
+       "name": "StallLamp1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "226, 88.4000015, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "StallPost1",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "226, 84.1999969, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 4, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 15, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "41.81999969482422, 8, 41.81999969482422"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.784314, 0.313726",
+       "class": "Part",
+       "name": "StallLamp3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "226, 88.4000015, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.784314, 0.235294, 0.235294",
+       "class": "Part",
+       "name": "StallCanopy1",
+       "anchored": true,
+       "mat": "Enum.Material.Fabric",
+       "cframe": "226, 87, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "16, 1.5, 16"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "CenterPost",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "200, 85.6999969, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.5, 7, 1.5"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.784314, 0.313726",
+       "class": "Part",
+       "name": "StallLamp4",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "174, 88.4000015, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.862745, 0.666667, 0.156863",
+       "class": "Part",
+       "name": "StallCanopy2",
+       "anchored": true,
+       "mat": "Enum.Material.Fabric",
+       "cframe": "174, 87, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "16, 1.5, 16"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.333333, 0.196078",
+       "class": "Part",
+       "name": "Counter2",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "178, 82.8000031, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 1.2000000476837158, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.588235, 0.411765, 0.235294",
+       "class": "Part",
+       "name": "Crate1",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "212, 80.1999969, -118, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "Tier4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 42, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "20, 10, 20"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Barrel1",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "186, 80.4000015, -84, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 4, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Crate2",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "215, 80.3000031, -120, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.862745, 0.470588",
+       "class": "Part",
+       "name": "CenterLamp",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "200, 89.8000031, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 1.2000000476837158, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.333333, 0.196078",
+       "class": "Part",
+       "name": "Counter3",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "222, 82.8000031, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 1.2000000476837158, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "StallPost3",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "226, 84.1999969, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 4, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "Tier3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 53, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "36, 12, 36"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "StallPost2",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "174, 84.1999969, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 4, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.333333, 0.196078",
+       "class": "Part",
+       "name": "Counter4",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "178, 82.8000031, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 1.2000000476837158, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.784314, 0.313726",
+       "class": "Part",
+       "name": "StallLamp2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "174, 88.4000015, 26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 8, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "28.437599182128906, 8, 28.437599182128906"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.470588, 0.784314",
+       "class": "Part",
+       "name": "StallCanopy4",
+       "anchored": true,
+       "mat": "Enum.Material.Fabric",
+       "cframe": "174, 87, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "16, 1.5, 16"
+      },
+      {
+       "canCollide": true,
+       "color": "0.588235, 0.411765, 0.235294",
+       "class": "Part",
+       "name": "TopPlatform",
+       "anchored": true,
+       "mat": "Enum.Material.WoodPlanks",
+       "cframe": "200, 79, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "82, 4, 82"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Tier2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 64, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "52, 10, 52"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.627451, 0.352941",
+       "class": "Part",
+       "name": "StallCanopy3",
+       "anchored": true,
+       "mat": "Enum.Material.Fabric",
+       "cframe": "226, 87, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "16, 1.5, 16"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "Tip",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 32, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 12, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 22, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "61.5, 8, 61.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.588235, 0.411765, 0.235294",
+       "class": "Part",
+       "name": "MarketSign",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "200, 91, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "10, 2, 0.6000000238418579"
+      },
+      {
+       "canCollide": true,
+       "color": "0.156863, 0.109804, 0.0784314",
+       "class": "Part",
+       "name": "StallPost4",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "174, 84.1999969, -26, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 4, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.784314, 1",
+       "class": "SpawnLocation",
+       "name": "SpawnLocation",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "200, 82.5, -100, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 0.6000000238418579, 6"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "8, 146, 19.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "16, 146, 12.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.784314, 1",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "10, 144, 10.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "20, 146, 25.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "EmberPeaks",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.0980392, 0.0862745, 0.0784314",
+       "class": "Part",
+       "name": "Tip",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "100, 42, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 12, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.215686, 0.176471, 0.156863",
+       "class": "Part",
+       "name": "Tier3",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "100, 63, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "32, 12, 32"
+      },
+      {
+       "canCollide": true,
+       "color": "0.27451, 0.215686, 0.188235",
+       "class": "Part",
+       "name": "TopPlatform",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "100, 89, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "72, 4, 72"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.188235, 0.164706",
+       "class": "Part",
+       "name": "Tier1",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "100, 83, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "60, 8, 60"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.705882, 0.235294",
+       "class": "SpawnLocation",
+       "name": "SpawnLocation",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "100, 92.5, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 0.6000000238418579, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "100, 25, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "36.720001220703125, 8, 36.720001220703125"
+      },
+      {
+       "canCollide": true,
+       "color": "0.0980392, 0.0862745, 0.0784314",
+       "class": "Part",
+       "name": "Tier4",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "100, 52, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "18, 10, 18"
+      },
+      {
+       "canCollide": true,
+       "color": "0.215686, 0.176471, 0.156863",
+       "class": "Part",
+       "name": "Tier2",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "100, 74, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "46, 10, 46"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.705882, 0.235294",
+       "class": "Part",
+       "name": "Vent1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "120, 90.4000015, 218, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.470588, 0.156863",
+       "class": "Part",
+       "name": "Vent2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "78, 90.4000015, 184, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.0980392, 0.0862745, 0.0784314",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.CrackedLava",
+       "cframe": "126, 91.3000031, 176, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 5, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.470588, 0.156863",
+       "class": "Part",
+       "name": "LavaPool",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "100, 90.8000031, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "30, 1, 30"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "100, 18, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "24.969600677490234, 8, 24.969600677490234"
+      },
+      {
+       "canCollide": true,
+       "color": "0.215686, 0.176471, 0.156863",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.CrackedLava",
+       "cframe": "76, 91.5, 222, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 6, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "100, 32, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "54, 8, 54"
+      },
+      {
+       "canCollide": true,
+       "color": "0.215686, 0.176471, 0.156863",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Basalt",
+       "cframe": "118, 91.5, 194, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 5, 5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "SkySanctum",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PlatformLight",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "0, 62, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "31.211999893188477, 8, 31.211999893188477"
+      },
+      {
+       "canCollide": true,
+       "color": "0.345098, 0.509804, 0.313726",
+       "class": "Part",
+       "name": "GrassCap",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "0, 140.699997, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "82, 1.5, 82"
+      },
+      {
+       "canCollide": true,
+       "color": "0.294118, 0.333333, 0.352941",
+       "class": "Part",
+       "name": "Tier1",
+       "anchored": true,
+       "mat": "Enum.Material.Granite",
+       "cframe": "0, 130, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "70, 8, 70"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "41, 145, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Beacon",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "0, 152, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 18, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune4",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-28.9913788, 145, 28.9913788, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune8",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "28.9913788, 145, -28.9913788, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.176471, 0.203922, 0.235294",
+       "class": "Part",
+       "name": "Tier4",
+       "anchored": true,
+       "mat": "Enum.Material.Granite",
+       "cframe": "0, 98, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "20, 12, 20"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "0, 76, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "67.5, 8, 67.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.294118, 0.333333, 0.352941",
+       "class": "Part",
+       "name": "Tier2",
+       "anchored": true,
+       "mat": "Enum.Material.Granite",
+       "cframe": "0, 121, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "50, 10, 50"
+      },
+      {
+       "canCollide": false,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "GlowEffect",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "0, 142.800003, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "88, 2, 88"
+      },
+      {
+       "canCollide": true,
+       "color": "0.176471, 0.203922, 0.235294",
+       "class": "Part",
+       "name": "Tier3",
+       "anchored": true,
+       "mat": "Enum.Material.Granite",
+       "cframe": "0, 110, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "34, 12, 34"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune7",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-7.5315781e-15, 145, -41, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "28.9913788, 145, 28.9913788, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "0, 69, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "45.900001525878906, 8, 45.900001525878906"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "2.51052603e-15, 145, 41, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.176471, 0.203922, 0.235294",
+       "class": "Part",
+       "name": "Tip",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "0, 86, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 12, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.862745, 1",
+       "class": "SpawnLocation",
+       "name": "SpawnLocation",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "0, 143.5, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 1, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune5",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-41, 145, 5.02105207e-15, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.862745, 1",
+       "class": "Part",
+       "name": "Rune6",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-28.9913788, 145, -28.9913788, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.431373, 0.372549",
+       "class": "Part",
+       "name": "TopPlatform",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "0, 137, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "90, 6, 90"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CloudGardens",
+     "children": [
+      {
+       "class": "Sound",
+       "name": "WindAmbient",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 67, -1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "40.79999923706055, 8, 40.79999923706055"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock5",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "184, 84, -39, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 4, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 74, -1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "60, 8, 60"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "220, 84, 39, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 4, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "213, 85, 27, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 3, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 60, -1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "27.743999481201172, 8, 27.743999481201172"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "SpawnPoint",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "200, 83, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 1, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.588235, 0.784314, 0.588235",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "200, 80, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "80, 4, 80"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "227, 84, -35, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 6, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "173, 83, 27, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 2, 8"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "Tree_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.133333, 0.545098, 0.133333",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-171, 78, -167.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 10, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-181, 80, -160.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-184, 80, -172.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-168, 80, -159.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AncientRuins",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 56, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "51, 8, 51"
+      },
+      {
+       "class": "Sound",
+       "name": "MysticAmbient",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-237, 73, -212, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 0.509804, 0.431373",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "-200, 70, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "100, 6, 100"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-221, 73, -246, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 2, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock5",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-205, 75, -225, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 2, 7"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 63, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "75, 8, 75"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "SpawnPoint",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-200, 74, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 1, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-187, 73, -238, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 4, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-214, 73, -165, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 5, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 49, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "34.68000030517578, 8, 34.68000030517578"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalSpires",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.352941, 0.45098",
+       "class": "Part",
+       "name": "Tier2",
+       "anchored": true,
+       "mat": "Enum.Material.Slate",
+       "cframe": "-150, 94, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "42, 10, 42"
+      },
+      {
+       "canCollide": true,
+       "color": "0.137255, 0.156863, 0.215686",
+       "class": "Part",
+       "name": "Tip",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-150, 62, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 12, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.411765, 0.45098, 0.54902",
+       "class": "Part",
+       "name": "TopPlatform",
+       "anchored": true,
+       "mat": "Enum.Material.Slate",
+       "cframe": "-150, 109, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "62, 4, 62"
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.588235, 1",
+       "class": "Part",
+       "name": "Spire2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-164, 117.900002, 140, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 16.799999237060547, 7"
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.588235, 1",
+       "class": "Part",
+       "name": "Spire5",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-128, 116.099998, 144, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 11.199999809265137, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 1, 0.862745",
+       "class": "Part",
+       "name": "Glow6",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-156, 111.300003, 154, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-150, 38, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "21.50160026550293, 8, 21.50160026550293"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.823529, 1",
+       "class": "SpawnLocation",
+       "name": "SpawnLocation",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-150, 112.5, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 0.6000000238418579, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.137255, 0.156863, 0.215686",
+       "class": "Part",
+       "name": "Tier4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-150, 72, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "18, 10, 18"
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.588235, 1",
+       "class": "Part",
+       "name": "Glow5",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-128, 111.300003, 144, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.627451, 0.470588, 1",
+       "class": "Part",
+       "name": "Glow3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-144, 111.300003, 132, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-150, 45, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "31.6200008392334, 8, 31.6200008392334"
+      },
+      {
+       "canCollide": true,
+       "color": "0.372549, 0.411765, 0.509804",
+       "class": "Part",
+       "name": "Tier1",
+       "anchored": true,
+       "mat": "Enum.Material.Slate",
+       "cframe": "-150, 103, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "54, 8, 54"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.823529, 1",
+       "class": "Part",
+       "name": "Glow4",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-170, 111.300003, 168, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 1, 0.862745",
+       "class": "Part",
+       "name": "Spire6",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-156, 120.199997, 154, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 22.399999618530273, 7"
+      },
+      {
+       "canCollide": true,
+       "color": "0.784314, 1, 1",
+       "class": "Part",
+       "name": "CoreCrystal1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-150, 116, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 10, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.823529, 1",
+       "class": "Part",
+       "name": "Spire4",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-170, 118, 168, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 14, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.352941, 0.45098",
+       "class": "Part",
+       "name": "Tier3",
+       "anchored": true,
+       "mat": "Enum.Material.Slate",
+       "cframe": "-150, 83, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "30, 12, 30"
+      },
+      {
+       "canCollide": true,
+       "color": "0.627451, 0.470588, 1",
+       "class": "Part",
+       "name": "Spire3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-144, 121.599998, 132, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 25.200000762939453, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-150, 52, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "46.5, 8, 46.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.862745, 0.745098, 1",
+       "class": "Part",
+       "name": "CoreCrystal3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-168, 114, 138, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 10, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.823529, 1",
+       "class": "Part",
+       "name": "Glow1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-134, 111.300003, 162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.823529, 1",
+       "class": "Part",
+       "name": "Spire1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-134, 119.300003, 162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 19.600000381469727, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.588235, 1",
+       "class": "Part",
+       "name": "Glow2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-164, 111.300003, 140, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.705882, 0.784314, 1",
+       "class": "Part",
+       "name": "CoreCrystal2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-132, 114, 162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 10, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.45098, 0.490196, 0.588235",
+       "class": "Part",
+       "name": "Cap",
+       "anchored": true,
+       "mat": "Enum.Material.Slate",
+       "cframe": "-150, 111.599998, 150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "54, 1.2000000476837158, 54"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "VoidRifts",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-0.25, 100, 201.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "24.275999069213867, 8, 24.275999069213867"
+      },
+      {
+       "class": "Sound",
+       "name": "EtherealAmbient",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "24, 124, 187, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.196078, 0.470588",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "0, 120, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "70, 4, 70"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "SpawnPoint",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "0, 123, 200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 1, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-0.25, 107, 201.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "35.70000076293945, 8, 35.70000076293945"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-0.25, 114, 201.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "52.5, 8, 52.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "21, 125, 180, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 2, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-15, 125, 233, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock5",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "13, 125, 235, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 4, 7"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-33, 125, 232, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 2, 3"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalNode_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "194, 94.25, -199, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "VerdantIsle",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Trunk4",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-232, 72.5, -140, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 8, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.470588, 0.470588",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-236, 72.3000031, -164, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.137255, 0.235294, 0.117647",
+       "class": "Part",
+       "name": "Tier4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 32, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "22, 10, 22"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 12, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "69, 8, 69"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "Canopy1",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-180, 78.5, -132, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "9, 7, 9"
+      },
+      {
+       "canCollide": true,
+       "color": "0.411765, 0.411765, 0.411765",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-166, 72, -128, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 3, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.54902, 1, 0.54902",
+       "class": "SpawnLocation",
+       "name": "SpawnLocation",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-200, 72.5, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 0.6000000238418579, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "Canopy3",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-192, 78.5, -180, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "9, 7, 9"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "Canopy2",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-224, 78.5, -170, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "9, 7, 9"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.588235, 0.254902",
+       "class": "Part",
+       "name": "CanopyTop5",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-170, 82.5, -158, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.196078, 0.313726, 0.156863",
+       "class": "Part",
+       "name": "Tier3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 43, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "40, 12, 40"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "Canopy4",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-232, 78.5, -140, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "9, 7, 9"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.588235, 0.254902",
+       "class": "Part",
+       "name": "CanopyTop3",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-192, 82.5, -180, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Trunk1",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-180, 72.5, -132, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 8, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Trunk3",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-192, 72.5, -180, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 8, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.54902, 0.784314",
+       "class": "Part",
+       "name": "FlowerPatch1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-184, 71.3000031, -120, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 0.5, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.137255, 0.235294, 0.117647",
+       "class": "Part",
+       "name": "Tip",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 22, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "8, 12, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Trunk2",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-224, 72.5, -170, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 8, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.254902, 0.431373, 0.188235",
+       "class": "Part",
+       "name": "Tier1",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "-200, 63, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "76, 8, 76"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 5, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "46.91999816894531, 8, 46.91999816894531"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.392157, 0.176471",
+       "class": "Part",
+       "name": "Tier2",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "-200, 54, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "58, 10, 58"
+      },
+      {
+       "canCollide": true,
+       "color": "0.294118, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "TopPlatform",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "-200, 69, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "92, 4, 92"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.588235, 0.254902",
+       "class": "Part",
+       "name": "CanopyTop1",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-180, 82.5, -132, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, -2, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "31.90559959411621, 8, 31.90559959411621"
+      },
+      {
+       "canCollide": true,
+       "color": "0.235294, 0.509804, 0.215686",
+       "class": "Part",
+       "name": "Canopy5",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-170, 78.5, -158, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "9, 7, 9"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.588235, 0.254902",
+       "class": "Part",
+       "name": "CanopyTop4",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-232, 82.5, -140, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.901961, 0.470588",
+       "class": "Part",
+       "name": "FlowerPatch2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-218, 71.3000031, -182, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 0.5, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.27451, 0.54902, 0.215686",
+       "class": "Part",
+       "name": "Cap",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-200, 71.5999985, -150, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "84, 1.2000000476837158, 84"
+      },
+      {
+       "canCollide": true,
+       "color": "0.368627, 0.235294, 0.156863",
+       "class": "Part",
+       "name": "Trunk5",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-170, 72.5, -158, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 8, 2.5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.313726, 0.588235, 0.254902",
+       "class": "Part",
+       "name": "CanopyTop2",
+       "anchored": true,
+       "mat": "Enum.Material.LeafyGrass",
+       "cframe": "-224, 82.5, -170, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalNode_4",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "197, 94.25, -186, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "Tree_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-221, 78, -169, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-219, 78, -162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.133333, 0.545098, 0.133333",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-210, 76, -169, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 6, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-207, 78, -155, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalNode_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.784314, 0.392157, 1",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "215, 96, -191.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "227, 98, -190.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "201, 98, -179.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "211, 98, -187.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalNode_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "196, 98, -207.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.784314, 0.392157, 1",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "191, 96, -204.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "176, 98, -219.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "192, 98, -219.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "OreNode_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "1, 0.392157, 0.196078",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "117.75, 94.5, 185.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "113.75, 96.5, 195.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "113.75, 96.5, 186.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "114.75, 96.5, 194.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-26.5, 146, -17.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.784314, 1",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-12.5, 144, -10.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-15.5, 146, -21.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-5.5, 146, -6.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_10",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-211, 73.5, -192, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_6",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-3.25, 124.75, 198.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_8",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-15.25, 124.75, 195.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "OreNode_4",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-186, 105, -5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "Rock_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-190, 109, 17, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-198, 109, 13, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-178, 109, 21, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.501961, 0.501961, 0.501961",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-193, 107, 8, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 3, 4"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalCanyons",
+     "children": [
+      {
+       "class": "Sound",
+       "name": "CrystalAmbient",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "216, 92.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 4, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "211, 95.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 3, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.705882, 0.588235, 0.784314",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "200, 90, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "90, 5, 90"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 69.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "31.211999893188477, 8, 31.211999893188477"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "SpawnPoint",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "200, 93.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 1, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock5",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "204, 92.5, -242, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 4, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "239, 92.5, -203, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 6, 8"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 76.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "45.900001525878906, 8, 45.900001525878906"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "243, 93.5, -162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 2, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "200, 83.5, -200, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "67.5, 8, 67.5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_9",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-187, 73.5, -193, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_5",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.588235, 0.470588, 1",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Glass",
+       "cframe": "-15, 142.5, -25.9807625, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 7, 5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "HerbNode_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "214, 84.5, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_7",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-2.25, 124.75, 195.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "StormPeaks",
+     "children": [
+      {
+       "class": "Sound",
+       "name": "ThunderAmbient",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-220, 106, 12, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 7"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 79, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "20.808000564575195, 8, 20.808000564575195"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "SpawnPoint",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-200, 104, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 1, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock3",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-190, 106, 29, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 6, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.470588, 0.470588, 0.54902",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Grass",
+       "cframe": "-200, 100, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "60, 6, 60"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock4",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-183, 103, 22, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 2, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 86, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "30.600000381469727, 8, 30.600000381469727"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock2",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-188, 104, 29, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "6, 6, 6"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.392157, 0.392157",
+       "class": "Part",
+       "name": "Rock5",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-177, 106, -19, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "7, 6, 5"
+      },
+      {
+       "canCollide": true,
+       "color": "0.164706, 0.14902, 0.188235",
+       "class": "Part",
+       "name": "Skirt1",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-200, 93, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "45, 8, 45"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "HerbNode_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "203, 84.5, 5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "Rock_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-222, 108.5, 0.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-202, 108.5, -7.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.501961, 0.501961, 0.501961",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Rock",
+       "cframe": "-214, 106.5, -14.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 2, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-219, 108.5, -16.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "Tree_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.133333, 0.545098, 0.133333",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Wood",
+       "cframe": "-187, 77, -141, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 8, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-185, 79, -147, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-175, 79, -129, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-201, 79, -141, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "HerbNode_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_1",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "235.5, 88, 7, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_3",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "228.5, 88, -19, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "ResourceNode_2",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "212.5, 88, -9, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      },
+      {
+       "canCollide": true,
+       "color": "0.392157, 1, 0.392157",
+       "class": "Part",
+       "name": "Base",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "223.5, 86, -6, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "3, 3, 3"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "OreNode_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-194, 105, 11, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_4",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "1, 0.717647, 0.301961",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Glass",
+       "cframe": "-15, 142.5, 25.9807625, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 7, 5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_11",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-201, 73.5, -185, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "AetherNode_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.392157, 0.862745, 1",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Glass",
+       "cframe": "30, 142.5, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "5, 7, 5"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "CrystalNode_5",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "202, 94.25, -204, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "OreNode_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-212, 105, 3, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    },
+    {
+     "class": "Model",
+     "name": "HerbNode_4",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.498039, 0.8, 0.498039",
+       "class": "Part",
+       "name": "Core",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "202, 84.5, -12, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 2, 2"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Props",
+   "children": [
+    {
+     "canCollide": true,
+     "color": "0.431373, 0.862745, 1",
+     "class": "Part",
+     "name": "CrystalTree_4",
+     "anchored": true,
+     "mat": "Enum.Material.Glass",
+     "cframe": "216, 95.5, -186, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 6, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.54902, 0.862745",
+     "class": "Part",
+     "name": "AetherFlower_5",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "26, 142.300003, -14, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.509804, 0.509804, 0.529412",
+     "class": "Part",
+     "name": "FloatingRock_1",
+     "anchored": true,
+     "mat": "Enum.Material.Rock",
+     "cframe": "34, 144.300003, 10, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 5, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.745098, 0.313726",
+     "class": "Part",
+     "name": "MushroomCluster_1",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "184, 82.5, 12, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 3, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "0.588235, 0.470588, 1",
+     "class": "Part",
+     "name": "GlowingOrb_4",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-22, 122.5, 210, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": false,
+     "color": "0.588235, 0.470588, 1",
+     "class": "Part",
+     "name": "GlowingOrb_2",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-16, 122.5, 218, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.784314, 0.784314, 0.823529",
+     "class": "Part",
+     "name": "AncientPillar_1",
+     "anchored": true,
+     "mat": "Enum.Material.Marble",
+     "cframe": "-190, 77, -186, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 8, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.745098, 0.313726",
+     "class": "Part",
+     "name": "MushroomCluster_2",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "222, 82.5, -14, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 3, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.784314, 0.784314, 0.823529",
+     "class": "Part",
+     "name": "AncientPillar_4",
+     "anchored": true,
+     "mat": "Enum.Material.Marble",
+     "cframe": "-222, 77, -188, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 8, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.745098, 0.313726",
+     "class": "Part",
+     "name": "MushroomCluster_4",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "212, 82.5, 20, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 3, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.784314, 0.784314, 0.823529",
+     "class": "Part",
+     "name": "AncientPillar_5",
+     "anchored": true,
+     "mat": "Enum.Material.Marble",
+     "cframe": "-208, 77, -176, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 8, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.784314, 0.784314, 0.823529",
+     "class": "Part",
+     "name": "AncientPillar_3",
+     "anchored": true,
+     "mat": "Enum.Material.Marble",
+     "cframe": "-186, 77, -220, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 8, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.54902, 0.862745",
+     "class": "Part",
+     "name": "AetherFlower_4",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-8, 142.300003, 24, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.54902, 0.862745",
+     "class": "Part",
+     "name": "AetherFlower_3",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "22, 142.300003, 8, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.509804, 0.509804, 0.529412",
+     "class": "Part",
+     "name": "FloatingRock_3",
+     "anchored": true,
+     "mat": "Enum.Material.Rock",
+     "cframe": "-186, 105.5, 10, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 5, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "0.588235, 0.470588, 1",
+     "class": "Part",
+     "name": "GlowingOrb_1",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "14, 122.5, 184, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.431373, 0.862745, 1",
+     "class": "Part",
+     "name": "CrystalTree_3",
+     "anchored": true,
+     "mat": "Enum.Material.Glass",
+     "cframe": "-150, 114, 158, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 6, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.745098, 0.313726",
+     "class": "Part",
+     "name": "MushroomCluster_5",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "178, 82.5, 6, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 3, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.54902, 0.862745",
+     "class": "Part",
+     "name": "AetherFlower_1",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-20, 142.300003, 16, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.509804, 0.509804, 0.529412",
+     "class": "Part",
+     "name": "FloatingRock_5",
+     "anchored": true,
+     "mat": "Enum.Material.Rock",
+     "cframe": "-184, 74.0999985, -162, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 5, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.509804, 0.509804, 0.529412",
+     "class": "Part",
+     "name": "FloatingRock_2",
+     "anchored": true,
+     "mat": "Enum.Material.Rock",
+     "cframe": "214, 84.5, -8, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 5, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "0.588235, 0.470588, 1",
+     "class": "Part",
+     "name": "GlowingOrb_5",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "18, 122.5, 222, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.431373, 0.862745, 1",
+     "class": "Part",
+     "name": "CrystalTree_2",
+     "anchored": true,
+     "mat": "Enum.Material.Glass",
+     "cframe": "-164, 114, 144, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 6, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.745098, 0.313726",
+     "class": "Part",
+     "name": "MushroomCluster_3",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "196, 82.5, -22, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 3, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.509804, 0.509804, 0.529412",
+     "class": "Part",
+     "name": "FloatingRock_4",
+     "anchored": true,
+     "mat": "Enum.Material.Rock",
+     "cframe": "-188, 75.5, -214, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 5, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.784314, 0.784314, 0.823529",
+     "class": "Part",
+     "name": "AncientPillar_2",
+     "anchored": true,
+     "mat": "Enum.Material.Marble",
+     "cframe": "-214, 77, -212, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 8, 3"
+    },
+    {
+     "canCollide": true,
+     "color": "0.431373, 0.862745, 1",
+     "class": "Part",
+     "name": "CrystalTree_1",
+     "anchored": true,
+     "mat": "Enum.Material.Glass",
+     "cframe": "-138, 114, 144, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 6, 3"
+    },
+    {
+     "canCollide": false,
+     "color": "1, 0.54902, 0.862745",
+     "class": "Part",
+     "name": "AetherFlower_2",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-15, 142.300003, -18, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": false,
+     "color": "0.588235, 0.470588, 1",
+     "class": "Part",
+     "name": "GlowingOrb_3",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "0, 122.5, 192, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "2, 2, 2"
+    },
+    {
+     "canCollide": true,
+     "color": "0.431373, 0.862745, 1",
+     "class": "Part",
+     "name": "CrystalTree_5",
+     "anchored": true,
+     "mat": "Enum.Material.Glass",
+     "cframe": "188, 95.5, -214, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [],
+     "size": "3, 6, 3"
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Creatures",
+   "children": [
+    {
+     "attrs": {
+      "Speed": "24",
+      "Aggressive": "true",
+      "CreatureId": "ember_drake"
+     },
+     "class": "Model",
+     "name": "EmberDragon_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "120, 92.1999969, 186.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "120, 93.75, 186.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "12",
+      "Aggressive": "true",
+      "CreatureId": "sky_whale"
+     },
+     "class": "Model",
+     "name": "SkyWhale_1",
+     "children": [
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.627451, 0.862745",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "30, 158, 30.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 2.5, 10"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.27451, 0.54902, 0.784314",
+       "class": "Part",
+       "name": "Tail",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "30, 158, 23.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.5, 1.5, 3"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "1, 1, 1",
+       "class": "Part",
+       "name": "Eye",
+       "anchored": false,
+       "mat": "Enum.Material.Neon",
+       "cframe": "30.8999996, 159.300003, 34.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "0.699999988079071, 0.699999988079071, 0.699999988079071"
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "32.5999985, 158.199997, 31.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin2",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "27.3999996, 158.199997, 31.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "16",
+      "Aggressive": "false",
+      "CreatureId": "shadow_wolf"
+     },
+     "class": "Model",
+     "name": "AetherWolf_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "8, 144.75, -22, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "8, 143.199997, -22, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "24",
+      "Aggressive": "true",
+      "CreatureId": "ember_drake"
+     },
+     "class": "Model",
+     "name": "EmberDragon_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "112, 93.75, 208.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "112, 92.1999969, 208.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "12",
+      "Aggressive": "true",
+      "CreatureId": "sky_whale"
+     },
+     "class": "Model",
+     "name": "SkyWhale_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.627451, 0.862745",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "10, 175, -34.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 2.5, 10"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.27451, 0.54902, 0.784314",
+       "class": "Part",
+       "name": "Tail",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "10, 175, -41.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.5, 1.5, 3"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "1, 1, 1",
+       "class": "Part",
+       "name": "Eye",
+       "anchored": false,
+       "mat": "Enum.Material.Neon",
+       "cframe": "10.8999996, 176.300003, -30.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "0.699999988079071, 0.699999988079071, 0.699999988079071"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin2",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "7.4000001, 175.199997, -33.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "12.6000004, 175.199997, -33.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "20",
+      "Aggressive": "false",
+      "CreatureId": "crystal_fox"
+     },
+     "class": "Model",
+     "name": "CrystalFox_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "222, 95.75, -207.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "222, 94.1999969, -207.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "12",
+      "Aggressive": "false",
+      "CreatureId": "sky_whale"
+     },
+     "class": "Model",
+     "name": "SkyWhale_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.352941, 0.627451, 0.862745",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-40, 170, 20.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "4, 2.5, 10"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin2",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-42.5999985, 170.199997, 21.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "canCollide": true,
+       "color": "1, 1, 1",
+       "class": "Part",
+       "name": "Eye",
+       "anchored": false,
+       "mat": "Enum.Material.Neon",
+       "cframe": "-39.0999985, 171.300003, 24.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "0.699999988079071, 0.699999988079071, 0.699999988079071"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.27451, 0.54902, 0.784314",
+       "class": "Part",
+       "name": "Tail",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-40, 170, 13.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.5, 1.5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.431373, 0.705882, 0.921569",
+       "class": "Part",
+       "name": "Fin",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-37.4000015, 170.199997, 21.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 0.800000011920929, 4"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "WeldConstraint",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "CreatureId": "cloud_sprite"
+     },
+     "class": "Model",
+     "name": "CloudSprite_2",
+     "children": [
+      {
+       "canCollide": false,
+       "color": "0.901961, 0.960784, 1",
+       "class": "Part",
+       "name": "Head",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "205, 86.5, -30, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.600000023841858, 1.600000023841858, 1.600000023841858"
+      },
+      {
+       "canCollide": false,
+       "color": "0.705882, 0.862745, 1",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "205, 84.5, -30, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "24",
+      "Aggressive": "true",
+      "CreatureId": "ember_drake"
+     },
+     "class": "Model",
+     "name": "EmberDragon_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "90, 93.75, 192.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "1, 0.298039, 0.0980392",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "90, 92.1999969, 192.25, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "20",
+      "Aggressive": "false",
+      "CreatureId": "crystal_fox"
+     },
+     "class": "Model",
+     "name": "CrystalFox_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "208, 94.1999969, -189.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "208, 95.75, -189.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "16",
+      "Aggressive": "true",
+      "CreatureId": "shadow_wolf"
+     },
+     "class": "Model",
+     "name": "AetherWolf_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-18, 143.199997, 10, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-18, 144.75, 10, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "16",
+      "Aggressive": "false",
+      "CreatureId": "shadow_wolf"
+     },
+     "class": "Model",
+     "name": "AetherWolf_1",
+     "children": [
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "20, 143.199997, 8, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.698039, 0.698039, 0.898039",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "20, 144.75, 8, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "18",
+      "Aggressive": "true",
+      "CreatureId": "verdant_deer"
+     },
+     "class": "Model",
+     "name": "VerdantDeer_2",
+     "children": [
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-212, 73.75, -157.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-212, 72.1999969, -157.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "20",
+      "Aggressive": "true",
+      "CreatureId": "crystal_fox"
+     },
+     "class": "Model",
+     "name": "CrystalFox_2",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "194, 94.1999969, -203.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.8, 0.898039, 1",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "194, 95.75, -203.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "CreatureId": "cloud_sprite"
+     },
+     "class": "Model",
+     "name": "CloudSprite_1",
+     "children": [
+      {
+       "canCollide": false,
+       "color": "0.705882, 0.862745, 1",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "180, 84.5, -30, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2.5, 2.5, 2.5"
+      },
+      {
+       "canCollide": false,
+       "color": "0.901961, 0.960784, 1",
+       "class": "Part",
+       "name": "Head",
+       "anchored": true,
+       "mat": "Enum.Material.Neon",
+       "cframe": "180, 86.5, -30, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1.600000023841858, 1.600000023841858, 1.600000023841858"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "18",
+      "Aggressive": "true",
+      "CreatureId": "verdant_deer"
+     },
+     "class": "Model",
+     "name": "VerdantDeer_3",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-182, 73.75, -167.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      },
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-182, 72.1999969, -167.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      }
+     ]
+    },
+    {
+     "attrs": {
+      "Speed": "18",
+      "Aggressive": "true",
+      "CreatureId": "verdant_deer"
+     },
+     "class": "Model",
+     "name": "VerdantDeer_1",
+     "children": [
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Body",
+       "anchored": true,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-190, 72.1999969, -139.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "2, 1.5, 3"
+      },
+      {
+       "canCollide": true,
+       "color": "0.298039, 0.8, 0.4",
+       "class": "Part",
+       "name": "Head",
+       "anchored": false,
+       "mat": "Enum.Material.SmoothPlastic",
+       "cframe": "-190, 73.75, -139.75, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+       "children": [],
+       "size": "1, 1, 1"
+      },
+      {
+       "class": "WeldConstraint",
+       "name": "HeadWeld",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "class": "Folder",
+   "name": "Portals",
+   "children": [
+    {
+     "canCollide": true,
+     "color": "0.498039, 0.498039, 1",
+     "class": "Part",
+     "name": "Portal_5",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "184, 92.5, -212, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 5, 1"
+    },
+    {
+     "canCollide": true,
+     "color": "0.498039, 0.498039, 1",
+     "class": "Part",
+     "name": "Portal_1",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-14, 141.5, 12, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 5, 1"
+    },
+    {
+     "canCollide": true,
+     "color": "0.498039, 0.498039, 1",
+     "class": "Part",
+     "name": "Portal_4",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "0, 121.5, 212, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 5, 1"
+    },
+    {
+     "canCollide": true,
+     "color": "0.498039, 0.498039, 1",
+     "class": "Part",
+     "name": "Portal_3",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "-214, 103, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 5, 1"
+    },
+    {
+     "canCollide": true,
+     "color": "0.498039, 0.498039, 1",
+     "class": "Part",
+     "name": "Portal_2",
+     "anchored": true,
+     "mat": "Enum.Material.Neon",
+     "cframe": "186, 82.5, -4, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+     "children": [
+      {
+       "class": "PointLight",
+       "name": "PointLight",
+       "children": []
+      }
+     ],
+     "size": "3, 5, 1"
+    }
+   ]
+  }
+ ]
+}
