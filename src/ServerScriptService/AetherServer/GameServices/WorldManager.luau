@@ -146,6 +146,10 @@ function WorldManager.Initialize()
                 if type(islandId) ~= "string" then
                     return
                 end
+                -- Validate: island must be a registered playable island with a live instance
+                if not WorldManager.IslandDefs[islandId] then
+                    return
+                end
                 if not WorldManager.GetIslandInstance(islandId) then
                     return
                 end

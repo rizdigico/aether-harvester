@@ -19,26 +19,76 @@ return {
     {
         name = "PureMath.XPRequiredForLevel",
         tests = {
-            { name = "level 1 -> 100", fn = function() expectEqual(PureMath.XPRequiredForLevel(1), 100, "lvl1") end },
-            { name = "level 2 -> 150", fn = function() expectEqual(PureMath.XPRequiredForLevel(2), 150, "lvl2") end },
-            { name = "level 5 -> 506 (1.5^4*100)", fn = function() expectEqual(PureMath.XPRequiredForLevel(5), 506, "lvl5") end },
+            {
+                name = "level 1 -> 100",
+                fn = function()
+                    expectEqual(PureMath.XPRequiredForLevel(1), 100, "lvl1")
+                end,
+            },
+            {
+                name = "level 2 -> 150",
+                fn = function()
+                    expectEqual(PureMath.XPRequiredForLevel(2), 150, "lvl2")
+                end,
+            },
+            {
+                name = "level 5 -> 506 (1.5^4*100)",
+                fn = function()
+                    expectEqual(PureMath.XPRequiredForLevel(5), 506, "lvl5")
+                end,
+            },
         },
     },
     {
         name = "PureMath.Clamp",
         tests = {
-            { name = "clamps above max", fn = function() expectEqual(PureMath.Clamp(150, 0, 100), 100, "high") end },
-            { name = "clamps below min", fn = function() expectEqual(PureMath.Clamp(-5, 0, 100), 0, "low") end },
-            { name = "keeps in range", fn = function() expectEqual(PureMath.Clamp(42, 0, 100), 42, "mid") end },
+            {
+                name = "clamps above max",
+                fn = function()
+                    expectEqual(PureMath.Clamp(150, 0, 100), 100, "high")
+                end,
+            },
+            {
+                name = "clamps below min",
+                fn = function()
+                    expectEqual(PureMath.Clamp(-5, 0, 100), 0, "low")
+                end,
+            },
+            {
+                name = "keeps in range",
+                fn = function()
+                    expectEqual(PureMath.Clamp(42, 0, 100), 42, "mid")
+                end,
+            },
         },
     },
     {
         name = "PureMath.FormatNumber",
         tests = {
-            { name = "formats millions", fn = function() expectEqual(PureMath.FormatNumber(1000000), "1,000,000", "1M") end },
-            { name = "formats thousands", fn = function() expectEqual(PureMath.FormatNumber(1234), "1,234", "1k") end },
-            { name = "formats small", fn = function() expectEqual(PureMath.FormatNumber(42), "42", "42") end },
-            { name = "formats zero", fn = function() expectEqual(PureMath.FormatNumber(0), "0", "zero") end },
+            {
+                name = "formats millions",
+                fn = function()
+                    expectEqual(PureMath.FormatNumber(1000000), "1,000,000", "1M")
+                end,
+            },
+            {
+                name = "formats thousands",
+                fn = function()
+                    expectEqual(PureMath.FormatNumber(1234), "1,234", "1k")
+                end,
+            },
+            {
+                name = "formats small",
+                fn = function()
+                    expectEqual(PureMath.FormatNumber(42), "42", "42")
+                end,
+            },
+            {
+                name = "formats zero",
+                fn = function()
+                    expectEqual(PureMath.FormatNumber(0), "0", "zero")
+                end,
+            },
         },
     },
     {

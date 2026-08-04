@@ -29,6 +29,9 @@ function ChatService:SetupChannels()
     local SendMessage = Remotes:FindFirstChild("SendChatMessage")
     if SendMessage then
         SendMessage.OnServerEvent:Connect(function(player, channelId, message)
+            if type(channelId) ~= "string" or type(message) ~= "string" then
+                return
+            end
             ChatService:HandleMessage(player, channelId, message)
         end)
     end

@@ -125,7 +125,7 @@ function PetService.Initialize()
     local EquipPet = Remotes:FindFirstChild("EquipPet")
     if EquipPet then
         EquipPet.OnServerEvent:Connect(function(player, petKey)
-            if petKey == nil then
+            if type(petKey) ~= "number" and type(petKey) ~= "string" then
                 return
             end
             local data = PlayerDataService.GetData(player)

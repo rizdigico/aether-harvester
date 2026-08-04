@@ -8,6 +8,9 @@
       "AetherShared": {
         "$path": "src/ReplicatedStorage/AetherShared"
       },
+      "IntegrationTests": {
+        "$path": "tests/integration"
+      },
       "TestEZ": {
         "$path": "vendor/testez/src"
       }
@@ -41,9 +44,8 @@
 
     "Workspace": {
       "$className": "Workspace",
-      "AetherWorld": {
-        "$className": "Folder",
-        "$path": "src/Workspace/AetherWorld"
+      "$properties": {
+        "FilteringEnabled": true
       }
     }
   }

@@ -11,6 +11,7 @@ local QuestService = require(game.ServerScriptService.AetherServer.GameServices.
 local AchievementService = require(game.ServerScriptService.AetherServer.GameServices.AchievementService)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local EventService = require(game.ServerScriptService.AetherServer.GameServices.EventService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
@@ -168,6 +169,11 @@ function NodeManager.Initialize()
                 end
             end
             if not node then
+                return
+            end
+
+            -- Rate limit: max one harvest per second per player
+            if not RateLimiter.Check(player, "HarvestResource", 1) then
                 return
             end
 

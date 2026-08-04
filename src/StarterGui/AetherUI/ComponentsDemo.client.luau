@@ -1,5 +1,5 @@
 --!strict
--- ComponentsDemo.luau
+-- ComponentsDemo.client.luau
 -- Visual QA showcase for AetherUI component library.
 -- Demonstrates 8+ components in a single screen.
 

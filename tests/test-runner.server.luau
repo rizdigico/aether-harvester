@@ -7,8 +7,9 @@ local TestBootstrap = TestEZ.TestBootstrap
 local results = TestBootstrap:run({
     testRoots = {
         game.ReplicatedStorage.AetherShared,
+        game.ReplicatedStorage.IntegrationTests,
     },
-    runnerName = "AetherHarvesterUnitTests",
+    runnerName = "AetherHarvesterIntegrationTests",
     isCli = false,
 })
 

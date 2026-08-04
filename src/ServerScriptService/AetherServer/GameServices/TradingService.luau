@@ -1,5 +1,6 @@
 local TradingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 TradingService.ActiveTrades = {}
 
@@ -16,6 +17,10 @@ function TradingService.Initialize()
     if CreateTrade then
         CreateTrade.OnServerEvent:Connect(function(player, offerItems, requestItems)
             if type(offerItems) ~= "table" or type(requestItems) ~= "table" then
+                return
+            end
+            -- Rate limit: max one trade creation per 2 seconds per player
+            if not RateLimiter.Check(player, "CreateTrade", 2) then
                 return
             end
             TradingService.CreateTrade(player, offerItems, requestItems)

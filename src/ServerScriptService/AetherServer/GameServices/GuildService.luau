@@ -2,6 +2,7 @@ local GuildService = {}
 local DataStoreService = game:GetService("DataStoreService")
 local GuildDataStore = DataStoreService:GetDataStore("GuildData_v1")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 GuildService.Guilds = {}
 GuildService.GuildIdCounter = 1
@@ -38,6 +39,10 @@ function GuildService.Initialize()
     if CreateGuild then
         CreateGuild.OnServerEvent:Connect(function(player, guildName, description)
             if type(guildName) ~= "string" then
+                return
+            end
+            -- Rate limit: max one guild creation per 5 seconds per player
+            if not RateLimiter.Check(player, "CreateGuild", 5) then
                 return
             end
             local guildId, guild = GuildService.CreateGuild(player, guildName, description)
@@ -112,6 +117,21 @@ function GuildService.Initialize()
 end
 
 function GuildService.CreateGuild(player, guildName, description)
+    -- VALIDATION: name length (3-24 chars), case-insensitive uniqueness, desc cap
+    local nameLen = utf8.len(guildName) or 0
+    if nameLen < 3 or nameLen > 24 then
+        return nil, "Guild name must be 3-24 characters"
+    end
+    local normalizedName = string.lower(guildName)
+    for _, existing in pairs(GuildService.Guilds) do
+        if type(existing.Name) == "string" and string.lower(existing.Name) == normalizedName then
+            return nil, "A guild with that name already exists"
+        end
+    end
+    if type(description) == "string" and #description > 200 then
+        description = description:sub(1, 200)
+    end
+
     local existingGuild = GuildService:GetGuildByPlayer(player)
     if existingGuild then
         return nil, "Already in a guild"

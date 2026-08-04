@@ -1,5 +1,6 @@
 local MarketplaceService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 MarketplaceService.Listings = {}
 MarketplaceService.ListingIdCounter = 1
@@ -25,6 +26,10 @@ function MarketplaceService.Initialize()
     if CreateListing then
         CreateListing.OnServerEvent:Connect(function(player, itemId, amount, price)
             if type(itemId) ~= "string" or type(amount) ~= "number" or type(price) ~= "number" then
+                return
+            end
+            -- Rate limit: max one listing creation per 2 seconds per player
+            if not RateLimiter.Check(player, "CreateListing", 2) then
                 return
             end
             MarketplaceService.CreateListing(player, itemId, math.floor(amount), math.floor(price))
