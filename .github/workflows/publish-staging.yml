@@ -7,7 +7,7 @@ name: Publish Staging
 on:
   workflow_dispatch:
   push:
-    branches: [staging]
+    branches: [master]
 
 jobs:
   publish-staging:
