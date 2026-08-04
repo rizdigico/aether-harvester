@@ -9,6 +9,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
 local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
 local AchievementService = require(game.ServerScriptService.AetherServer.GameServices.AchievementService)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
@@ -64,6 +65,20 @@ function NodeManager.ProcessHarvest(player, node)
         return false, "Node is on cooldown"
     end
 
+    -- Distance validation (P1: prevent harvesting from anywhere)
+    local MAX_HARVEST_DISTANCE = 30
+    local character = player.Character
+    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+    local nodePivot = pcall(function()
+        return node:GetPivot()
+    end) and node:GetPivot()
+    if hrp and nodePivot then
+        local distance = (hrp.Position - nodePivot.Position).Magnitude
+        if distance > MAX_HARVEST_DISTANCE then
+            return false, "Too far from node"
+        end
+    end
+
     local data = PlayerDataService.GetData(player)
     if not data then
         return false, "No player data"
@@ -93,6 +108,11 @@ function NodeManager.ProcessHarvest(player, node)
     -- Check achievements after harvest
     if AchievementService.CheckAllAchievements then
         AchievementService.CheckAllAchievements(player)
+    end
+
+    -- Anti-cheat heartbeat (wired: previously dead code)
+    if AntiCheatService and AntiCheatService.CheckPlayer then
+        AntiCheatService:CheckPlayer(player)
     end
 
     -- Update quests

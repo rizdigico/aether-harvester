@@ -79,13 +79,9 @@ function WorldManager.TeleportPlayerToIsland(player, islandId)
     if Remotes then
         local UpdateHUD = Remotes:FindFirstChild("UpdateHUD")
         if UpdateHUD then
-            UpdateHUD:FireClient(
-                player,
-                {
-                    Island = WorldManager.GetIslandDef(islandId) and WorldManager.GetIslandDef(islandId).Name
-                        or islandId,
-                }
-            )
+            UpdateHUD:FireClient(player, {
+                Island = WorldManager.GetIslandDef(islandId) and WorldManager.GetIslandDef(islandId).Name or islandId,
+            })
         end
     end
 
