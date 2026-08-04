@@ -1,45 +1,70 @@
--- Simulates 30 days of currency flow for 3 player types
--- Fixed seed for reproducibility
+-- Simulates 30 days of currency flow for 3 player types (backlog E7.3)
+-- Uses REAL constants from aether_constants.luau (recovered game build).
+-- Fixed seed for reproducibility.
 math.randomseed(42)
 
-local player_types = {
-    casual = { playtime = 1, shards = 0, gems = 0, inflation = false },
-    engaged = { playtime = 3, shards = 0, gems = 0, inflation = false },
-    whale = { playtime = 6, shards = 0, gems = 0, inflation = false },
+local Constants = require("./aether_constants")
+
+-- Player types: playtime in hours/day. Real yields/XP/sinks drive flow.
+local playerTypes = {
+    casual = { name = "Casual", playtimeHours = 1, shards = 0, pickaxeLevel = 0 },
+    engaged = { name = "Engaged", playtimeHours = 3, shards = 0, pickaxeLevel = 0 },
+    whale = { name = "Whale", playtimeHours = 6, shards = 0, pickaxeLevel = 0 },
 }
 
--- Constants
-local HARVEST_RATE = 50 -- shards per hour
-local QUEST_REWARD = 50 -- shards per day
-local DAILY_REWARD = 100 -- shards per day
-local UPGRADE_COST = 100 -- shards per upgrade
+local up = Constants.Upgrades.pickaxe_power_1 -- sink: base 100, x1.5, max 10
 
--- Simulate 30 days
-for _ = 1, 30 do
-    for _, player in pairs(player_types) do
-        -- Calculate daily earnings
-        local daily_earnings = (HARVEST_RATE * player.playtime) + QUEST_REWARD + DAILY_REWARD
-        player.shards = player.shards + daily_earnings
+-- Estimate shards/hr using the real AetherNode yield + respawn, with the
+-- +50% harvest_boost consumable multiplier (NodeManager.luau:94-96) applied.
+local node = Constants.NodeTypes.AetherNode
+local avgYield = (node.MinYield + node.MaxYield) / 2
+local harvestsPerHour = 3600 / node.RespawnTime -- 3600s/hr / 30s respawn
+local shardsPerHour = math.floor(avgYield * harvestsPerHour * Constants.HARVEST_BOOST_MULTIPLIER)
 
-        -- Calculate daily sinks
-        local daily_sinks = math.floor(player.shards / UPGRADE_COST) * UPGRADE_COST
-        player.shards = player.shards - daily_sinks
-
-        -- Check for inflation
-        if player.shards > 100000 then
-            player.inflation = true
+local function sinkUpgrades(shards, level)
+    local remaining = shards
+    while level < up.MaxLevel do
+        local cost = Constants.CalculateUpgradeCost(up, level)
+        if remaining >= cost then
+            remaining -= cost
+            level += 1
+        else
+            break
         end
+    end
+    return remaining, level
+end
+
+for day = 1, 30 do
+    for _, p in pairs(playerTypes) do
+        -- Harvest income (real yields) + daily login reward (real calendar).
+        p.shards += shardsPerHour * p.playtimeHours
+        local daily = Constants.DailyCalendar[((day - 1) % #Constants.DailyCalendar) + 1]
+        p.shards += daily.Currency
+        p.shards += (daily.Amount or 0) * (Constants.ItemValues[daily.Item] or 0)
+
+        -- Sink: spend on upgrades.
+        p.shards, p.pickaxeLevel = sinkUpgrades(p.shards, p.pickaxeLevel)
     end
 end
 
--- Print results
-for name, player in pairs(player_types) do
+for _, p in pairs(playerTypes) do
     print(
         string.format(
-            "Player Type: %s, Final Shards: %d, Inflation: %s",
-            name,
-            player.shards,
-            player.inflation and "Yes" or "No"
+            "Player Type: %s, Playtime %dh/day, Final Shards: %d, PickaxePowerI lv%d/10",
+            p.name,
+            p.playtimeHours,
+            p.shards,
+            p.pickaxeLevel
         )
     )
 end
+
+print(
+    string.format(
+        "\nReal yield model: %.1f shards/node avg, %d harvests/hr, %d shards/hr (with +50%% boost)",
+        avgYield,
+        harvestsPerHour,
+        shardsPerHour
+    )
+)

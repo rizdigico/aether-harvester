@@ -109,4 +109,89 @@ function Toast.new(props: ToastProps): Frame
     return frame
 end
 
+-- === Queue manager ===
+-- Parents toasts into a host container (auto-creates a UIListLayout), stacks them,
+-- and caps the number of visible toasts at MAX_VISIBLE. Older toasts are dismissed
+-- first when the cap is exceeded.
+
+local MAX_VISIBLE = 4
+
+export type ToastHost = {
+    Queue: (props: ToastProps) -> (),
+    Destroy: () -> (),
+    Clear: () -> (),
+}
+
+function Toast.enqueue(parent: Instance, props: ToastProps): ToastHost
+    local host = Instance.new("Frame")
+    host.Name = "AetherToastHost"
+    host.Size = UDim2.new(0, TOAST_WIDTH + Theme.Spacing.SP5 * 2, 0, 0)
+    host.AutomaticSize = Enum.AutomaticSize.Y
+    host.Position = UDim2.new(1, -Theme.Spacing.SP5, 0, Theme.Spacing.SP5)
+    host.AnchorPoint = Vector2.new(1, 0)
+    host.BackgroundTransparency = 1
+    host.ZIndex = Theme.ZIndex.TOAST
+    host.Parent = parent
+
+    local layout = Instance.new("UIListLayout")
+    layout.Name = "Layout"
+    layout.Padding = UDim.new(0, Theme.Spacing.SP3)
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+    layout.Parent = host
+
+    local stack: { Frame } = {}
+
+    local function reflow()
+        -- Dismiss oldest beyond the cap, oldest first.
+        while #stack > MAX_VISIBLE do
+            local oldest = table.remove(stack, 1)
+            local d = oldest:GetAttribute("_AetherDestroy")
+            if type(d) == "function" then
+                (d :: () -> ())()
+            else
+                oldest:Destroy()
+            end
+        end
+    end
+
+    local function queue(entry: ToastProps)
+        entry.Parent = host
+        local frame = Toast.new(entry)
+        table.insert(stack, frame)
+        reflow()
+        task.delay((entry.Duration or 4) + Theme.Animation.BASE * 2, function()
+            for i, f in ipairs(stack) do
+                if f == frame then
+                    table.remove(stack, i)
+                    break
+                end
+            end
+        end)
+    end
+
+    -- Queue the initial toast passed to enqueue()
+    if props and props.Text then
+        queue(props)
+    end
+
+    local function clear()
+        for _, f in ipairs(stack) do
+            local d = f:GetAttribute("_AetherDestroy")
+            if type(d) == "function" then
+                (d :: () -> ())()
+            else
+                f:Destroy()
+            end
+        end
+        table.clear(stack)
+        host:Destroy()
+    end
+
+    return {
+        Queue = queue,
+        Clear = clear,
+        Destroy = clear,
+    }
+end
+
 return Toast

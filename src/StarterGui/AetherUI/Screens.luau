@@ -269,7 +269,7 @@ do
         inst.LayoutOrder = 0
         inst.Text = "Lv. 1"
         inst.AutomaticSize = Enum.AutomaticSize.None
-        inst.TextSize = 1
+        inst.TextScaled = true
         inst.Rotation = 0
         inst.Font = Enum.Font.GothamBold
         inst.BackgroundTransparency = 0.5
@@ -298,7 +298,7 @@ do
         inst.LayoutOrder = 0
         inst.Text = "Shards: 0"
         inst.AutomaticSize = Enum.AutomaticSize.None
-        inst.TextSize = 1
+        inst.TextScaled = true
         inst.Rotation = 0
         inst.Font = Enum.Font.GothamBold
         inst.BackgroundTransparency = 0.5
@@ -327,7 +327,7 @@ do
         inst.LayoutOrder = 0
         inst.Text = "Tool: None"
         inst.AutomaticSize = Enum.AutomaticSize.None
-        inst.TextSize = 1
+        inst.TextScaled = true
         inst.Rotation = 0
         inst.Font = Enum.Font.GothamBold
         inst.BackgroundTransparency = 0.5
@@ -356,7 +356,7 @@ do
         inst.LayoutOrder = 0
         inst.Text = "Pet: None"
         inst.AutomaticSize = Enum.AutomaticSize.None
-        inst.TextSize = 1
+        inst.TextScaled = true
         inst.Rotation = 0
         inst.Font = Enum.Font.GothamBold
         inst.BackgroundTransparency = 0.5

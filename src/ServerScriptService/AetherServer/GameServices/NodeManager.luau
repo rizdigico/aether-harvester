@@ -11,6 +11,7 @@ local QuestService = require(game.ServerScriptService.AetherServer.GameServices.
 local AchievementService = require(game.ServerScriptService.AetherServer.GameServices.AchievementService)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local EventService = require(game.ServerScriptService.AetherServer.GameServices.EventService)
+local PetService = require(game.ServerScriptService.AetherServer.GameServices.PetService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
@@ -95,7 +96,13 @@ function NodeManager.ProcessHarvest(player, node)
         boost = 1.5
     end
 
-    yieldAmount = math.floor(yieldAmount * boost * EventService.GetActiveYieldMultiplier())
+    -- Apply equipped-pet HarvestPower bonus (PetService.GetPetBonuses, PetService.luau:292-304).
+    -- Handles the no-pet case gracefully: GetPetBonuses returns 0s when nothing is equipped.
+    local petBonuses = PetService.GetPetBonuses(player)
+    local harvestPower = petBonuses and petBonuses.HarvestPower or 0
+    local petMultiplier = 1 + harvestPower / 100
+
+    yieldAmount = math.floor(yieldAmount * boost * EventService.GetActiveYieldMultiplier() * petMultiplier)
 
     -- Grant resources
     PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount)

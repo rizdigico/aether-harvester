@@ -59,6 +59,64 @@ Recipes.Database = {
         RequiredLevel = 15,
         CraftingTime = 10,
     },
+    ["health_elixir"] = {
+        Id = "health_elixir",
+        Name = "Health Elixir",
+        ResultItemId = "health_elixir",
+        Ingredients = {
+            { ItemId = "prism_coral", Amount = 2 },
+            { ItemId = "aether_shard", Amount = 10 },
+        },
+        RequiredLevel = 2,
+        CraftingTime = 2,
+    },
+    ["speed_potion"] = {
+        Id = "speed_potion",
+        Name = "Speed Potion",
+        ResultItemId = "speed_potion",
+        Ingredients = {
+            { ItemId = "star_fragment", Amount = 1 },
+            { ItemId = "aether_shard", Amount = 20 },
+        },
+        RequiredLevel = 6,
+        CraftingTime = 4,
+    },
+    ["steel_pickaxe"] = {
+        Id = "steel_pickaxe",
+        Name = "Steel Pickaxe",
+        ResultItemId = "steel_pickaxe",
+        Ingredients = {
+            { ItemId = "crystal_shard", Amount = 8 },
+            { ItemId = "volcanic_ore", Amount = 5 },
+            { ItemId = "aether_shard", Amount = 30 },
+        },
+        RequiredLevel = 10,
+        CraftingTime = 8,
+    },
+    ["quantum_harvester"] = {
+        Id = "quantum_harvester",
+        Name = "Quantum Harvester",
+        ResultItemId = "quantum_harvester",
+        Ingredients = {
+            { ItemId = "aether_core", Amount = 2 },
+            { ItemId = "void_pearl", Amount = 3 },
+            { ItemId = "crystal_shard", Amount = 20 },
+        },
+        RequiredLevel = 25,
+        CraftingTime = 20,
+    },
+    ["aether_rod"] = {
+        Id = "aether_rod",
+        Name = "Aether Rod",
+        ResultItemId = "aether_rod",
+        Ingredients = {
+            { ItemId = "deep_pearl", Amount = 3 },
+            { ItemId = "aether_crystal", Amount = 4 },
+            { ItemId = "sky_essence", Amount = 2 },
+        },
+        RequiredLevel = 18,
+        CraftingTime = 12,
+    },
 }
 
 function Recipes.GetAll()

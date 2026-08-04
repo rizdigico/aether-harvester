@@ -1,75 +1,105 @@
--- Simulates days 1-7 with progression
--- Fixed seed for reproducibility
+-- Simulates days 1-7 of progression (backlog E6.1)
+-- Uses REAL constants from aether_constants.luau (recovered game build).
+-- Fixed seed for reproducibility.
 math.randomseed(42)
 
-local player_data = {
+local Constants = require("./aether_constants")
+
+local node = Constants.NodeTypes.AetherNode -- AetherNode, NodeManager.luau:22
+
+local player = {
     level = 1,
     xp = 0,
     shards = 0,
-    gems = 0,
-    upgrades = 0,
-    daily_reward = 100,
-    quest_reward = 50,
+    upgrades = {
+        pickaxe_power_1 = 0,
+    },
+    dailyRewardDay = 1,
+    questDone = {
+        quest_first_harvest = false,
+        quest_island_explorer = false,
+    },
 }
 
--- XP curve: xp_needed(level) = 100 * 1.5^(level-1)
-local function xp_needed(level)
-    return 100 * (1.5 ^ (level - 1))
+local function addXP(amount)
+    player.xp += amount
+    while player.xp >= Constants.CalculateXPRequired(player.level) do
+        player.xp -= Constants.CalculateXPRequired(player.level)
+        player.level += 1
+    end
 end
 
--- Simulate 7 days
+-- Spend shards on the cheapest real upgrade (Pickaxe Power I, base 100 / x1.5, MaxLevel 10).
+local function spendOnUpgrades()
+    local up = Constants.Upgrades.pickaxe_power_1
+    while player.upgrades.pickaxe_power_1 < up.MaxLevel do
+        local cost = Constants.CalculateUpgradeCost(up, player.upgrades.pickaxe_power_1)
+        if player.shards >= cost then
+            player.shards -= cost
+            player.upgrades.pickaxe_power_1 += 1
+        else
+            break
+        end
+    end
+end
+
 for day = 1, 7 do
-    local daily_shards = 0
-    local daily_xp = 0
-    local daily_upgrades = 0
+    local dailyHarvested = 0
+    local dailyXp = 0
 
-    -- Simulate 2 sessions per day
-    for session = 1, 2 do
-        -- Harvesting
-        local harvest_shards = math.random(50, 150)
-        player_data.shards = player_data.shards + harvest_shards
-        daily_shards = daily_shards + harvest_shards
-
-        -- XP from harvesting
-        local harvest_xp = math.random(10, 30)
-        player_data.xp = player_data.xp + harvest_xp
-        daily_xp = daily_xp + harvest_xp
-
-        -- Quest rewards
-        player_data.shards = player_data.shards + player_data.quest_reward
-        daily_shards = daily_shards + player_data.quest_reward
-
-        -- Daily reward
-        if session == 1 then
-            player_data.shards = player_data.shards + player_data.daily_reward
-            daily_shards = daily_shards + player_data.daily_reward
-        end
-
-        -- Upgrades
-        if player_data.shards >= 100 then
-            local upgrade_count = math.floor(player_data.shards / 100)
-            player_data.shards = player_data.shards - (upgrade_count * 100)
-            player_data.upgrades = player_data.upgrades + upgrade_count
-            daily_upgrades = daily_upgrades + upgrade_count
-        end
+    -- ~1 hour of play: 60 minutes, AetherNode (30s respawn) harvested twice/min.
+    local harvests = 120
+    for _ = 1, harvests do
+        local y = math.random(node.MinYield, node.MaxYield)
+        player.shards += y
+        dailyHarvested += y
+        addXP(node.XP)
+        dailyXp += node.XP
     end
 
-    -- Level up check
-    while player_data.xp >= xp_needed(player_data.level) do
-        player_data.xp = player_data.xp - xp_needed(player_data.level)
-        player_data.level = player_data.level + 1
+    -- Daily login reward (Rewards.luau DailyCalendar, rotates through the 30 days).
+    local daily = Constants.DailyCalendar[(player.dailyRewardDay - 1) % #Constants.DailyCalendar + 1]
+    player.shards += daily.Currency
+    dailyXp += daily.XP or 0
+    addXP(daily.XP or 0)
+
+    -- Real quests: First Harvest (day 1) then Island Explorer (day 2+).
+    if not player.questDone.quest_first_harvest and dailyHarvested >= 5 then
+        player.questDone.quest_first_harvest = true
+        player.shards += Constants.Quests.quest_first_harvest.Shards
+        addXP(Constants.Quests.quest_first_harvest.XP)
+        dailyXp += Constants.Quests.quest_first_harvest.XP
+    end
+    if day >= 2 and not player.questDone.quest_island_explorer then
+        player.questDone.quest_island_explorer = true
+        player.shards += Constants.Quests.quest_island_explorer.Shards
+        addXP(Constants.Quests.quest_island_explorer.XP)
+        dailyXp += Constants.Quests.quest_island_explorer.XP
     end
 
-    -- Print daily summary
+    spendOnUpgrades()
+
     print(
         string.format(
-            "Day %d: Level %d, XP: %d, Shards: %d, Gems: %d, Upgrades: %d",
+            "Day %d: Level %d, XP %d/%d, Shards %d, PickaxePowerI lv%d",
             day,
-            player_data.level,
-            player_data.xp,
-            player_data.shards,
-            player_data.gems,
-            player_data.upgrades
+            player.level,
+            player.xp,
+            Constants.CalculateXPRequired(player.level),
+            player.shards,
+            player.upgrades.pickaxe_power_1
         )
     )
+
+    player.dailyRewardDay += 1
 end
+
+print(
+    string.format(
+        "\nEnd of week: Level %d, XP %d, Shards %d, PickaxePowerI level %d/10",
+        player.level,
+        player.xp,
+        player.shards,
+        player.upgrades.pickaxe_power_1
+    )
+)
