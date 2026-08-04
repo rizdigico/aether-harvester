@@ -16,8 +16,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build
         run: |
-          curl -LsSf https://github.com/rojo-rbx/rokit/releases/latest/download/install.ps1 -o rokit-install.ps1
-          powershell -ExecutionPolicy Bypass -File rokit-install.ps1
+          curl -LsSf -o rokit.zip https://github.com/rojo-rbx/rokit/releases/download/v1.2.0/rokit-1.2.0-linux-x86_64.zip
+          unzip -o rokit.zip -d .rokit-bin
+          echo "$GITHUB_WORKSPACE/.rokit-bin" >> "$GITHUB_PATH"
           rokit trust rojo-rbx/rojo
           rokit install
           rojo build --output aether-harvester-staging.rbxlx
