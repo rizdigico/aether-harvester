@@ -1,0 +1,14 @@
+# Game deployment registry — per-game universe/place IDs.
+{
+  "games": [
+    {
+      "id": "aether-harvester",
+      "name": "Aether Harvester Simulator",
+      "universeId": 10612238315,
+      "placeIds": [97649669204650],
+      "stagingPlaceId": 97649669204650,
+      "productionPlaceId": null,
+      "environment": "development"
+    }
+  ]
+}

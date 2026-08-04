@@ -22,7 +22,7 @@ Write-Host "== Aether Harvester staging deploy =="
 
 # Try to resolve IDs from config/games.json if not passed explicitly.
 if ($PlaceId -eq 0 -or $UniverseId -eq 0) {
-    $configPath = Join-Path (Split-Path $PSScriptRoot -Parent) "..\config\games.json"
+    $configPath = Join-Path (Split-Path $PSScriptRoot -Parent) "config\games.json"
     if (Test-Path $configPath) {
         $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
         $game = $cfg.games | Where-Object { $_.id -eq "aether-harvester" } | Select-Object -First 1
