@@ -279,6 +279,10 @@ function PlayerDataService.AddXP(player, amount)
         return
     end
     data.XP = (data.XP or 0) + amount
+
+    -- Update battle pass XP
+    local BattlePassService = require(game.ServerScriptService.AetherServer.GameServices.BattlePassService)
+    BattlePassService.AddXP(player, amount)
 end
 
 function PlayerDataService.IncrementStat(player, statName, amount)

@@ -85,6 +85,22 @@ function PetService.DespawnFollower(player)
     end
 end
 
+-- Helper function to handle player character changes
+local function onPlayerCharacterChanged(player)
+    PetService.DespawnFollower(player)
+end
+
+-- Connect character change events
+local Players = game:GetService("Players")
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        onPlayerCharacterChanged(player)
+    end)
+    player.CharacterRemoving:Connect(function(character)
+        onPlayerCharacterChanged(player)
+    end)
+end)
+
 function PetService.Initialize()
     print("[PetService] Initializing...")
 

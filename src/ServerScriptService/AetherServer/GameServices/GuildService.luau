@@ -1,10 +1,31 @@
 local GuildService = {}
+local DataStoreService = game:GetService("DataStoreService")
+local GuildDataStore = DataStoreService:GetDataStore("GuildData_v1")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 
 GuildService.Guilds = {}
 GuildService.GuildIdCounter = 1
 
+function GuildService.LoadGuilds()
+    local success, guilds = pcall(function()
+        return GuildDataStore:GetAsync("Guilds")
+    end)
+    if success and guilds then
+        GuildService.Guilds = guilds or {}
+    end
+end
+
+function GuildService.SaveGuilds()
+    local success, err = pcall(function()
+        GuildDataStore:SetAsync("Guilds", GuildService.Guilds)
+    end)
+    if not success then
+        warn("[GuildService] Failed to save guilds: ", err)
+    end
+end
+
 function GuildService.Initialize()
+    GuildService.LoadGuilds()
     print("[GuildService] Initializing...")
 
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
@@ -129,6 +150,7 @@ function GuildService.CreateGuild(player, guildName, description)
     end
 
     print("[GuildService] Guild created: " .. guildName .. " by " .. player.Name)
+    GuildService.SaveGuilds()
     return guildId, guild
 end
 
@@ -162,6 +184,7 @@ function GuildService.InvitePlayer(player, targetPlayer)
         end
     end
 
+    GuildService.SaveGuilds()
     return true, "Invite sent"
 end
 
@@ -195,6 +218,7 @@ function GuildService.JoinGuild(player, guildId)
     end
 
     print("[GuildService] " .. player.Name .. " joined guild: " .. guild.Name)
+    GuildService.SaveGuilds()
     return true, "Joined guild"
 end
 
@@ -233,9 +257,11 @@ function GuildService.LeaveGuild(player)
     -- Delete guild if owner left and no members
     if guild.OwnerId == player.UserId and #guild.Members == 0 then
         GuildService.Guilds[data.GuildId] = nil
+        GuildService.SaveGuilds()
     end
 
     print("[GuildService] " .. player.Name .. " left guild")
+    GuildService.SaveGuilds()
     return true, "Left guild"
 end
 

@@ -99,4 +99,24 @@ function EventService.GetEventBonus(eventType)
     return bonuses[eventType] or 1.0
 end
 
+-- True if at least one event is currently active
+function EventService.IsEventActive()
+    return next(EventService.ActiveEvents) ~= nil
+end
+
+-- Combined gameplay multiplier from all active events (1.0 if none).
+-- Only yield-affecting events contribute (ResourceRush, HarvestFestival).
+function EventService.GetActiveYieldMultiplier()
+    local multiplier = 1.0
+    for _, event in pairs(EventService.ActiveEvents) do
+        if event.Active then
+            local bonus = EventService.GetEventBonus(event.Type)
+            if event.Type == "ResourceRush" or event.Type == "HarvestFestival" then
+                multiplier = multiplier * bonus
+            end
+        end
+    end
+    return multiplier
+end
+
 return EventService

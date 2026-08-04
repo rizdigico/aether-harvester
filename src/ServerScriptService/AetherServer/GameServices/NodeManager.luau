@@ -10,6 +10,7 @@ local ProgressionService = require(game.ServerScriptService.AetherServer.GameSer
 local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
 local AchievementService = require(game.ServerScriptService.AetherServer.GameServices.AchievementService)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local EventService = require(game.ServerScriptService.AetherServer.GameServices.EventService)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
@@ -93,7 +94,7 @@ function NodeManager.ProcessHarvest(player, node)
         boost = 1.5
     end
 
-    yieldAmount = math.floor(yieldAmount * boost)
+    yieldAmount = math.floor(yieldAmount * boost * EventService.GetActiveYieldMultiplier())
 
     -- Grant resources
     PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount)
