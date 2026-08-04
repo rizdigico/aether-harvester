@@ -19,7 +19,7 @@ tests/current/
 tests/diffs/
 
 # Environment
-.env
+.env*
 *.local.json
 
 # Studio artifacts
