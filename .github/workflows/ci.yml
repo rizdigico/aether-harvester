@@ -21,6 +21,8 @@ jobs:
           ./.rokit-bin/rokit --version
 
       - name: Install tools
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./.rokit-bin/rokit trust rojo-rbx/rojo JohnnyMorganz/StyLua Kampfkarren/selene lune-org/lune JohnnyMorganz/luau-lsp
           ./.rokit-bin/rokit install
