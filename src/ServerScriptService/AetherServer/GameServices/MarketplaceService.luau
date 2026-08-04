@@ -69,6 +69,26 @@ function MarketplaceService.Initialize()
 end
 
 function MarketplaceService.CreateListing(player, itemId, amount, price)
+    -- VALIDATION: bounds + ownership (fixes currency-from-nothing dupe)
+    if type(itemId) ~= "string" or itemId == "" then
+        return false, "Invalid item"
+    end
+    if type(amount) ~= "number" or amount < 1 or amount > 9999 or amount ~= math.floor(amount) then
+        return false, "Invalid amount"
+    end
+    if type(price) ~= "number" or price < 1 or price > 1000000 or price ~= math.floor(price) then
+        return false, "Invalid price"
+    end
+
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false, "Player data not found"
+    end
+    local owned = PlayerDataService.GetItemCount(player, itemId)
+    if owned < amount then
+        return false, "You don't own enough of that item"
+    end
+
     local listingId = "LISTING_" .. MarketplaceService.ListingIdCounter
     MarketplaceService.ListingIdCounter += 1
 
@@ -85,10 +105,12 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
 
     MarketplaceService.Listings[listingId] = listing
 
-    -- Remove item from seller's inventory
-    local data = PlayerDataService.GetData(player)
-    if data then
-        PlayerDataService.RemoveItem(player, itemId, amount)
+    -- Remove item from seller's inventory (verified ownership above)
+    local removed = PlayerDataService.RemoveItem(player, itemId, amount)
+    if not removed then
+        -- Ownership changed between check and removal (race): abort listing
+        MarketplaceService.Listings[listingId] = nil
+        return false, "Could not remove item"
     end
 
     -- Notify all clients
@@ -101,7 +123,7 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
     end
 
     print("[MarketplaceService] Listing created: " .. listingId)
-    return listingId, listing
+    return true, listingId, listing
 end
 
 function MarketplaceService.PurchaseListing(player, listingId)

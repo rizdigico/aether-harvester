@@ -4,6 +4,94 @@ local PlayerDataStore = DataStoreService:GetDataStore("PlayerData_v1")
 
 local playerData = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
+local SCHEMA_VERSION = 1
+
+-- Default profile (v1). New players and migrated old profiles get this shape.
+local function CreateDefaultProfile(userId)
+    return {
+        SchemaVersion = SCHEMA_VERSION,
+        PlayerId = tostring(userId),
+        Level = 1,
+        XP = 0,
+        Currency = {
+            AetherShards = 0,
+            AetherGems = 100,
+            EventTokens = 0,
+            FamePoints = 0,
+        },
+        Inventory = {},
+        PetInventory = {},
+        EquippedPets = {},
+        Skills = {},
+        Quests = {},
+        Achievements = {},
+        Stats = {
+            HarvestCount = 0,
+            CombatKills = 0,
+            TradesCompleted = 0,
+            PlaytimeMinutes = 0,
+            ZonesDiscovered = 0,
+        },
+        Settings = {
+            MusicVolume = 0.5,
+            SFXVolume = 0.7,
+            GraphicsQuality = 2,
+        },
+        PrestigeLevel = 0,
+        GuildId = nil,
+    }
+end
+
+-- Migrate/repair any loaded profile to the current schema.
+-- v0 (no SchemaVersion) profiles from the pre-versioning era are filled in.
+local function SanitizeProfile(userId, raw)
+    if type(raw) ~= "table" then
+        return CreateDefaultProfile(userId)
+    end
+    local base = CreateDefaultProfile(userId)
+    -- Merge: raw values win, missing fields fall back to defaults
+    local merged = {}
+    for k, v in pairs(base) do
+        merged[k] = v
+    end
+    for k, v in pairs(raw) do
+        if type(v) == "table" and type(base[k]) == "table" then
+            merged[k] = {}
+            for kk, vv in pairs(base[k]) do
+                merged[k][kk] = vv
+            end
+            for kk, vv in pairs(v) do
+                merged[k][kk] = vv
+            end
+        else
+            merged[k] = v
+        end
+    end
+    merged.SchemaVersion = SCHEMA_VERSION
+    merged.PlayerId = tostring(userId)
+    -- Guard: currencies/inventory must exist
+    merged.Currency = merged.Currency or base.Currency
+    merged.Inventory = merged.Inventory or {}
+    merged.PetInventory = merged.PetInventory or {}
+    return merged
+end
+
+-- Save with retry + backoff (P0: never silently drop a save)
+local function SaveProfile(userId, data, attempt)
+    attempt = attempt or 1
+    local ok, err = pcall(function()
+        PlayerDataStore:SetAsync(tostring(userId), data)
+    end)
+    if ok then
+        return true
+    end
+    if attempt < 3 then
+        task.wait(1.5 * attempt) -- 1.5s, 3s backoff
+        return SaveProfile(userId, data, attempt + 1)
+    end
+    warn("[PlayerDataService] Save failed after 3 attempts for " .. tostring(userId) .. ": " .. tostring(err))
+    return false
+end
 
 function PlayerDataService.Initialize()
     print("[PlayerDataService] Initializing...")
@@ -44,9 +132,13 @@ function PlayerDataService.Initialize()
     task.spawn(function()
         while true do
             task.wait(SAVE_INTERVAL)
-            for _, data in pairs(playerData) do
-                pcall(function()
-                    PlayerDataStore:SetAsync(tostring(data.PlayerId), data)
+            local snapshot = {}
+            for uid, data in pairs(playerData) do
+                snapshot[uid] = data
+            end
+            for uid, data in pairs(snapshot) do
+                task.spawn(function()
+                    SaveProfile(uid, data, 1)
                 end)
             end
         end
@@ -61,41 +153,11 @@ function PlayerDataService.OnPlayerAdded(player)
     end)
 
     if success and data then
-        playerData[player.UserId] = data
+        playerData[player.UserId] = SanitizeProfile(player.UserId, data)
         print("[PlayerDataService] Loaded data for " .. player.Name)
     else
         -- Create new player data
-        playerData[player.UserId] = {
-            PlayerId = tostring(player.UserId),
-            Level = 1,
-            XP = 0,
-            Currency = {
-                AetherShards = 0,
-                AetherGems = 100,
-                EventTokens = 0,
-                FamePoints = 0,
-            },
-            Inventory = {},
-            PetInventory = {},
-            EquippedPets = {},
-            Skills = {},
-            Quests = {},
-            Achievements = {},
-            Stats = {
-                HarvestCount = 0,
-                CombatKills = 0,
-                TradesCompleted = 0,
-                PlaytimeMinutes = 0,
-                ZonesDiscovered = 0,
-            },
-            Settings = {
-                MusicVolume = 0.5,
-                SFXVolume = 0.7,
-                GraphicsQuality = 2,
-            },
-            PrestigeLevel = 0,
-            GuildId = nil,
-        }
+        playerData[player.UserId] = CreateDefaultProfile(player.UserId)
         print("[PlayerDataService] Created new data for " .. player.Name)
     end
 
@@ -109,15 +171,10 @@ end
 function PlayerDataService.OnPlayerRemoving(player)
     print("[PlayerDataService] Player leaving: " .. player.Name)
 
-    -- Save data
-    local success, err = pcall(function()
-        PlayerDataStore:SetAsync(tostring(player.UserId), playerData[player.UserId])
-    end)
-
-    if success then
-        print("[PlayerDataService] Data saved for " .. player.Name)
-    else
-        warn("[PlayerDataService] Failed to save data for " .. player.Name .. ": " .. tostring(err))
+    -- Save data (with retry)
+    local data = playerData[player.UserId]
+    if data then
+        SaveProfile(player.UserId, data, 1)
     end
 
     playerData[player.UserId] = nil

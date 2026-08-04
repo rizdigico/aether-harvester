@@ -64,14 +64,13 @@ function WorldManager.TeleportPlayerToIsland(player, islandId)
         spawnPos = spawnLoc.Position
     end
 
-    root.CFrame =
-        CFrame.new(
-            spawnPos
-                + (
-                    WorldManager.IslandDefs[islandId] and WorldManager.IslandDefs[islandId].SpawnOffset
-                    or Vector3.new(0, 5, 0)
-                )
-        )
+    root.CFrame = CFrame.new(
+        spawnPos
+            + (
+                WorldManager.IslandDefs[islandId] and WorldManager.IslandDefs[islandId].SpawnOffset
+                or Vector3.new(0, 5, 0)
+            )
+    )
 
     playerIslands[player.UserId] = islandId
 
@@ -82,7 +81,10 @@ function WorldManager.TeleportPlayerToIsland(player, islandId)
         if UpdateHUD then
             UpdateHUD:FireClient(
                 player,
-                { Island = WorldManager.GetIslandDef(islandId) and WorldManager.GetIslandDef(islandId).Name or islandId }
+                {
+                    Island = WorldManager.GetIslandDef(islandId) and WorldManager.GetIslandDef(islandId).Name
+                        or islandId,
+                }
             )
         end
     end

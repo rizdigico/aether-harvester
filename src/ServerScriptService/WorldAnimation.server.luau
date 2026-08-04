@@ -48,16 +48,13 @@ if Creatures then
         if c.Name:match("^SkyWhale") then
             local body = c:FindFirstChild("Body")
             if body then
-                table.insert(
-                    whales,
-                    {
-                        model = c,
-                        body = body,
-                        home = body.Position,
-                        phase = math.random() * math.pi * 2,
-                        radius = 25 + math.random() * 20,
-                    }
-                )
+                table.insert(whales, {
+                    model = c,
+                    body = body,
+                    home = body.Position,
+                    phase = math.random() * math.pi * 2,
+                    radius = 25 + math.random() * 20,
+                })
             end
         end
     end

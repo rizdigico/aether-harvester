@@ -197,7 +197,9 @@ Pets.Database = {
         Happiness = 100,
         Energy = 100,
         Stats = { HarvestPower = 10, Speed = 8, Luck = 3, Defense = 4 },
-        Abilities = { { Name = "Thunder Dive", Type = "Active", Description = "Deals damage and stuns", Cooldown = 20 } },
+        Abilities = {
+            { Name = "Thunder Dive", Type = "Active", Description = "Deals damage and stuns", Cooldown = 20 },
+        },
         Icon = "rbxassetid://0",
         ModelAsset = "",
     },
@@ -214,7 +216,9 @@ Pets.Database = {
         Happiness = 100,
         Energy = 100,
         Stats = { HarvestPower = 12, Speed = 6, Luck = 6, Defense = 5 },
-        Abilities = { { Name = "Crystal Glint", Type = "Passive", Description = "+12% rare drop chance", Cooldown = 0 } },
+        Abilities = {
+            { Name = "Crystal Glint", Type = "Passive", Description = "+12% rare drop chance", Cooldown = 0 },
+        },
         Icon = "rbxassetid://0",
         ModelAsset = "",
     },

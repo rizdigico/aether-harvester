@@ -88,14 +88,56 @@ function TradingService.AcceptTrade(player, tradeId)
         return false, "Trade already processed"
     end
 
+    if trade.PlayerId == player.UserId then
+        return false, "Cannot accept your own trade"
+    end
+
+    -- Validate item maps: { [itemId] = amount }
+    local function isValidMap(t)
+        if type(t) ~= "table" then
+            return false
+        end
+        for k, v in pairs(t) do
+            if type(k) ~= "string" or type(v) ~= "number" or v < 1 or v ~= math.floor(v) then
+                return false
+            end
+        end
+        return true
+    end
+
+    if not isValidMap(trade.OfferItems) or not isValidMap(trade.RequestItems) then
+        return false, "Invalid trade payload"
+    end
+
+    local offerer = game.Players:GetPlayerByUserId(trade.PlayerId)
+    if not offerer then
+        return false, "Trade partner left the game"
+    end
+
+    -- Phase 1: validate ownership for BOTH sides before any mutation (atomic)
+    for itemId, amount in pairs(trade.OfferItems) do
+        if PlayerDataService.GetItemCount(offerer, itemId) < amount then
+            return false, "Offerer no longer owns the offered items"
+        end
+    end
+    for itemId, amount in pairs(trade.RequestItems) do
+        if PlayerDataService.GetItemCount(player, itemId) < amount then
+            return false, "You don't own the requested items"
+        end
+    end
+
+    -- Phase 2: execute transfers (validated above -> cannot fail)
+    for itemId, amount in pairs(trade.OfferItems) do
+        PlayerDataService.RemoveItem(offerer, itemId, amount)
+        PlayerDataService.AddItem(player, itemId, amount)
+    end
+    for itemId, amount in pairs(trade.RequestItems) do
+        PlayerDataService.RemoveItem(player, itemId, amount)
+        PlayerDataService.AddItem(offerer, itemId, amount)
+    end
+
     trade.Status = "Accepted"
     trade.AcceptedBy = player.UserId
-
-    -- Process trade
-    -- Remove offer items from trader
-    -- Add request items to trader
-    -- Add offer items to accepter
-    -- Remove request items from accepter
 
     print("[TradingService] Trade accepted: " .. tradeId)
 
@@ -104,7 +146,8 @@ function TradingService.AcceptTrade(player, tradeId)
     if Remotes then
         local TradeCompleted = Remotes:FindFirstChild("TradeCompleted")
         if TradeCompleted then
-            TradeCompleted:FireAllClients(trade)
+            TradeCompleted:FireClient(offerer, trade)
+            TradeCompleted:FireClient(player, trade)
         end
     end
 
