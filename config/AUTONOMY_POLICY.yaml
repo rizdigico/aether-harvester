@@ -1,0 +1,20 @@
+# AUTONOMY POLICY — Aether Harvester
+
+allow_repository_writes: true
+allow_feature_branches: true
+allow_pull_requests: true
+allow_staging_publish: true
+allow_staging_data_migrations: true
+
+allow_production_publish: false
+allow_public_release: false
+allow_production_data_migrations: false
+allow_production_data_deletion: false
+allow_monetization_price_changes: false
+allow_real_robux_purchase_tests: false
+allow_external_asset_purchases: false
+
+maximum_robux_spend: 0
+require_rollback_before_migration: true
+require_staging_verification: true
+require_human_approval_for_production: true
