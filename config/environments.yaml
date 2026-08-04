@@ -1,0 +1,23 @@
+# Aether Harvester environment configuration
+# Environments are strictly separated: development, staging, production.
+# Universe/place IDs are created when an experience is published.
+game:
+  id: aether-harvester
+  name: Aether Harvester Simulator
+
+development:
+  universeId: 10612238315
+  placeId: 97649669204650
+
+staging:
+  universeId: null
+  placeId: null
+
+production:
+  universeId: null
+  placeId: null
+
+# Open Cloud publishing: staging is automated, production is human-gated.
+publishing:
+  stagingEnabled: true
+  productionEnabled: false

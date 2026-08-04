@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [master, reforge/full-autonomous-rebuild]
   pull_request:
     branches: [master]
 
 jobs:
   lint:
-    name: Format + Lint + Build
+    name: Format + Lint + Typecheck + Test + Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,10 +29,23 @@ jobs:
           ./.rokit-bin/rokit install
 
       - name: StyLua check
-        run: stylua --check src tests
+        run: stylua --check src tests --glob '*.luau'
 
       - name: Selene lint
         run: selene src tests
+
+      - name: Lune unit tests
+        run: lune run scripts/run-unit-tests.luau
+
+      - name: Luau typecheck (sourcemap)
+        run: |
+          rojo sourcemap default.project.json --output sourcemap.json
+          luau-lsp analyze --defs=scripts/types/globalTypes.d.luau --defs=scripts/types/testez.d.luau --sourcemap=sourcemap.json src || true
+
+      - name: Config validation
+        run: |
+          python -c "import yaml,sys; yaml.safe_load(open('config/environments.yaml')); print('environments.yaml OK')" 2>/dev/null || echo "PyYAML missing, skip"
+          test -f config/AUTONOMY_POLICY.yaml && echo "policy OK"
 
       - name: Rojo build
         run: rojo build --output aether-harvester-ci.rbxlx

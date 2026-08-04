@@ -20,22 +20,30 @@ if (-not $env:ROBLOX_OPEN_CLOUD_API_KEY) {
 
 Write-Host "== Aether Harvester staging deploy =="
 
-# Try to resolve IDs from config/games.json if not passed explicitly.
+# Try to resolve IDs from config/environments.yaml if not passed explicitly.
 if ($PlaceId -eq 0 -or $UniverseId -eq 0) {
-    $configPath = Join-Path (Split-Path $PSScriptRoot -Parent) "config\games.json"
+    $configPath = Join-Path (Split-Path $PSScriptRoot -Parent) "config\environments.yaml"
     if (Test-Path $configPath) {
-        $cfg = Get-Content $configPath -Raw | ConvertFrom-Json
-        $game = $cfg.games | Where-Object { $_.id -eq "aether-harvester" } | Select-Object -First 1
-        if ($game) {
-            if ($PlaceId -eq 0) { $PlaceId = [int]$game.stagingPlaceId }
-            if ($UniverseId -eq 0) { $UniverseId = [int]$game.universeId }
+        # Minimal YAML parse: read development/staging blocks
+        $yaml = Get-Content $configPath -Raw
+        $match = [regex]::Match($yaml, "development:\s*\n\s*universeId:\s*(\d+)\s*\n\s*placeId:\s*(\d+)")
+        if ($match.Success) {
+            if ($UniverseId -eq 0) { $UniverseId = [int]$match.Groups[1].Value }
+            if ($PlaceId -eq 0) { $PlaceId = [int]$match.Groups[2].Value }
+        }
+        $stage = [regex]::Match($yaml, "staging:\s*\n\s*universeId:\s*(\d+)\s*\n\s*placeId:\s*(\d+)")
+        if ($stage.Success) {
+            $stagingUniverse = [int]$stage.Groups[1].Value
+            $stagingPlace = [int]$stage.Groups[2].Value
+            if ($stagingPlace -gt 0) { $PlaceId = $stagingPlace }
+            if ($stagingUniverse -gt 0) { $UniverseId = $stagingUniverse }
         }
     }
 }
 
 if ($PlaceId -eq 0 -or $UniverseId -eq 0) {
-    Write-Host "Missing IDs. Publish the game once in Studio, then set universeId/stagingPlaceId"
-    Write-Host "in roblox-dev/config/games.json (or pass -PlaceId/-UniverseId)."
+    Write-Host "Missing IDs. Publish the game once in Studio, then set universeId/placeId"
+    Write-Host "in config/environments.yaml (or pass -PlaceId/-UniverseId)."
     exit 1
 }
 

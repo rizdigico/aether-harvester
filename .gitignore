@@ -13,16 +13,19 @@ dist/
 # Node modules (visual regression tooling)
 node_modules/
 
-# Visual regression artifacts
-tests/baselines/
+# Visual regression - generated artifacts only (baselines ARE versioned)
 tests/current/
 tests/diffs/
 
-# Environment
+# Environment & secrets
 .env*
 *.local.json
 
-# Studio artifacts
-*.fbx
-*.obj
-*.mtl
+# Studio/Blender temporary exports (tracked exports live in assets/export/ with manifests)
+# Generated place/asset exports that are reproducible are ignored; approved exports
+# and all .blend SOURCES are tracked (see assets/README.md asset-source policy).
+artifacts/current/
+
+# OS junk
+Thumbs.db
+.DS_Store
