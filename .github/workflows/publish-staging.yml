@@ -22,7 +22,7 @@ jobs:
           unzip -o rokit.zip -d .rokit-bin
           echo "$GITHUB_WORKSPACE/.rokit-bin" >> "$GITHUB_PATH"
           echo "$HOME/.rokit/bin" >> "$GITHUB_PATH"
-          ./.rokit-bin/rokit trust rojo-rbx/rojo
+          ./.rokit-bin/rokit trust rojo-rbx/rojo JohnnyMorganz/StyLua Kampfkarren/selene lune-org/lune JohnnyMorganz/luau-lsp
           ./.rokit-bin/rokit install
           rojo build --output aether-harvester-staging.rbxlx
       - name: Publish staging place
