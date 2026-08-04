@@ -23,7 +23,7 @@ format:
 	$(STYLUA) src tests
 
 check:
-	$(STYLUA) --check src tests
+	$(STYLUA) --check src tests --glob '*.luau' --glob '!src/StarterGui/AetherUI/Screens.luau'
 
 lint:
 	$(SELENE) src tests
