@@ -18,7 +18,8 @@
 | **Data/Creatures.luau** | `tests/lune/Data.spec.luau` (bundled) | — | 6 (shared) | — | PENDING* | — |
 | **Data/Quests.luau** | `tests/lune/Data.spec.luau` (bundled) | — | 5 (shared) | — | PENDING* | — |
 | **Data/Recipes.luau** | `tests/lune/Data.spec.luau` (bundled) | — | 6 (shared) | — | PENDING* | — |
-| **TOTALS** | **5 Lune specs** | **7 TestEZ specs** | **~102** | **~88** | — | — |
+| **Modules/QuestProgress.luau** | `tests/lune/QuestProgress.spec.luau` | — | 19 | — | PENDING* | — |
+| **TOTALS** | **6 Lune specs** | **7 TestEZ specs** | **~121** | **~88** | — | — |
 
 \* *PENDING: lune/selene/stylua could not run due to bash permission deny in worker-a session. Must be run by orchestrator.*
 
@@ -30,6 +31,7 @@
 | `tests/lune/Progression.spec.luau` | `Modules/Progression.luau` | 22 | New, AddXP, LevelUp, stat calculations, XP curve, getters |
 | `tests/lune/Inventory.spec.luau` | `Modules/Inventory.luau` | 16 | New, currency ops, HasSpace, GetItemCount, AddItem/RemoveItem (mocked Items) |
 | `tests/lune/Data.spec.luau` | All 4 Data modules | 25 | Load validation, required fields, no duplicate IDs, shape checks |
+| `tests/lune/QuestProgress.spec.luau` | `Modules/QuestProgress.luau` | 19 | partial/exact/over-clamp completion, multi & zero objectives, objective matching, progress clamping |
 | `tests/lune/Util.spec.luau` | (existing) | 5 | Placeholder Util.clamp / safeDivide |
 
 ## TestEZ Specs Created
@@ -50,6 +52,7 @@
 |-----------|-----|-----|
 | `Modules/Utils.luau:383` | `generateUID` used `chars:sub(math.random(), math.random())` — two independent random indices produce 0–3 chars per iteration instead of exactly 1 | Compute `idx` once, use `chars:sub(idx, idx)` |
 | `Modules/Creatures.luau:434,438` | `Battle()` declares `local attackDamage` twice in the same `while` scope — shadowing error in strict Luau | Renamed to `dmg1` / `dmg2` |
+| `Data/Quests.luau:108` (`quest_pet_master`) | Objective `Collect` referenced `ItemId = "pets"` — no such item in `Data/Items.luau` (dangling ref) | Changed to existing item `pet_food` |
 
 ## API Discrepancies Discovered
 

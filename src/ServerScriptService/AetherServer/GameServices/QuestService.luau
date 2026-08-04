@@ -6,6 +6,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
 local QuestsData = require(game.ReplicatedStorage.AetherShared.Data.Quests)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
+local QuestProgress = require(game.ReplicatedStorage.AetherShared.Modules.QuestProgress)
 
 -- Active quests per player: userId -> { questId -> {Progress = {...}, Completed = bool} }
 local activeQuests = {}
@@ -101,16 +102,9 @@ function QuestService.UpdateProgress(player, objectiveType, target, amount)
             end
 
             if changed then
-                -- Check completion
-                local allDone = true
-                for i, objective in ipairs(quest.Objectives or {}) do
-                    if (quest.Progress[i] or 0) < (objective.Amount or 1) then
-                        allDone = false
-                        break
-                    end
-                end
-
-                if allDone then
+                -- Check completion (pure module: all objectives met)
+                local result = QuestProgress.ComputeQuestProgress(quest, quest.Progress)
+                if result.completed then
                     quest.Completed = true
                 end
 

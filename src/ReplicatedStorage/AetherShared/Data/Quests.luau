@@ -105,7 +105,7 @@ Quests.Database = {
         Difficulty = "Medium",
         LevelRequired = 12,
         Objectives = {
-            { Type = "Collect", ItemId = "pets", Amount = 10 },
+            { Type = "Collect", ItemId = "pet_food", Amount = 10 },
         },
         Rewards = {
             XP = 800,

@@ -1,1 +1,60 @@
-{}
+{
+  "harvest_nodes": [
+    {
+      "id": "harvest_node_aether",
+      "category": "harvest_node",
+      "name": "AetherNode",
+      "description": "Floating crystal cluster (4 shards) on a small base, cyan emission. Low-poly harvest node for aether deposits.",
+      "source_path": "assets/blender/harvest_nodes/aether_node_kit.blend",
+      "export_path": "assets/models/export/AetherNode.fbx",
+      "export_format": "fbx",
+      "triangle_count_approx": 52,
+      "bounding_box_studs": [2.0, 2.0, 1.549],
+      "materials": ["Aether_Base", "Aether_Emissive"],
+      "license": "project_owned",
+      "status": "draft_awaiting_vision"
+    },
+    {
+      "id": "harvest_node_crystal",
+      "category": "harvest_node",
+      "name": "CrystalNode",
+      "description": "Large single hexagonal crystal prism with glowing tip on a plinth, white-blue emission.",
+      "source_path": "assets/blender/harvest_nodes/aether_node_kit.blend",
+      "export_path": "assets/models/export/CrystalNode.fbx",
+      "export_format": "fbx",
+      "triangle_count_approx": 50,
+      "bounding_box_studs": [1.098, 1.268, 2.0],
+      "materials": ["Crystal_Base", "Crystal_Emissive"],
+      "license": "project_owned",
+      "status": "draft_awaiting_vision"
+    },
+    {
+      "id": "harvest_node_ore",
+      "category": "harvest_node",
+      "name": "OreNode",
+      "description": "Rocky chunk with four orange glowing veins, low-poly displaced icosphere.",
+      "source_path": "assets/blender/harvest_nodes/aether_node_kit.blend",
+      "export_path": "assets/models/export/OreNode.fbx",
+      "export_format": "fbx",
+      "triangle_count_approx": 68,
+      "bounding_box_studs": [1.765, 2.0, 1.785],
+      "materials": ["Ore_Rock", "Ore_Vein"],
+      "license": "project_owned",
+      "status": "draft_awaiting_vision"
+    },
+    {
+      "id": "harvest_node_herb",
+      "category": "harvest_node",
+      "name": "HerbNode",
+      "description": "Small plant with six glowing petals around a bud on a stem, green base with green emission petals.",
+      "source_path": "assets/blender/harvest_nodes/aether_node_kit.blend",
+      "export_path": "assets/models/export/HerbNode.fbx",
+      "export_format": "fbx",
+      "triangle_count_approx": 48,
+      "bounding_box_studs": [2.0, 1.873, 1.882],
+      "materials": ["Herb_Base", "Herb_Petal"],
+      "license": "project_owned",
+      "status": "draft_awaiting_vision"
+    }
+  ]
+}
