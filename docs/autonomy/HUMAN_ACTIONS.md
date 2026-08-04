@@ -1,15 +1,12 @@
 # HUMAN ACTIONS — required items with no automated route
 
-## H-001: Enable Studio MCP server in Roblox Studio (BLOCKING direct Studio control)
-**Why:** The StudioMCP.exe proxy connects to the running Studio instance via WebSocket. The in-Studio WS host only activates when "Enable Studio as MCP server" is toggled ON in Studio's Assistant, and the setting appears enabled in AssistantSettings (2995327390.json: `mcp-server.enabled: true`) but the running instance (RobloxStudioBeta) is NOT hosting the WS ("Not connected to the WS host" from list_roblox_studios).
+## H-002: Re-toggle "Enable Studio as MCP server" in the NEW Studio instance (BLOCKING live E2E)
+**Why:** Studio was restarted (bridge rebind). The persisted AssistantSettings has `mcp-server.enabled: true`, but the fresh instance's Assistant client only connects when the toggle CHANGES while the bridge host (port 13469) is running. The bridge is UP right now — so flipping the toggle will connect immediately.
 
 **Exact steps (30 seconds):**
-1. In the open Roblox Studio (Aether Harvester place), click the **Assistant** button (top-right, robot/AI icon).
-2. Click the **…** (more) menu → **Manage MCP Servers**.
-3. Toggle ON **"Enable Studio as MCP server"**.
-4. If a green indicator appears → connected. If not, **restart Studio** (close + reopen the place), the setting persists.
-5. Confirm: the plugin icon or indicator shows connected clients.
+1. In the open Roblox Studio (Aesther Harvest place, new instance), click the **Assistant** button (top-right).
+2. **…** menu → **Manage MCP Servers**.
+3. Toggle OFF then ON **"Enable Studio as MCP server"** (off→on is what triggers the connection).
+4. The orchestrator will detect the connection and immediately run the full E2E play-mode verification.
 
-**Impact of not doing it:** Orchestrator cannot read/dump the live 24-service game source from Studio into the repo, cannot run play-mode verification, screenshots, or in-Studio tests. All filesystem work continues regardless.
-
-**Do it when convenient — everything else proceeds autonomously.**
+**Impact:** Without this, live play-mode verification (boot lines, harvest E2E, HUD checks) cannot run. All filesystem/git/CI/asset work continues regardless.
