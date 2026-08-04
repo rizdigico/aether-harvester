@@ -266,7 +266,11 @@ function QuestService.Initialize()
         end
     end
 
-    print("[QuestService] Initialized with " .. tostring(next(QuestsData.GetAll())) and " quests available")
+    local questCount = 0
+    for _ in pairs(QuestsData.GetAll()) do
+        questCount += 1
+    end
+    print("[QuestService] Initialized with " .. questCount .. " quests available")
 end
 
 return QuestService
