@@ -1,108 +1,93 @@
-# Aether Harvester Security Model
+# SECURITY MODEL
 
-## Remote Catalog
+## Threat Model
 
-### Remote Events & Functions
-| Name               | Direction       | Payload                                      | File:Line                     | Validation Status       |
-|--------------------|-----------------|-----------------------------------------------|----------------------------|------------------------|
-| HarvestEvent       | Client→Server    | {nodeId: string, tool: Tool}                   | InputHandler:85   | No validation (P0)  |
-| InteractionEvent   | Client→Server    | {objectName: string}                           | InputHandler:112  | No validation (P0)  |
-| InventoryEvent     | Client→Server    | {action: string, item: table}                 | InventoryUI:156   | No validation (P0)  |
-| MinimapEvent       | Server→Client    | {action: string, nodeId: string, nodePosition: Vector3} | Minimap:155 | Validated (P2) |
-| HUDEvents          | Server→Client    | {action: string, xp: number, level: number}   | HUD:158        | Validated (P2) |
-| CreatureEvent      | Server→Client    | {action: string, creature: table}             | CreatureService:236 | Validated (P2) |
-| EventNotification  | Server→Client    | {eventId: string, action: string, message: string} | EventService:150 | Validated (P2) |
-| QuestEvent         | Server→Client    | {questId: string, completed: boolean}         | QuestService:187 | Validated (P2) |
-| TradeEvent         | Server→Client    | {action: string, tradeId: string, offer: table} | TradingService:282 | Validated (P2) |
+### Assumptions
+- **Server-authoritative**: All sensitive state (currency, inventory, guilds) is validated server-side.
+- **Client-trusted**: Client-side state is only for UI and does not affect game logic.
+- **Roblox Environment**: Uses Roblox DataStoreService with no external dependencies.
 
-### Authority Violations
+### Attack Vectors
+1. **Client-Side Exploitation**: Manipulating client state to bypass server validation.
+2. **DataStore Abuse**: Rapid saves or invalid data to crash DataStore or cause race conditions.
+3. **Ownership Bypass**: Exploiting missing ownership checks in trades, guilds, and marketplace.
+4. **Currency Manipulation**: Exploiting missing validation to create negative balances or infinite currency.
+5. **Race Conditions**: Exploiting lack of transactional saves or session races.
 
-- **InputHandler.lua:85** - `HarvestEvent` fires raw `nodeId` and `tool` without validation. Exploit: Malicious node IDs or tool manipulation.
-- **InputHandler.lua:112** - `InteractionEvent` fires raw `objectName` without validation. Exploit: Object name spoofing.
-- **InventoryUI.lua:156** - `InventoryEvent` fires raw `item` data without validation. Exploit: Inventory manipulation.
+## Found Defects
 
-**Total Authority Violations:** 3
-**Top 3 Severity:** P0
+### P0 (Critical)
+1. **Missing Validation in TradingService** (TradingService.luau:17): No validation for item ownership or quantity in `CreateTrade`. Clients can send arbitrary item IDs and amounts.
+   - **Impact**: Arbitrary item creation and trading.
+   - **Fix**: Validate item ownership and quantity before processing trades.
 
-## Exploit Vectors
+2. **No Rate Limiting on DataStore** (PlayerDataService.luau:44): Auto-save loop lacks rate limiting, risking DataStore throttling or abuse.
+   - **Impact**: DataStore throttling or service disruption.
+   - **Fix**: Implement rate limiting with exponential backoff.
 
-| Vector               | Attack                          | Impact                                      | Severity | Mitigation
-|----------------------|--------------------------------|--------------------------------------------|----------|--------------|
-| Unvalidated Remotes  | Client-side injection of arbitrary data | Data corruption, game state manipulation | P0       | Input validation, rate limiting
-| Missing Rate Limits  | Spam attacks on server events    | Server overload, lag, crashes             | P1       | Rate limiting middleware
-| DataStore Races      | Concurrent DataStore writes      | Inconsistent player data                | P1       | DataStore versioning, locking
-| Currency Injection   | Fake currency transactions       | Cheating, balance manipulation             | P0       | Server-side validation
-| Inventory Duplication| Duplicate item acquisition      | Unfair advantage, resource hoarding       | P0       | Inventory tracking, server-side checks
-| Teleport Hacks       | Manipulated player position     | Game balance disruption, unfair advantage   | P1       | Position validation, movement restrictions
+3. **No Ownership Check in MarketplaceService** (MarketplaceService.luau:107): `PurchaseListing` allows buying own listings without validation.
+   - **Impact**: Self-trading and potential currency exploits.
+   - **Fix**: Add ownership check to prevent buying own listings.
 
-## DataStore Audit
+### P1 (High)
+1. **No Distance Check in HarvestResource** (WorldManager.luau:123): No validation that the player is near the node.
+   - **Impact**: Players can harvest nodes from arbitrary distances.
+   - **Fix**: Validate player proximity to nodes.
 
-- **Current Issues:**
-  - No versioning for player data.
-  - No locking mechanism for concurrent writes.
-  - No key structure validation.
+2. **No Cooldown in UpgradeService** (UpgradeService.luau:65): `PurchaseUpgrade` lacks cooldown to prevent spam.
+   - **Impact**: Spam attacks on upgrade purchases.
+   - **Fix**: Implement cooldown logic for upgrade purchases.
 
-- **Secure Design:**
-  - Implement versioning for player data.
-  - Use locking for concurrent DataStore operations.
-  - Enforce key structure validation.
-  - Use sessions for temporary data.
+3. **No Versioning in DataStore** (PlayerDataService.luau:3): Uses `PlayerData_v1` without versioning or migration support.
+   - **Impact**: Data corruption during schema changes.
+   - **Fix**: Implement versioning and migration support.
 
-## Validation Standards
+### P2 (Medium)
+1. **No Session Race Protection** (PlayerDataService.luau:113): `OnPlayerRemoving` lacks transactional save logic.
+   - **Impact**: Race conditions during player disconnection.
+   - **Fix**: Use transactional saves or optimistic concurrency.
 
-### Per Remote Category
-- **Input Validation:**
-  - Validate all client inputs for type, range, and ownership.
-  - Use server-side validation for all RemoteEvents.
+2. **No Negative Currency Check** (PlayerDataService.luau:145): `RemoveCurrency` allows negative balances.
+   - **Impact**: Negative currency balances and potential exploits.
+   - **Fix**: Validate currency balances before deduction.
 
-- **Type Validation:**
-  - Ensure payloads match expected types (e.g., `nodeId` must be a string).
+3. **No Guild XP Validation** (GuildService.luau:254): `AddXP` lacks validation for valid guilds.
+   - **Impact**: Invalid guild XP manipulation.
+   - **Fix**: Validate guild existence before adding XP.
 
-- **Range Validation:**
-  - Validate numeric ranges (e.g., `xp` must be non-negative).
+### P3 (Low)
+1. **No Error Handling in RemoteEvents** (TradingService.luau:34): Error responses are not consistently sent to clients.
+   - **Impact**: Poor user experience and lack of feedback.
+   - **Fix**: Standardize error responses for all remote events.
 
-- **Ownership Validation:**
-  - Ensure players only interact with their own data.
+2. **No Logging for Critical Events** (GuildService.luau:130): Guild creation lacks detailed logging.
+   - **Impact**: Lack of audit trail for critical actions.
+   - **Fix**: Add detailed logging for guild and trade operations.
 
-- **Cooldown Validation:**
-  - Implement rate limiting for all client actions.
+3. **No Input Sanitization** (GameClient.luau:302): `HarvestNode` accepts raw node IDs without validation.
+   - **Impact**: Potential injection or invalid node exploitation.
+   - **Fix**: Validate node IDs and sanitize inputs.
 
-## Rate Limit Design
+## Persistence Audit
 
-- **Middleware:**
-  - Implement a rate-limiting middleware for all RemoteEvents.
-  - Default rate: 5 requests per second per player.
-  - Exceptions: Critical actions (e.g., quest completion).
+### PlayerDataService
+- **Schema**: Uses `PlayerData_v1` DataStore with nested tables for currency, inventory, pets, and stats.
+- **Versioning**: **No versioning** or migration support. Direct overwrites on save.
+- **Concurrency**: **No transactional saves**; race conditions possible during player disconnection.
+- **Error Handling**: Uses `pcall` for saves but lacks retry logic or fallback.
+- **Verdict**: **No versioning, no migrations, no concurrency control**
 
-- **Implementation:**
-  - Use a table to track player request timestamps.
-  - Reject requests exceeding the rate limit.
+## Recommended Hardening Priorities
 
-## Anti-Exploit Test Checklist
+1. **Add Rate Limiting** to all DataStore operations and critical remotes (P0).
+2. **Implement Ownership Checks** for trades, guilds, and marketplace listings (P0).
+3. **Add Distance Validation** for node harvesting and island changes (P1).
+4. **Introduce DataStore Versioning** with migration support (P1).
+5. **Add Cooldowns** to critical actions like upgrades and trades (P1).
+6. **Enforce Positive Currency Balances** in all currency operations (P2).
+7. **Add Logging** for critical events and errors (P3).
+8. **Sanitize Inputs** for all remote events and functions (P3).
+9. **Implement Transactional Saves** for player data (P2).
+10. **Add Input Validation** for all remote events and functions (P3).
 
-- **Currency Manipulation:**
-  - Test for fake currency transactions.
-  - Verify server-side validation.
-
-- **Inventory Duplication:**
-  - Test for duplicate item acquisition.
-  - Verify inventory tracking.
-
-- **Teleport Hacks:**
-  - Test for manipulated player positions.
-  - Verify position validation.
-
-- **DataStore Races:**
-  - Test concurrent DataStore writes.
-  - Verify locking mechanism.
-
-- **Spam Attacks:**
-  - Test server response to spam.
-  - Verify rate limiting.
-
-## Confirmation
-
-- **Remote Count:** 8
-- **Authority Violations Count:** 3
-- **P0/P1 Exploits Found:** 5
-- **Deliverable Path:** `C:\Users\aariz\kilo_HQ\roblox-dev\aether-harvester\docs\autonomy\SECURITY_MODEL.md`
+---
