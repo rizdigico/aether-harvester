@@ -1,0 +1,10 @@
+{
+  "settings": {
+    "luau": {
+      "aliases": {
+        "AetherShared": "ReplicatedStorage.AetherShared"
+      },
+      "ignoreGlobs": ["node_modules/**", ".rokit/**"]
+    }
+  }
+}

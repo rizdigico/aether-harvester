@@ -1,0 +1,27 @@
+# Rokit
+.rokit/
+
+# Rojo sync files
+*.rbxlx
+*.rbxl
+serve.project.json
+
+# Lune build output
+dist/
+
+# Node modules (visual regression tooling)
+node_modules/
+
+# Visual regression artifacts
+tests/baselines/
+tests/current/
+tests/diffs/
+
+# Environment
+.env
+*.local.json
+
+# Studio artifacts
+*.fbx
+*.obj
+*.mtl

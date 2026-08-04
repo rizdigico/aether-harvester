@@ -1,0 +1,5 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JohnnyMorganz/luau-lsp/main/scripts/globalTypes.tl",
+  "name": "Aether Harvester",
+  "globals": {}
+}

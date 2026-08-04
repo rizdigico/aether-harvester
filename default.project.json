@@ -1,0 +1,49 @@
+{
+  "name": "AetherHarvester",
+  "tree": {
+    "$className": "DataModel",
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "AetherShared": {
+        "$className": "Folder",
+        "$path": "src/ReplicatedStorage/AetherShared"
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "AetherServer": {
+        "$className": "Folder",
+        "$path": "src/ServerScriptService/AetherServer"
+      }
+    },
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$path": "src/StarterPlayer/StarterPlayerScripts"
+      }
+    },
+
+    "StarterGui": {
+      "$className": "StarterGui",
+      "AetherUI": {
+        "$className": "Folder",
+        "$path": "src/StarterGui/AetherUI"
+      }
+    },
+
+    "Workspace": {
+      "$className": "Workspace",
+      "$properties": {
+        "FilteringEnabled": true
+      },
+      "AetherWorld": {
+        "$className": "Folder",
+        "$path": "src/Workspace/AetherWorld"
+      }
+    }
+  }
+}
