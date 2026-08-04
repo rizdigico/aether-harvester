@@ -1,5 +1,5 @@
 {
-  "name": "AetherHarvester",
+  "name": "AetherHarvesterTests",
   "tree": {
     "$className": "DataModel",
 
@@ -7,6 +7,9 @@
       "$className": "ReplicatedStorage",
       "AetherShared": {
         "$path": "src/ReplicatedStorage/AetherShared"
+      },
+      "TestEZ": {
+        "$path": "vendor/testez/src"
       }
     },
 
@@ -14,6 +17,9 @@
       "$className": "ServerScriptService",
       "AetherServer": {
         "$path": "src/ServerScriptService/AetherServer"
+      },
+      "TestRunner": {
+        "$path": "tests/test-runner.server.luau"
       }
     },
 
@@ -35,9 +41,6 @@
 
     "Workspace": {
       "$className": "Workspace",
-      "$properties": {
-        "FilteringEnabled": true
-      },
       "AetherWorld": {
         "$className": "Folder",
         "$path": "src/Workspace/AetherWorld"

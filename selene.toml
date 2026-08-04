@@ -1,20 +1,16 @@
 # Selene configuration for Aether Harvester
 # https://kampfkarren.github.io/selene/
-std = "roblox"
-
-[style]
-max_complexity = 20
-max_lines = 200
+# Chains the Roblox std with the local testez std (defines describe/it/expect).
+std = "roblox+testez"
 
 [lints]
 # Strictness
 global_usage = "deny"
 if_same_then_else = "warn"
-incorrect_std_library_use = "deny"
+incorrect_standard_library_use = "deny"
 shadowing = "allow"
 unused_self = "warn"
 while_true = "allow"
 
-[globals]
-# Common Roblox globals that selene's roblox std already covers;
-# add project-specific globals here if any module exposes them.
+[config]
+empty_if = { comments_count = true }

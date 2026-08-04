@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Format + Lint + Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rokit
+        run: |
+          curl -LsSf https://github.com/rojo-rbx/rokit/releases/latest/download/install.ps1 -o rokit-install.ps1
+          powershell -ExecutionPolicy Bypass -File rokit-install.ps1
+          rokit trust rojo-rbx/rojo JohnnyMorganz/StyLua Kampfkarren/selene lune-org/lune JohnnyMorganz/luau-lsp
+
+      - name: Install tools
+        run: rokit install
+
+      - name: StyLua check
+        run: stylua --check src tests
+
+      - name: Selene lint
+        run: selene src tests
+
+      - name: Rojo build
+        run: rojo build --output aether-harvester-ci.rbxlx
+
+      - name: Rojo test build
+        run: rojo build test.project.json --output test-place-ci.rbxlx
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: aether-harvester-builds
+          path: |
+            aether-harvester-ci.rbxlx
+            test-place-ci.rbxlx

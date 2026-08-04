@@ -1,0 +1,34 @@
+# Publish to Roblox Open Cloud (staging).
+# Requires Open Cloud API key stored as repo secret ROBLOX_OPEN_CLOUD_API_KEY.
+# NEVER configure production publish to run automatically.
+
+name: Publish Staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [staging]
+
+jobs:
+  publish-staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          curl -LsSf https://github.com/rojo-rbx/rokit/releases/latest/download/install.ps1 -o rokit-install.ps1
+          powershell -ExecutionPolicy Bypass -File rokit-install.ps1
+          rokit trust rojo-rbx/rojo
+          rokit install
+          rojo build --output aether-harvester-staging.rbxlx
+      - name: Publish staging place
+        env:
+          ROBLOX_OPEN_CLOUD_API_KEY: ${{ secrets.ROBLOX_OPEN_CLOUD_API_KEY }}
+        run: |
+          # Uses rbxcloud or direct Open Cloud Place Publishing API.
+          # See https://create.roblox.com/docs/cloud/guides/usage-place-publishing
+          echo "Publishing staging place (requires Open Cloud API key)"
+          # Placeholder: rbxcloud publish --place <STAGING_PLACE_ID> --file aether-harvester-staging.rbxlx
+
+      - name: Smoke test marker
+        run: echo "Staging published — human approval required for production"

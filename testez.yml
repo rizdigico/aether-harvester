@@ -1,0 +1,18 @@
+# TestEZ standard library for selene
+# Chain with roblox: std = "roblox+testez"
+base: roblox
+lua_versions:
+  - luau
+globals:
+  describe:
+    args:
+      - type: string
+      - type: function
+  it:
+    args:
+      - type: string
+      - type: function
+      - type: function
+        required: false
+  expect:
+    any: true

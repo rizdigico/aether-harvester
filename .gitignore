@@ -5,6 +5,7 @@
 *.rbxlx
 *.rbxl
 serve.project.json
+sourcemap.json
 
 # Lune build output
 dist/

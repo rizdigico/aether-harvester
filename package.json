@@ -1,0 +1,21 @@
+{
+  "name": "aether-harvester",
+  "version": "0.1.0",
+  "description": "Aether Harvester Simulator - Roblox game project (Rojo-managed)",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "format": "stylua src tests",
+    "format:check": "stylua --check src tests",
+    "lint": "selene src tests",
+    "build": "rojo build --output aether-harvester.rbxlx",
+    "build:test": "rojo build test.project.json --output test-place.rbxlx",
+    "serve": "rojo serve",
+    "test:unit": "lune run scripts/run-unit-tests.luau",
+    "visual:compare": "node scripts/compare-screenshots.mjs"
+  },
+  "devDependencies": {
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0"
+  }
+}
