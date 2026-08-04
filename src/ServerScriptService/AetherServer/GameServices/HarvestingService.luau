@@ -23,17 +23,17 @@ local function initializeHarvestNodes()
             currentRespawnTime = 0,
             lastHarvested = 0,
             maxHarvests = 10,
-            currentHarvests = 0
+            currentHarvests = 0,
         },
         ["Node2"] = {
             respawnTime = NODE_RESPAWN_TIME,
             currentRespawnTime = 0,
             lastHarvested = 0,
             maxHarvests = 15,
-            currentHarvests = 0
-        }
+            currentHarvests = 0,
+        },
     }
-    
+
     -- Start respawn timers
     startRespawnTimers()
 end
@@ -59,44 +59,44 @@ local function validateHarvestAction(player: Player, nodeId: string, tool: Insta
         warn("Node does not exist: " .. nodeId)
         return false, "Node does not exist."
     end
-    
+
     local nodeData = HARVEST_NODES[nodeId]
-    
+
     -- Check if the node is ready to be harvested
     if nodeData.currentHarvests >= nodeData.maxHarvests then
         return false, "Node is depleted. Wait for it to respawn."
     end
-    
+
     -- Check if the player has a valid tool
     if not tool or not tool:IsA("Tool") then
         return false, "Invalid tool."
     end
-    
+
     -- Check if the player is close enough to the node
     local character = player.Character
     if not character then
         return false, "Character not found."
     end
-    
+
     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then
         return false, "HumanoidRootPart not found."
     end
-    
+
     local nodePart = workspace:FindFirstChild(nodeId)
     if not nodePart then
         return false, "Node part not found in workspace."
     end
-    
+
     local distance = (humanoidRootPart.Position - nodePart.Position).Magnitude
     if distance > 10 then
         return false, "Too far from the node."
     end
-    
+
     -- Process the harvest
     nodeData.currentHarvests = nodeData.currentHarvests + 1
     nodeData.lastHarvested = tick()
-    
+
     -- Return success
     return true, "Harvest successful."
 end
@@ -104,7 +104,7 @@ end
 -- Function to handle remote events for harvest actions
 local function handleHarvestEvent(player: Player, nodeId: string, tool: Instance)
     local success, message = validateHarvestAction(player, nodeId, tool)
-    
+
     if success then
         -- Broadcast harvest success to client
         game:GetService("ReplicatedStorage"):FindFirstChild("HarvestEvent"):FireClient(player, true, nodeId)
@@ -113,7 +113,7 @@ local function handleHarvestEvent(player: Player, nodeId: string, tool: Instance
             Inventory = {
                 -- Example: Add harvested items to player's inventory
                 -- This would be implemented based on node type and player's tool
-            }
+            },
         })
     else
         -- Broadcast harvest failure to client
@@ -135,5 +135,5 @@ end
 -- Export functions for use by other modules
 return {
     validateHarvestAction = validateHarvestAction,
-    initializeHarvestNodes = initializeHarvestNodes
+    initializeHarvestNodes = initializeHarvestNodes,
 }

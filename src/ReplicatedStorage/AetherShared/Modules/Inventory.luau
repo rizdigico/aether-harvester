@@ -5,6 +5,16 @@
 
 local Inventory = {}
 
+-- Items data module is provided as a global in the game's boot chain;
+-- resolve through _G so the module works under Lune tests too.
+local function getItemDef(itemName)
+    local Items = _G.Items
+    if Items and Items.Get then
+        return Items.Get(itemName)
+    end
+    return nil
+end
+
 -- Constants
 local INVENTORY_SIZE = 30
 local MAX_STACK_SIZE = 999
@@ -47,35 +57,38 @@ function Inventory.New()
         slots = {},
         currency = {
             gold = 0,
-            aether = 0
+            aether = 0,
         },
         equippedItems = {
             weapon = nil,
             armor = nil,
-            tool = nil
-        }
+            tool = nil,
+        },
     }
-    
+
     -- Fill inventory with empty slots
     for i = 1, INVENTORY_SIZE do
         table.insert(inventory.slots, {
             itemName = nil,
             quantity = 0,
-            durability = nil
+            durability = nil,
         })
     end
-    
+
+    -- Instance methods resolve through the module (Inventory:AddItem etc.)
+    setmetatable(inventory, { __index = Inventory })
+
     return inventory
 end
 
 -- Add an item to the inventory
 function Inventory:AddItem(itemName, quantity, properties)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     -- Check if item is stackable
     if item.stackable then
         local stackSlot = nil
@@ -85,7 +98,7 @@ function Inventory:AddItem(itemName, quantity, properties)
                 break
             end
         end
-        
+
         if stackSlot then
             -- Add to existing stack
             self.slots[stackSlot].quantity = math.min(self.slots[stackSlot].quantity + quantity, item.maxStack)
@@ -98,7 +111,7 @@ function Inventory:AddItem(itemName, quantity, properties)
                         itemName = itemName,
                         quantity = math.min(quantity, item.maxStack),
                         durability = properties and properties.durability or item.properties.durability,
-                        properties = properties
+                        properties = properties,
                     }
                     return true
                 end
@@ -112,24 +125,24 @@ function Inventory:AddItem(itemName, quantity, properties)
                     itemName = itemName,
                     quantity = quantity,
                     durability = properties and properties.durability or item.properties.durability,
-                    properties = properties
+                    properties = properties,
                 }
                 return true
             end
         end
     end
-    
+
     return false, "Inventory is full."
 end
 
 -- Remove an item from the inventory
 function Inventory:RemoveItem(itemName, quantity)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     -- Check if item is stackable
     if item.stackable then
         for i, slot in ipairs(self.slots) do
@@ -138,7 +151,7 @@ function Inventory:RemoveItem(itemName, quantity)
                     -- Remove entire stack
                     self.slots[i] = {
                         itemName = nil,
-                        quantity = 0
+                        quantity = 0,
                     }
                 else
                     -- Reduce stack
@@ -153,24 +166,24 @@ function Inventory:RemoveItem(itemName, quantity)
             if slot.itemName == itemName then
                 self.slots[i] = {
                     itemName = nil,
-                    quantity = 0
+                    quantity = 0,
                 }
                 return true
             end
         end
     end
-    
+
     return false, "Item not found in inventory."
 end
 
 -- Use an item from the inventory
 function Inventory:UseItem(itemName, player)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     -- Find the item in inventory
     for i, slot in ipairs(self.slots) do
         if slot.itemName == itemName then
@@ -184,7 +197,7 @@ function Inventory:UseItem(itemName, player)
                         end
                     end
                 end
-                
+
                 -- Remove one use
                 if slot.quantity > 1 then
                     slot.quantity = slot.quantity - 1
@@ -192,7 +205,7 @@ function Inventory:UseItem(itemName, player)
                     -- Remove the item
                     self.slots[i] = {
                         itemName = nil,
-                        quantity = 0
+                        quantity = 0,
                     }
                 end
                 return true
@@ -200,41 +213,41 @@ function Inventory:UseItem(itemName, player)
             return false, "Item is not consumable."
         end
     end
-    
+
     return false, "Item not found in inventory."
 end
 
 -- Equip an item
 function Inventory:EquipItem(itemName, slotType)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     -- Check if item can be equipped
     if not item.equippable then
         return false, "Item is not equippable."
     end
-    
+
     -- Find the item in inventory
     for i, slot in ipairs(self.slots) do
         if slot.itemName == itemName then
             -- Unequip previous item if needed
             if self.equippedItems[slotType] then
-                local previousItem = Items.Get(self.equippedItems[slotType])
+                local previousItem = getItemDef(self.equippedItems[slotType])
                 if previousItem and previousItem.equippable then
                     -- Return previous item to inventory
                     self:AddItem(self.equippedItems[slotType], 1)
                 end
             end
-            
+
             -- Equip new item
             self.equippedItems[slotType] = itemName
             return true
         end
     end
-    
+
     return false, "Item not found in inventory."
 end
 
@@ -243,14 +256,14 @@ function Inventory:UnequipItem(slotType)
     if not self.equippedItems[slotType] then
         return false, "No item equipped in this slot."
     end
-    
+
     local itemName = self.equippedItems[slotType]
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     -- Add item back to inventory
     self:AddItem(itemName, 1)
     self.equippedItems[slotType] = nil
@@ -259,22 +272,22 @@ end
 
 -- Check if inventory has enough space for an item
 function Inventory:HasSpace(itemName, quantity)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return false
     end
-    
+
     local totalSpace = INVENTORY_SIZE
     local usedSpace = 0
-    
+
     -- Calculate used space
     for _, slot in ipairs(self.slots) do
         if slot.itemName then
             usedSpace = usedSpace + 1
         end
     end
-    
+
     -- If item is stackable, check if we have space for the quantity
     if item.stackable then
         local stackSlot = nil
@@ -284,7 +297,7 @@ function Inventory:HasSpace(itemName, quantity)
                 break
             end
         end
-        
+
         if stackSlot then
             -- Check if we can add to existing stack
             if self.slots[stackSlot].quantity + quantity <= item.maxStack then
@@ -292,7 +305,7 @@ function Inventory:HasSpace(itemName, quantity)
             end
         end
     end
-    
+
     return usedSpace < INVENTORY_SIZE
 end
 
@@ -343,12 +356,12 @@ end
 
 -- Get item count
 function Inventory:GetItemCount(itemName)
-    local item = Items.Get(itemName)
+    local item = getItemDef(itemName)
     if not item then
         warn(string.format("Item %s not found.", itemName))
         return 0
     end
-    
+
     local count = 0
     for _, slot in ipairs(self.slots) do
         if slot.itemName == itemName then
@@ -363,7 +376,7 @@ function Inventory:GetTotalWeight()
     local totalWeight = 0
     for _, slot in ipairs(self.slots) do
         if slot.itemName then
-            local item = Items.Get(slot.itemName)
+            local item = getItemDef(slot.itemName)
             if item then
                 local weight = slot.properties and slot.properties.weight or item.properties.weight
                 totalWeight = totalWeight + (slot.quantity * weight)

@@ -20,10 +20,10 @@ local EVENTS = {
             items = {
                 {
                     itemId = "HarvestingBoost",
-                    quantity = 1
-                }
-            }
-        }
+                    quantity = 1,
+                },
+            },
+        },
     },
     ["CreatureBattle"] = {
         name = "Creature Battle Tournament",
@@ -36,11 +36,11 @@ local EVENTS = {
             items = {
                 {
                     itemId = "BattleReward",
-                    quantity = 1
-                }
-            }
-        }
-    }
+                    quantity = 1,
+                },
+            },
+        },
+    },
 }
 
 -- Function to initialize events
@@ -50,7 +50,7 @@ local function initializeEvents()
         eventData.startTime = tick() + 3600 -- Start in 1 hour
         eventData.endTime = eventData.startTime + 86400 -- End in 24 hours
     end
-    
+
     -- Start event timers
     startEventTimers()
 end
@@ -80,14 +80,14 @@ local function notifyPlayersAboutEvent(eventId: string, eventType: string)
         warn("Event not found: " .. eventId)
         return
     end
-    
+
     local message = ""
     if eventType == "started" then
         message = "Event started: " .. eventData.name .. "\n" .. eventData.description
     elseif eventType == "ended" then
         message = "Event ended: " .. eventData.name
     end
-    
+
     -- Notify all players
     for _, player in ipairs(Players:GetPlayers()) do
         game:GetService("ReplicatedStorage"):FindFirstChild("EventNotification"):FireClient(player, eventId, message)
@@ -101,11 +101,11 @@ local function giveEventRewards(player: Player, eventId: string)
         warn("Event not found: " .. eventId)
         return false, "Event not found."
     end
-    
+
     if not eventData.active then
         return false, "Event is not active."
     end
-    
+
     -- Give XP
     local xpReward = eventData.rewards.xp or 0
     if xpReward > 0 then
@@ -114,10 +114,10 @@ local function giveEventRewards(player: Player, eventId: string)
         progressionData.xp = (progressionData.xp or 0) + xpReward
         playerData.Progression = progressionData
         DataStoreService.savePlayerData(player, {
-            Progression = progressionData
+            Progression = progressionData,
         })
     end
-    
+
     -- Give items
     local itemsReward = eventData.rewards.items or {}
     for _, item in pairs(itemsReward) do
@@ -126,10 +126,10 @@ local function giveEventRewards(player: Player, eventId: string)
         inventoryData[item.itemId] = (inventoryData[item.itemId] or 0) + item.quantity
         playerData.Inventory = inventoryData
         DataStoreService.savePlayerData(player, {
-            Inventory = inventoryData
+            Inventory = inventoryData,
         })
     end
-    
+
     return true, "Event rewards given."
 end
 
@@ -137,7 +137,9 @@ end
 local function handleEventParticipation(player: Player, eventId: string)
     local success, message = giveEventRewards(player, eventId)
     if success then
-        game:GetService("ReplicatedStorage"):FindFirstChild("EventNotification"):FireClient(player, eventId, "rewards_received", message)
+        game:GetService("ReplicatedStorage")
+            :FindFirstChild("EventNotification")
+            :FireClient(player, eventId, "rewards_received", message)
     else
         warn("Failed to give event rewards: " .. message)
     end
@@ -160,5 +162,5 @@ end
 return {
     initializeEvents = initializeEvents,
     notifyPlayersAboutEvent = notifyPlayersAboutEvent,
-    giveEventRewards = giveEventRewards
+    giveEventRewards = giveEventRewards,
 }

@@ -41,12 +41,13 @@ for i = 1, INVENTORY_SIZE do
     slot.Position = UDim2.new(
         math.floor((i - 1) % 5) * (SLOT_SIZE.X.Offset + SLOT_SPACING.X.Offset),
         math.floor((i - 1) / 5) * (SLOT_SIZE.Y.Offset + SLOT_SPACING.Y.Offset),
-        0, 0
+        0,
+        0
     )
     slot.BackgroundTransparency = 1
     slot.BorderSizePixel = 0
     slot.Parent = InventoryGrid
-    
+
     -- Create item label for each slot
     local itemLabel = Instance.new("TextLabel")
     itemLabel.Name = "ItemLabel"
@@ -58,7 +59,7 @@ for i = 1, INVENTORY_SIZE do
     itemLabel.TextSize = 14
     itemLabel.Font = Enum.Font.Gotham
     itemLabel.Parent = slot
-    
+
     -- Create item icon placeholder
     local itemIcon = Instance.new("ImageLabel")
     itemIcon.Name = "ItemIcon"
@@ -66,13 +67,13 @@ for i = 1, INVENTORY_SIZE do
     itemIcon.Position = UDim2.new(0, 0, 0, 0)
     itemIcon.BackgroundTransparency = 1
     itemIcon.Parent = slot
-    
+
     -- Store references
     InventorySlots[i] = {
         slot = slot,
         itemLabel = itemLabel,
         itemIcon = itemIcon,
-        item = nil
+        item = nil,
     }
 end
 
@@ -136,7 +137,7 @@ local function showTooltip(item: table, x: number, y: number)
         TooltipContainer.Visible = false
         return
     end
-    
+
     TooltipTitleLabel.Text = item.name
     TooltipDescriptionLabel.Text = item.description
     TooltipContainer.Position = UDim2.new(0, x, 0, y)
@@ -194,19 +195,19 @@ for i, slotData in pairs(InventorySlots) do
     slotData.slot.MouseButton1Click:Connect(function()
         handleSlotClick(i)
     end)
-    
+
     slotData.slot.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             handleDragStart(i)
         end
     end)
-    
+
     slotData.slot.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             handleDragOver(i)
         end
     end)
-    
+
     slotData.slot.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             handleDragLeave(i)
@@ -229,24 +230,30 @@ end
 
 -- Connect mouse move for tooltips
 game:GetService("UserInputService"):Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
+    if gameProcessed then
+        return
+    end
+
     if input.UserInputType == Enum.UserInputType.MouseMovement then
         local mouse = game:GetService("Players"):GetPlayerFromCharacter(game.Players.LocalPlayer.Character).GetMouse()
         local mouseX, mouseY = mouse.X, mouse.Y
-        
+
         -- Check if mouse is over any slot
         for i, slotData in pairs(InventorySlots) do
             local slotPos = slotData.slot.AbsolutePosition
             local slotSize = slotData.slot.AbsoluteSize
-            
-            if mouseX >= slotPos.X and mouseX <= slotPos.X + slotSize.X and 
-               mouseY >= slotPos.Y and mouseY <= slotPos.Y + slotSize.Y then
+
+            if
+                mouseX >= slotPos.X
+                and mouseX <= slotPos.X + slotSize.X
+                and mouseY >= slotPos.Y
+                and mouseY <= slotPos.Y + slotSize.Y
+            then
                 showTooltip(slotData.item, mouseX, mouseY)
                 return
             end
         end
-        
+
         hideTooltip()
     end
 end)

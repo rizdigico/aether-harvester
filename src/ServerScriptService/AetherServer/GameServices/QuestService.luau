@@ -16,18 +16,18 @@ local QUESTS = {
                 type = "harvest",
                 target = "Node1",
                 completed = false,
-                count = 1
-            }
+                count = 1,
+            },
         },
         rewards = {
             items = {
                 {
                     itemId = "BasicHarvestingTool",
-                    quantity = 1
-                }
+                    quantity = 1,
+                },
             },
-            xp = 100
-        }
+            xp = 100,
+        },
     },
     ["TameFirstCreature"] = {
         name = "Tame Your First Creature",
@@ -37,19 +37,19 @@ local QUESTS = {
                 type = "tame",
                 creatureId = "Rabbit",
                 completed = false,
-                count = 1
-            }
+                count = 1,
+            },
         },
         rewards = {
             items = {
                 {
                     itemId = "CreatureTamingKit",
-                    quantity = 1
-                }
+                    quantity = 1,
+                },
             },
-            xp = 150
-        }
-    }
+            xp = 150,
+        },
+    },
 }
 
 -- Function to initialize player quests
@@ -58,17 +58,17 @@ local function initializePlayerQuests(player: Player)
     if not playerData.Quests then
         playerData.Quests = {}
     end
-    
+
     -- Assign default quests to new players
     if #playerData.Quests == 0 then
         for questId, quest in pairs(QUESTS) do
             playerData.Quests[questId] = {
                 quest = quest,
-                progress = {}
+                progress = {},
             }
         end
     end
-    
+
     player:SetAttribute("PlayerData", playerData)
 end
 
@@ -78,26 +78,26 @@ local function updateQuestProgress(player: Player, questId: string, objectiveInd
     if not playerData.Quests then
         return false, "Quests data not found."
     end
-    
+
     local questData = playerData.Quests[questId]
     if not questData then
         return false, "Quest not found."
     end
-    
+
     local quest = questData.quest
     local progress = questData.progress
     if not progress then
         progress = {}
         questData.progress = progress
     end
-    
+
     if not quest.objectives[objectiveIndex] then
         return false, "Objective not found."
     end
-    
+
     local objective = quest.objectives[objectiveIndex]
     objective.completed = completed
-    
+
     -- Check if all objectives are completed
     local allCompleted = true
     for _, obj in pairs(quest.objectives) do
@@ -106,17 +106,17 @@ local function updateQuestProgress(player: Player, questId: string, objectiveInd
             break
         end
     end
-    
+
     if allCompleted then
         -- Quest completed, give rewards
         giveQuestRewards(player, questId)
     end
-    
+
     -- Save updated player data
     DataStoreService.savePlayerData(player, {
-        Quests = playerData.Quests
+        Quests = playerData.Quests,
     })
-    
+
     return true, "Quest progress updated."
 end
 
@@ -126,14 +126,14 @@ local function giveQuestRewards(player: Player, questId: string)
     if not playerData.Quests then
         return false, "Quests data not found."
     end
-    
+
     local questData = playerData.Quests[questId]
     if not questData then
         return false, "Quest not found."
     end
-    
+
     local quest = questData.quest
-    
+
     -- Give XP
     local xpReward = quest.rewards.xp or 0
     if xpReward > 0 then
@@ -142,7 +142,7 @@ local function giveQuestRewards(player: Player, questId: string)
         progressionData.xp = (progressionData.xp or 0) + xpReward
         playerData.Progression = progressionData
     end
-    
+
     -- Give items
     local itemsReward = quest.rewards.items or {}
     for _, item in pairs(itemsReward) do
@@ -151,16 +151,16 @@ local function giveQuestRewards(player: Player, questId: string)
         inventoryData[item.itemId] = (inventoryData[item.itemId] or 0) + item.quantity
         playerData.Inventory = inventoryData
     end
-    
+
     -- Save updated player data
     DataStoreService.savePlayerData(player, {
         Progression = playerData.Progression,
-        Inventory = playerData.Inventory
+        Inventory = playerData.Inventory,
     })
-    
+
     -- Notify client that quest is completed
     game:GetService("ReplicatedStorage"):FindFirstChild("QuestEvent"):FireClient(player, questId, true)
-    
+
     return true, "Quest rewards given."
 end
 
@@ -168,7 +168,9 @@ end
 local function handleQuestEvent(player: Player, questId: string, objectiveIndex: number, completed: boolean)
     local success, message = updateQuestProgress(player, questId, objectiveIndex, completed)
     if success then
-        game:GetService("ReplicatedStorage"):FindFirstChild("QuestEvent"):FireClient(player, questId, "progress_updated", message)
+        game:GetService("ReplicatedStorage")
+            :FindFirstChild("QuestEvent")
+            :FireClient(player, questId, "progress_updated", message)
     else
         warn("Failed to update quest progress: " .. message)
     end
@@ -182,7 +184,7 @@ end
 -- Connect to player added event
 Players.PlayerAdded:Connect(function(player)
     initializePlayerQuests(player)
-    
+
     -- Connect to remote events
     local questEvent = game:GetService("ReplicatedStorage"):FindFirstChild("QuestEvent")
     if questEvent then
@@ -196,5 +198,5 @@ end)
 return {
     initializePlayerQuests = initializePlayerQuests,
     updateQuestProgress = updateQuestProgress,
-    giveQuestRewards = giveQuestRewards
+    giveQuestRewards = giveQuestRewards,
 }

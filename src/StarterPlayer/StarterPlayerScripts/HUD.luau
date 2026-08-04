@@ -111,7 +111,7 @@ local function updateQuests(quests: table)
     for _, child in ipairs(QuestsList:GetChildren()) do
         child:Destroy()
     end
-    
+
     -- Add new quests
     for questId, questData in pairs(quests) do
         local questFrame = Instance.new("Frame")
@@ -119,7 +119,7 @@ local function updateQuests(quests: table)
         questFrame.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
         questFrame.BorderSizePixel = 0
         questFrame.Parent = QuestsList
-        
+
         local questTitleLabel = Instance.new("TextLabel")
         questTitleLabel.Name = "QuestTitleLabel"
         questTitleLabel.Size = UDim2.new(0.8, 0, 1, 0)
@@ -130,7 +130,7 @@ local function updateQuests(quests: table)
         questTitleLabel.TextSize = 14
         questTitleLabel.Font = Enum.Font.Gotham
         questTitleLabel.Parent = questFrame
-        
+
         local questProgressLabel = Instance.new("TextLabel")
         questProgressLabel.Name = "QuestProgressLabel"
         questProgressLabel.Size = UDim2.new(0.2, 0, 1, 0)
@@ -142,7 +142,7 @@ local function updateQuests(quests: table)
         questProgressLabel.Font = Enum.Font.Gotham
         questProgressLabel.Parent = questFrame
     end
-    
+
     -- Update canvas size
     QuestsList.CanvasSize = UDim2.new(0, 0, 0, QuestsList.AbsoluteSize.Y)
 end

@@ -56,7 +56,7 @@ local ItemRarity = Enum.create("ItemRarity", {
     Uncommon = 2,
     Rare = 3,
     Epic = 4,
-    Legendary = 5
+    Legendary = 5,
 })
 
 -- Item type enum
@@ -66,7 +66,7 @@ local ItemType = Enum.create("ItemType", {
     Consumable = 3,
     CraftingMaterial = 4,
     Currency = 5,
-    Misc = 6
+    Misc = 6,
 })
 
 -- Base items
@@ -82,8 +82,8 @@ Items.AetherShard = {
     icon = "rbxassetid://123456789",
     properties = {
         durability = nil,
-        weight = 0.1
-    }
+        weight = 0.1,
+    },
 }
 
 Items.WoodenPickaxe = {
@@ -100,7 +100,7 @@ Items.WoodenPickaxe = {
         durability = 100,
         weight = 1.5,
         miningSpeed = 1.0,
-        miningPower = 10
+        miningPower = 10,
     },
     abilities = {
         {
@@ -117,9 +117,9 @@ Items.WoodenPickaxe = {
                         game:GetService("Debris"):AddItem(humanoid, 5)
                     end
                 end
-            end
-        }
-    }
+            end,
+        },
+    },
 }
 
 -- Additional items (30+)
@@ -135,8 +135,8 @@ Items.CopperOre = {
     icon = "rbxassetid://987654320",
     properties = {
         durability = nil,
-        weight = 0.2
-    }
+        weight = 0.2,
+    },
 }
 
 Items.IronOre = {
@@ -151,8 +151,8 @@ Items.IronOre = {
     icon = "rbxassetid://987654319",
     properties = {
         durability = nil,
-        weight = 0.3
-    }
+        weight = 0.3,
+    },
 }
 
 Items.GoldOre = {
@@ -167,8 +167,8 @@ Items.GoldOre = {
     icon = "rbxassetid://987654318",
     properties = {
         durability = nil,
-        weight = 0.4
-    }
+        weight = 0.4,
+    },
 }
 
 Items.Stone = {
@@ -183,8 +183,8 @@ Items.Stone = {
     icon = "rbxassetid://987654317",
     properties = {
         durability = nil,
-        weight = 0.1
-    }
+        weight = 0.1,
+    },
 }
 
 Items.Wood = {
@@ -199,8 +199,8 @@ Items.Wood = {
     icon = "rbxassetid://987654316",
     properties = {
         durability = nil,
-        weight = 0.2
-    }
+        weight = 0.2,
+    },
 }
 
 Items.HealthPotion = {
@@ -216,7 +216,7 @@ Items.HealthPotion = {
     properties = {
         durability = nil,
         weight = 0.1,
-        healAmount = 25
+        healAmount = 25,
     },
     abilities = {
         {
@@ -233,9 +233,9 @@ Items.HealthPotion = {
                         humanoid.Health = currentHealth + (maxHealth * item.properties.healAmount / 100)
                     end
                 end
-            end
-        }
-    }
+            end,
+        },
+    },
 }
 
 Items.ManaPotion = {
@@ -251,7 +251,7 @@ Items.ManaPotion = {
     properties = {
         durability = nil,
         weight = 0.1,
-        manaAmount = 25
+        manaAmount = 25,
     },
     abilities = {
         {
@@ -267,16 +267,16 @@ Items.ManaPotion = {
                         humanoid:SetAttribute("Mana", mana + (100 * item.properties.manaAmount / 100))
                     end
                 end
-            end
-        }
-    }
+            end,
+        },
+    },
 }
 
 -- Function to get all items
 function Items.GetAll()
     local allItems = {}
     for name, item in pairs(Items) do
-        table.insert(allItems, {name = name, item = item})
+        table.insert(allItems, { name = name, item = item })
     end
     return allItems
 end
@@ -291,7 +291,7 @@ function Items.GetByType(type)
     local items = {}
     for name, item in pairs(Items) do
         if item.type == type then
-            table.insert(items, {name = name, item = item})
+            table.insert(items, { name = name, item = item })
         end
     end
     return items
@@ -302,7 +302,7 @@ function Items.GetByRarity(rarity)
     local items = {}
     for name, item in pairs(Items) do
         if item.rarity == rarity then
-            table.insert(items, {name = name, item = item})
+            table.insert(items, { name = name, item = item })
         end
     end
     return items

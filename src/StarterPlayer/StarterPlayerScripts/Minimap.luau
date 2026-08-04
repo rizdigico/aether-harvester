@@ -56,50 +56,50 @@ local function updateMinimap()
     if not character then
         return
     end
-    
+
     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then
         return
     end
-    
+
     -- Update player marker position
     local camera = workspace.CurrentCamera
     local cameraCFrame = camera.CFrame
     local playerPosition = humanoidRootPart.Position
     local screenPosition, onScreen = camera:WorldToViewportPoint(playerPosition)
-    
+
     if onScreen then
         local minimapSize = MinimapContainer.AbsoluteSize
         local minimapCenter = Vector2.new(minimapSize.X / 2, minimapSize.Y / 2)
         local relativePosition = Vector2.new(screenPosition.X, screenPosition.Y) - minimapCenter
-        
+
         -- Normalize relative position to fit within minimap
         local normalizedPosition = Vector2.new(
             math.clamp(relativePosition.X / minimapSize.X, 0, 1),
             math.clamp(relativePosition.Y / minimapSize.Y, 0, 1)
         )
-        
+
         PlayerMarker.Position = UDim2.new(normalizedPosition.X, 0, normalizedPosition.Y, 0)
     end
-    
+
     -- Update node markers
     for _, nodeMarker in pairs(NodeMarkers) do
         local nodePart = workspace:FindFirstChild(nodeMarker.nodeId)
         if nodePart then
             local nodePosition = nodePart.Position
             local screenPosition, onScreen = camera:WorldToViewportPoint(nodePosition)
-            
+
             if onScreen then
                 local minimapSize = MinimapContainer.AbsoluteSize
                 local minimapCenter = Vector2.new(minimapSize.X / 2, minimapSize.Y / 2)
                 local relativePosition = Vector2.new(screenPosition.X, screenPosition.Y) - minimapCenter
-                
+
                 -- Normalize relative position to fit within minimap
                 local normalizedPosition = Vector2.new(
                     math.clamp(relativePosition.X / minimapSize.X, 0, 1),
                     math.clamp(relativePosition.Y / minimapSize.Y, 0, 1)
                 )
-                
+
                 nodeMarker.image.Position = UDim2.new(normalizedPosition.X, 0, normalizedPosition.Y, 0)
             end
         end
@@ -115,13 +115,13 @@ local function addNodeMarker(nodeId: string, nodePosition: Vector3)
     nodeMarker.BackgroundTransparency = 1
     nodeMarker.Image = "rbxassetid://357069579" -- Node marker texture
     nodeMarker.Parent = MinimapContainer
-    
+
     -- Store reference
     table.insert(NodeMarkers, {
         image = nodeMarker,
-        nodeId = nodeId
+        nodeId = nodeId,
     })
-    
+
     -- Update marker position
     updateMinimap()
 end

@@ -59,7 +59,7 @@ Enums.ItemRarity = {
     Rare = 3,
     Epic = 4,
     Legendary = 5,
-    Mythic = 6
+    Mythic = 6,
 }
 
 -- Item Type
@@ -68,7 +68,7 @@ Enums.ItemType = {
     Consumable = 2,
     Equipment = 3,
     CraftingMaterial = 4,
-    QuestItem = 5
+    QuestItem = 5,
 }
 
 -- Creature Type
@@ -77,7 +77,7 @@ Enums.CreatureType = {
     Plant = 2,
     Mineral = 3,
     Mythical = 4,
-    Boss = 5
+    Boss = 5,
 }
 
 -- Biome Type
@@ -88,7 +88,7 @@ Enums.BiomeType = {
     Ocean = 4,
     Swamp = 5,
     Volcanic = 6,
-    Arctic = 7
+    Arctic = 7,
 }
 
 -- Quest Type
@@ -97,7 +97,7 @@ Enums.QuestType = {
     Weekly = 2,
     Event = 3,
     MainStory = 4,
-    SideQuest = 5
+    SideQuest = 5,
 }
 
 --[[ 
@@ -113,10 +113,18 @@ local RNG = {}
 -- @usage local rng = RNG.seededRandom(42)
 -- local randomValue = rng()
 RNG.seededRandom = function(seed)
-    local mt = math.randomseed
-    mt(seed)
+    -- Self-contained deterministic PRNG (mulberry32).
+    -- Does NOT depend on math.random/math.randomseed, so identical seeds
+    -- produce identical sequences in Roblox, Lune, and any Luau runtime.
+    local state = seed % 4294967296
     return function()
-        return math.random()
+        state = (state + 0x6D2B79F5) % 4294967296
+        local t = state
+        t = bit32.bxor(t, bit32.rshift(t, 15))
+        t = bit32.bxor(t, bit32.lshift(t, 13))
+        t = bit32.bxor(t, bit32.rshift(t, 16))
+        local x = (t % 4294967296) / 4294967296
+        return x
     end
 end
 
@@ -132,17 +140,17 @@ RNG.weightedRandom = function(table, weights)
     for _, weight in ipairs(weights) do
         totalWeight = totalWeight + weight
     end
-    
+
     local randomValue = math.random() * totalWeight
     local cumulativeWeight = 0
-    
+
     for i, value in ipairs(table) do
         cumulativeWeight = cumulativeWeight + weights[i]
         if randomValue <= cumulativeWeight then
             return value
         end
     end
-    
+
     return table[#table]
 end
 
@@ -205,8 +213,8 @@ end
 -- @return: number
 --
 -- @usage local interpolatedValue = Math.lerp(0.5, 0, 100)
-Math.lerp = function(value, start, end)
-    return start + (end - start) * value
+Math.lerp = function(value, start, target)
+    return start + (target - start) * value
 end
 
 -- Calculates the squared distance between two 2D points
@@ -255,11 +263,11 @@ Math.angleBetween = function(x1, y1, x2, y2)
     local dotProduct = x1 * x2 + y1 * y2
     local magnitude1 = math.sqrt(x1 * x1 + y1 * y1)
     local magnitude2 = math.sqrt(x2 * x2 + y2 * y2)
-    
+
     if magnitude1 == 0 or magnitude2 == 0 then
         return 0
     end
-    
+
     local cosTheta = dotProduct / (magnitude1 * magnitude2)
     return math.acos(math.clamp(cosTheta, -1, 1))
 end
@@ -311,14 +319,16 @@ local String = {}
 String.formatNumber = function(number)
     local parts = tostring(math.floor(number + 0.5))
     local result = ""
-    
+    local count = 0
+
     for i = #parts, 1, -1 do
         result = parts:sub(i, i) .. result
-        if i % 3 == 1 and i ~= 1 then
+        count += 1
+        if count % 3 == 0 and i ~= 1 then
             result = "," .. result
         end
     end
-    
+
     return result
 end
 
@@ -335,7 +345,7 @@ String.formatTime = function(seconds)
     remainingSeconds = remainingSeconds % 3600
     local minutes = math.floor(remainingSeconds / 60)
     local secs = math.floor(remainingSeconds % 60)
-    
+
     local parts = {}
     if days > 0 then
         table.insert(parts, days .. "d")
@@ -347,7 +357,7 @@ String.formatTime = function(seconds)
         table.insert(parts, minutes .. "m")
     end
     table.insert(parts, secs .. "s")
-    
+
     return table.concat(parts, " ")
 end
 
@@ -377,11 +387,12 @@ String.generateUID = function(length)
     length = length or 8
     local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
     local uid = ""
-    
+
     for i = 1, length do
-        uid = uid .. chars:sub(math.random(1, #chars), math.random(1, #chars))
+        local idx = math.random(1, #chars)
+        uid = uid .. chars:sub(idx, idx)
     end
-    
+
     return uid
 end
 
@@ -400,7 +411,7 @@ Table.deepClone = function(table)
     if type(table) ~= "table" then
         return table
     end
-    
+
     local clone = {}
     for key, value in pairs(table) do
         if type(value) == "table" then
@@ -409,7 +420,7 @@ Table.deepClone = function(table)
             clone[key] = value
         end
     end
-    
+
     return clone
 end
 
@@ -423,7 +434,7 @@ end
 -- @usage local mergedTable = Table.merge(targetTable, sourceTable)
 Table.merge = function(target, source, overwrite)
     overwrite = overwrite or true
-    
+
     for key, value in pairs(source) do
         if overwrite or target[key] == nil then
             if type(value) == "table" and type(target[key]) == "table" then
@@ -433,7 +444,7 @@ Table.merge = function(target, source, overwrite)
             end
         end
     end
-    
+
     return target
 end
 
@@ -444,9 +455,9 @@ end
 -- @return: table
 --
 -- @usage local filteredTable = Table.filter(originalTable, function(value) return value > 0 end)
-Table.filter = function(table, callback)
+Table.filter = function(inputTable, callback)
     local result = {}
-    for _, value in pairs(table) do
+    for _, value in pairs(inputTable) do
         if callback(value) then
             table.insert(result, value)
         end
@@ -511,7 +522,7 @@ Table.randomKey = function(table)
     for key in pairs(table) do
         table.insert(keys, key)
     end
-    
+
     return keys[math.random(1, #keys)]
 end
 
@@ -526,7 +537,7 @@ Table.randomValue = function(table)
     for _, value in pairs(table) do
         table.insert(values, value)
     end
-    
+
     return values[math.random(1, #values)]
 end
 
@@ -563,7 +574,7 @@ end
 -- @usage local isValidPlayer = Validation.isValidPlayer(player)
 Validation.isValidPlayer = function(value)
     -- Placeholder: In a real implementation, this would check if the value is a valid Player object
-    return type(value) == "table" and value:IsA and value:IsA("Player")
+    return type(value) == "table" and value.IsA and value:IsA("Player")
 end
 
 -- Checks if a value is a valid item ID
@@ -601,16 +612,16 @@ local Remote = {}
 -- @usage local success, result = Remote.safeInvoke(remoteFunction, arg1, arg2, 5)
 Remote.safeInvoke = function(remoteFunction, ...)
     local timeout = select(#... + 1, ...) or 5
-    local args = {...}
+    local args = { ... }
     local result, success = pcall(function()
         return remoteFunction:InvokeServer(table.unpack(args))
     end)
-    
+
     if not success then
         warn("RemoteFunction invoke failed:", result)
         return nil, false
     end
-    
+
     return result, true
 end
 
@@ -624,16 +635,16 @@ end
 -- @usage local success = Remote.safeFire(remoteEvent, arg1, arg2, 5)
 Remote.safeFire = function(remoteEvent, ...)
     local timeout = select(#... + 1, ...) or 5
-    local args = {...}
+    local args = { ... }
     local success = pcall(function()
         remoteEvent:FireServer(table.unpack(args))
     end)
-    
+
     if not success then
         warn("RemoteEvent fire failed:", ...)
         return false
     end
-    
+
     return true
 end
 
@@ -647,16 +658,16 @@ end
 -- @usage local success, result = Remote.withTimeout(function() return func(...) end, 5)
 Remote.withTimeout = function(func, ...)
     local timeout = select(#... + 1, ...) or 5
-    local args = {...}
+    local args = { ... }
     local result, success = pcall(function()
         return func(table.unpack(args))
     end)
-    
+
     if not success then
         warn("Function timed out or failed:", ...)
         return nil, false
     end
-    
+
     return result, true
 end
 
@@ -666,17 +677,17 @@ end
 return {
     -- Constants
     Constants = Constants,
-    
+
     -- Enums
     Enums = Enums,
-    
+
     -- RNG
     seededRandom = RNG.seededRandom,
     weightedRandom = RNG.weightedRandom,
     randomFromTable = RNG.randomFromTable,
     chanceRoll = RNG.chanceRoll,
     shuffle = RNG.shuffle,
-    
+
     -- Math
     clamp = Math.clamp,
     lerp = Math.lerp,
@@ -685,13 +696,13 @@ return {
     angleBetween = Math.angleBetween,
     mapRange = Math.mapRange,
     roundTo = Math.roundTo,
-    
+
     -- String
     formatNumber = String.formatNumber,
     formatTime = String.formatTime,
     truncate = String.truncate,
     generateUID = String.generateUID,
-    
+
     -- Table
     deepClone = Table.deepClone,
     merge = Table.merge,
@@ -701,16 +712,16 @@ return {
     count = Table.count,
     randomKey = Table.randomKey,
     randomValue = Table.randomValue,
-    
+
     -- Validation
     isPositiveInteger = Validation.isPositiveInteger,
     isNonNegativeInteger = Validation.isNonNegativeInteger,
     isValidPlayer = Validation.isValidPlayer,
     isValidItemId = Validation.isValidItemId,
     isValidCreatureId = Validation.isValidCreatureId,
-    
+
     -- Remote
     safeInvoke = Remote.safeInvoke,
     safeFire = Remote.safeFire,
-    withTimeout = Remote.withTimeout
+    withTimeout = Remote.withTimeout,
 }

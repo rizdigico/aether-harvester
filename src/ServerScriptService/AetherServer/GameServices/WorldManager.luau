@@ -18,9 +18,9 @@ local ISLAND_REGISTRY = {
         Unlocked = true,
         MaxPlayers = 50,
         CurrentPlayers = 0,
-        Events = {}
+        Events = {},
     },
-    
+
     ["ForestIsland"] = {
         Name = "Whispering Woods",
         Biome = "Forest",
@@ -32,12 +32,12 @@ local ISLAND_REGISTRY = {
             {
                 Name = "Autumn Festival",
                 StartTime = 1633040000, -- Oct 1, 2021
-                EndTime = 1635728000,   -- Oct 31, 2021
-                Active = false
-            }
-        }
+                EndTime = 1635728000, -- Oct 31, 2021
+                Active = false,
+            },
+        },
     },
-    
+
     ["MountainIsland"] = {
         Name = "Peak Haven",
         Biome = "Mountain",
@@ -45,9 +45,9 @@ local ISLAND_REGISTRY = {
         Unlocked = false,
         MaxPlayers = 15,
         CurrentPlayers = 0,
-        Events = {}
+        Events = {},
     },
-    
+
     ["OceanIsland"] = {
         Name = "Tidecaller's Reef",
         Biome = "Ocean",
@@ -59,12 +59,12 @@ local ISLAND_REGISTRY = {
             {
                 Name = "Moonlit Tides",
                 StartTime = 1630000000, -- Sep 1, 2021
-                EndTime = 1632640000,   -- Sep 30, 2021
-                Active = false
-            }
-        }
+                EndTime = 1632640000, -- Sep 30, 2021
+                Active = false,
+            },
+        },
     },
-    
+
     ["VolcanoIsland"] = {
         Name = "Ember Peak",
         Biome = "Volcanic",
@@ -72,9 +72,9 @@ local ISLAND_REGISTRY = {
         Unlocked = false,
         MaxPlayers = 8,
         CurrentPlayers = 0,
-        Events = {}
+        Events = {},
     },
-    
+
     ["MinorIsland1"] = {
         Name = "Hidden Cove",
         Biome = "Coastal",
@@ -82,8 +82,8 @@ local ISLAND_REGISTRY = {
         Unlocked = false,
         MaxPlayers = 5,
         CurrentPlayers = 0,
-        Events = {}
-    }
+        Events = {},
+    },
 }
 
 -- Module exports
@@ -96,7 +96,7 @@ local function loadWorldData()
         if not data then
             data = {}
         end
-        
+
         -- Merge with default registry
         for islandId, islandData in pairs(ISLAND_REGISTRY) do
             if not data[islandId] then
@@ -110,16 +110,16 @@ local function loadWorldData()
                 end
             end
         end
-        
+
         WorldDataStore:SetAsync("WorldState", data)
         return data
     end)
-    
+
     if not success then
         warn("Failed to load world data: " .. err)
         return nil
     end
-    
+
     return err
 end
 
@@ -127,7 +127,7 @@ local function saveWorldData()
     local success, err = pcall(function()
         WorldDataStore:SetAsync("WorldState", ISLAND_REGISTRY)
     end)
-    
+
     if not success then
         warn("Failed to save world data: " .. err)
         return false
@@ -140,14 +140,14 @@ local function checkIslandEvent(islandId, currentTime)
     if not island then
         return false
     end
-    
+
     for _, event in pairs(island.Events) do
         if currentTime >= event.StartTime and currentTime <= event.EndTime then
             event.Active = true
             return true
         end
     end
-    
+
     return false
 end
 
@@ -155,12 +155,12 @@ end
 function WorldManager:Initialize()
     -- Load world data
     ISLAND_REGISTRY = loadWorldData() or ISLAND_REGISTRY
-    
+
     -- Setup player connections
     Players.PlayerAdded:Connect(function(player)
         player.CharacterAdded:Connect(function(character)
             local humanoid = character:WaitForChild("Humanoid")
-            
+
             -- Check for island events on spawn
             local currentTime = os.time()
             for islandId, island in pairs(ISLAND_REGISTRY) do
@@ -171,11 +171,11 @@ function WorldManager:Initialize()
             end
         end)
     end)
-    
+
     -- Setup periodic checks for events
     local eventCheckConnection = RunService.Heartbeat:Connect(function()
         local currentTime = os.time()
-        
+
         for islandId, island in pairs(ISLAND_REGISTRY) do
             if checkIslandEvent(islandId, currentTime) then
                 -- Event is active, check if it was previously inactive
@@ -186,7 +186,7 @@ function WorldManager:Initialize()
                         break
                     end
                 end
-                
+
                 if not eventActive then
                     -- TODO: Notify players about new active event
                     print("New event active on island: " .. island.Name)
@@ -194,7 +194,7 @@ function WorldManager:Initialize()
             end
         end
     end)
-    
+
     -- Clean up connection on shutdown
     game:GetService("RunService"):BindToClose(function()
         eventCheckConnection:Disconnect()
@@ -207,7 +207,7 @@ function WorldManager:GetSpawnPoint(islandId)
         warn("Island not found: " .. islandId)
         return nil
     end
-    
+
     return island.SpawnPoint
 end
 
@@ -217,7 +217,7 @@ function WorldManager:IsIslandUnlocked(islandId)
         warn("Island not found: " .. islandId)
         return false
     end
-    
+
     return island.Unlocked
 end
 
@@ -227,7 +227,7 @@ function WorldManager:UnlockIsland(islandId)
         warn("Island not found: " .. islandId)
         return false
     end
-    
+
     island.Unlocked = true
     saveWorldData()
     return true
@@ -239,7 +239,7 @@ function WorldManager:GetIslandInfo(islandId)
         warn("Island not found: " .. islandId)
         return nil
     end
-    
+
     return island
 end
 
@@ -249,7 +249,7 @@ function WorldManager:GetPlayerCount(islandId)
         warn("Island not found: " .. islandId)
         return 0
     end
-    
+
     return island.CurrentPlayers
 end
 
@@ -259,7 +259,7 @@ function WorldManager:UpdatePlayerCount(islandId, delta)
         warn("Island not found: " .. islandId)
         return false
     end
-    
+
     island.CurrentPlayers = math.clamp(island.CurrentPlayers + delta, 0, island.MaxPlayers)
     saveWorldData()
     return true
@@ -270,26 +270,30 @@ function WorldManager:CanFastTravel(player, islandId)
     if not self:IsIslandUnlocked(islandId) then
         return false, "Island not unlocked"
     end
-    
+
     -- Check cooldowns
     local profile = PlayerDataService:LoadProfile(player)
     if not profile then
         return false, "Failed to load player profile"
     end
-    
+
     local cooldown = profile.FastTravel.Cooldowns[islandId]
     if cooldown and cooldown > os.time() then
         return false, "Fast travel cooldown active"
     end
-    
+
     -- Check player count
     if self:GetPlayerCount(islandId) >= ISLAND_REGISTRY[islandId].MaxPlayers then
         return false, "Island at maximum capacity"
     end
-    
+
     return true, "Can fast travel"
 end
 
 -- Return module
 WorldManager.__index = WorldManager
-return setmetatable(WorldManager, {__call = function(self, ...) return self:Initialize(...) end})
+return setmetatable(WorldManager, {
+    __call = function(self, ...)
+        return self:Initialize(...)
+    end,
+})

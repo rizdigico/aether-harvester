@@ -11,6 +11,8 @@ incorrect_standard_library_use = "deny"
 shadowing = "allow"
 unused_self = "warn"
 while_true = "allow"
+# UI system intentionally mixes scale+offset for responsive layouts
+roblox_manual_fromscale_or_fromoffset = "allow"
 
 [config]
 empty_if = { comments_count = true }

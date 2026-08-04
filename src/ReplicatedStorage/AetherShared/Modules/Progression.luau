@@ -50,7 +50,7 @@ local SKILL_TREE_COUNT = 5
 
 -- Initialize a new progression system
 function Progression.New()
-    return {
+    local progression = {
         level = 1,
         xp = 0,
         xpToNextLevel = XP_PER_LEVEL,
@@ -62,20 +62,22 @@ function Progression.New()
             intelligence = 1,
             defense = 1,
             speed = 1,
-            luck = 1
-        }
+            luck = 1,
+        },
     }
+    setmetatable(progression, { __index = Progression })
+    return progression
 end
 
 -- Add XP to player
 function Progression:AddXP(amount)
     self.xp = self.xp + amount
-    
+
     -- Check if player has leveled up
     while self.xp >= self.xpToNextLevel and self.level < MAX_LEVEL do
         self:LevelUp()
     end
-    
+
     return self.xp
 end
 
@@ -85,10 +87,10 @@ function Progression:LevelUp()
     self.xp = self.xp - self.xpToNextLevel
     self.xpToNextLevel = self.xpToNextLevel + (XP_PER_LEVEL * 0.1 * self.level)
     self.skillPoints = self.skillPoints + SKILL_POINTS_PER_LEVEL
-    
+
     -- Update stats based on level
     self:UpdateStats()
-    
+
     return self.level
 end
 
@@ -119,8 +121,8 @@ function Progression:InitializeSkillTrees()
                     if humanoid then
                         humanoid:SetAttribute("AttackDamage", (humanoid:GetAttribute("AttackDamage") or 5) + 1)
                     end
-                end
-            }
+                end,
+            },
         },
         lockedSkills = {
             {
@@ -130,9 +132,12 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
                     if humanoid then
-                        humanoid:SetAttribute("AdvancedAttackDamage", (humanoid:GetAttribute("AdvancedAttackDamage") or 0) + 2)
+                        humanoid:SetAttribute(
+                            "AdvancedAttackDamage",
+                            (humanoid:GetAttribute("AdvancedAttackDamage") or 0) + 2
+                        )
                     end
-                end
+                end,
             },
             {
                 name = "DefenseBoost",
@@ -143,12 +148,12 @@ function Progression:InitializeSkillTrees()
                     if humanoid then
                         humanoid:SetAttribute("Defense", (humanoid:GetAttribute("Defense") or 0) + 1)
                     end
-                end
-            }
-        }
+                end,
+            },
+        },
     }
     table.insert(self.skillTrees, combatTree)
-    
+
     -- Crafting skill tree
     local craftingTree = {
         name = "Crafting",
@@ -161,8 +166,8 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local craftingSpeed = player:GetAttribute("CraftingSpeed") or 1.0
                     player:SetAttribute("CraftingSpeed", craftingSpeed * 0.9)
-                end
-            }
+                end,
+            },
         },
         lockedSkills = {
             {
@@ -172,12 +177,12 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     -- Unlock better recipes
                     player:SetAttribute("UnlockedRecipes", (player:GetAttribute("UnlockedRecipes") or 0) + 1)
-                end
-            }
-        }
+                end,
+            },
+        },
     }
     table.insert(self.skillTrees, craftingTree)
-    
+
     -- Mining skill tree
     local miningTree = {
         name = "Mining",
@@ -190,8 +195,8 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local miningSpeed = player:GetAttribute("MiningSpeed") or 1.0
                     player:SetAttribute("MiningSpeed", miningSpeed * 1.1)
-                end
-            }
+                end,
+            },
         },
         lockedSkills = {
             {
@@ -201,12 +206,12 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local miningPower = player:GetAttribute("MiningPower") or 1.0
                     player:SetAttribute("MiningPower", miningPower * 1.2)
-                end
-            }
-        }
+                end,
+            },
+        },
     }
     table.insert(self.skillTrees, miningTree)
-    
+
     -- Exploration skill tree
     local explorationTree = {
         name = "Exploration",
@@ -219,8 +224,8 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local travelSpeed = player:GetAttribute("TravelSpeed") or 1.0
                     player:SetAttribute("TravelSpeed", travelSpeed * 1.1)
-                end
-            }
+                end,
+            },
         },
         lockedSkills = {
             {
@@ -230,12 +235,12 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local senses = player:GetAttribute("Senses") or 0
                     player:SetAttribute("Senses", senses + 1)
-                end
-            }
-        }
+                end,
+            },
+        },
     }
     table.insert(self.skillTrees, explorationTree)
-    
+
     -- Social skill tree
     local socialTree = {
         name = "Social",
@@ -248,8 +253,8 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local charisma = player:GetAttribute("Charisma") or 0
                     player:SetAttribute("Charisma", charisma + 1)
-                end
-            }
+                end,
+            },
         },
         lockedSkills = {
             {
@@ -259,9 +264,9 @@ function Progression:InitializeSkillTrees()
                 effect = function(player)
                     local negotiation = player:GetAttribute("Negotiation") or 0
                     player:SetAttribute("Negotiation", negotiation + 1)
-                end
-            }
-        }
+                end,
+            },
+        },
     }
     table.insert(self.skillTrees, socialTree)
 end
@@ -276,12 +281,12 @@ function Progression:UnlockSkill(skillName, skillTreeName)
                         table.insert(tree.unlockedSkills, skill)
                         table.removeValue(tree.lockedSkills, skill)
                         self.skillPoints = self.skillPoints - 1
-                        
+
                         -- Apply skill effect
                         if skill.effect then
                             skill.effect(game.Players:GetPlayerFromCharacter(playerCharacter))
                         end
-                        
+
                         return true
                     else
                         return false, "Not enough skill points."

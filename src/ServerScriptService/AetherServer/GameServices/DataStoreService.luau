@@ -14,7 +14,7 @@ local PLAYER_DATA_KEYS = {
     Progression = "progression",
     Creatures = "creatures",
     Quests = "quests",
-    Trading = "trading"
+    Trading = "trading",
 }
 
 -- Function to save player data
@@ -31,7 +31,7 @@ local function savePlayerData(player: Player, data: table)
         -- Save updated data
         PLAYER_DATA_STORE:SetAsync(player.UserId, playerData)
     end)
-    
+
     if not success then
         warn("Failed to save player data: " .. tostring(err))
     end
@@ -46,7 +46,7 @@ local function loadPlayerData(player: Player)
         end
         return playerData
     end)
-    
+
     if not success then
         warn("Failed to load player data: " .. tostring(err))
         return {}
@@ -59,7 +59,7 @@ local function deletePlayerData(player: Player)
     local success, err = pcall(function()
         PLAYER_DATA_STORE:RemoveAsync(player.UserId)
     end)
-    
+
     if not success then
         warn("Failed to delete player data: " .. tostring(err))
     end
@@ -70,7 +70,7 @@ local function onPlayerAdded(player: Player)
     -- Load player data when they join
     local playerData = loadPlayerData(player)
     player:SetAttribute("PlayerData", playerData)
-    
+
     -- Save player data when they leave
     player.CharacterAdded:Connect(function()
         player.CharacterRemoving:Connect(function()
@@ -78,7 +78,7 @@ local function onPlayerAdded(player: Player)
             -- In a real implementation, you would save data on specific actions
         end)
     end)
-    
+
     -- Example: Save data on player disconnect
     player.CharacterRemoving:Connect(function()
         -- This is a placeholder; actual saving should be done on specific actions
@@ -97,5 +97,5 @@ end
 return {
     savePlayerData = savePlayerData,
     loadPlayerData = loadPlayerData,
-    deletePlayerData = deletePlayerData
+    deletePlayerData = deletePlayerData,
 }

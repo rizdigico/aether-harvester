@@ -57,7 +57,7 @@ local QuestType = Enum.create("QuestType", {
     Side = 2,
     Daily = 3,
     Weekly = 4,
-    Event = 5
+    Event = 5,
 })
 
 -- Quest category enum
@@ -67,7 +67,7 @@ local QuestCategory = Enum.create("QuestCategory", {
     Crafting = 3,
     Collection = 4,
     Social = 5,
-    Survival = 6
+    Survival = 6,
 })
 
 -- Quest difficulty enum
@@ -75,7 +75,7 @@ local QuestDifficulty = Enum.create("QuestDifficulty", {
     Easy = 1,
     Medium = 2,
     Hard = 3,
-    Expert = 4
+    Expert = 4,
 })
 
 -- Objective type enum
@@ -84,7 +84,7 @@ local ObjectiveType = Enum.create("ObjectiveType", {
     KillCreatures = 2,
     ReachLocation = 3,
     CompleteSubquest = 4,
-    CraftItem = 5
+    CraftItem = 5,
 })
 
 -- Reward type enum
@@ -93,7 +93,7 @@ local RewardType = Enum.create("RewardType", {
     XP = 2,
     Item = 3,
     Creature = 4,
-    SkillPoint = 5
+    SkillPoint = 5,
 })
 
 -- Requirement type enum
@@ -101,7 +101,7 @@ local RequirementType = Enum.create("RequirementType", {
     Item = 1,
     Level = 2,
     Skill = 3,
-    Currency = 4
+    Currency = 4,
 })
 
 -- Base quests
@@ -118,46 +118,46 @@ Quests.StartingAdventure = {
             description = "Collect 10 Wood.",
             target = {
                 itemName = "Wood",
-                quantity = 10
+                quantity = 10,
             },
             completed = false,
-            progress = 0
+            progress = 0,
         },
         {
             type = ObjectiveType.CollectItems,
             description = "Collect 5 Stone.",
             target = {
                 itemName = "Stone",
-                quantity = 5
+                quantity = 5,
             },
             completed = false,
-            progress = 0
-        }
+            progress = 0,
+        },
     },
     rewards = {
         {
             type = RewardType.Currency,
             value = 50,
-            currency = "Gold"
+            currency = "Gold",
         },
         {
             type = RewardType.XP,
-            value = 500
+            value = 500,
         },
         {
             type = RewardType.Item,
             itemName = "HealthPotion",
-            quantity = 1
-        }
+            quantity = 1,
+        },
     },
     requirements = {
         {
             type = RequirementType.Level,
-            value = 1
-        }
+            value = 1,
+        },
     },
     completionText = "You have successfully started your adventure! You have earned rewards.",
-    failureText = "You need to gather more resources to complete this quest."
+    failureText = "You need to gather more resources to complete this quest.",
 }
 
 Quests.TheMysteriousForest = {
@@ -173,47 +173,47 @@ Quests.TheMysteriousForest = {
             description = "Collect 15 CopperOre.",
             target = {
                 itemName = "CopperOre",
-                quantity = 15
+                quantity = 15,
             },
             completed = false,
-            progress = 0
+            progress = 0,
         },
         {
             type = ObjectiveType.CollectItems,
             description = "Collect 5 IronOre.",
             target = {
                 itemName = "IronOre",
-                quantity = 5
+                quantity = 5,
             },
             completed = false,
-            progress = 0
-        }
+            progress = 0,
+        },
     },
     rewards = {
         {
             type = RewardType.Currency,
             value = 100,
-            currency = "Gold"
+            currency = "Gold",
         },
         {
             type = RewardType.XP,
-            value = 1000
+            value = 1000,
         },
         {
             type = RewardType.Item,
             itemName = "ManaPotion",
-            quantity = 1
-        }
+            quantity = 1,
+        },
     },
     requirements = {
         {
             type = RequirementType.Item,
             itemName = "WoodenPickaxe",
-            quantity = 1
-        }
+            quantity = 1,
+        },
     },
     completionText = "You have explored the mysterious forest and earned rewards.",
-    failureText = "You need to gather more resources to complete this quest."
+    failureText = "You need to gather more resources to complete this quest.",
 }
 
 Quests.TamingTheWild = {
@@ -229,36 +229,36 @@ Quests.TamingTheWild = {
             description = "Tame a Rabbit.",
             target = {
                 creatureName = "Rabbit",
-                quantity = 1
+                quantity = 1,
             },
             completed = false,
-            progress = 0
-        }
+            progress = 0,
+        },
     },
     rewards = {
         {
             type = RewardType.Currency,
             value = 150,
-            currency = "Gold"
+            currency = "Gold",
         },
         {
             type = RewardType.XP,
-            value = 1200
+            value = 1200,
         },
         {
             type = RewardType.Item,
             itemName = "HealthPotion",
-            quantity = 2
-        }
+            quantity = 2,
+        },
     },
     requirements = {
         {
             type = RequirementType.Level,
-            value = 3
-        }
+            value = 3,
+        },
     },
     completionText = "You have tamed a creature and earned rewards.",
-    failureText = "You need to tame a creature to complete this quest."
+    failureText = "You need to tame a creature to complete this quest.",
 }
 
 -- Additional quests (20 total)
@@ -275,54 +275,54 @@ Quests.TheAncientRuins = {
             description = "Collect 20 GoldOre.",
             target = {
                 itemName = "GoldOre",
-                quantity = 20
+                quantity = 20,
             },
             completed = false,
-            progress = 0
+            progress = 0,
         },
         {
             type = ObjectiveType.CollectItems,
             description = "Find the Ancient Key.",
             target = {
                 itemName = "AncientKey",
-                quantity = 1
+                quantity = 1,
             },
             completed = false,
-            progress = 0
-        }
+            progress = 0,
+        },
     },
     rewards = {
         {
             type = RewardType.Currency,
             value = 250,
-            currency = "Gold"
+            currency = "Gold",
         },
         {
             type = RewardType.XP,
-            value = 2000
+            value = 2000,
         },
         {
             type = RewardType.Item,
             itemName = "LegendarySword",
-            quantity = 1
-        }
+            quantity = 1,
+        },
     },
     requirements = {
         {
             type = RequirementType.Item,
             itemName = "IronOre",
-            quantity = 10
-        }
+            quantity = 10,
+        },
     },
     completionText = "You have explored the ancient ruins and found treasures.",
-    failureText = "You need to gather more resources to complete this quest."
+    failureText = "You need to gather more resources to complete this quest.",
 }
 
 -- Function to get all quests
 function Quests.GetAll()
     local allQuests = {}
     for name, quest in pairs(Quests) do
-        table.insert(allQuests, {name = name, quest = quest})
+        table.insert(allQuests, { name = name, quest = quest })
     end
     return allQuests
 end
@@ -337,7 +337,7 @@ function Quests.GetByType(type)
     local quests = {}
     for name, quest in pairs(Quests) do
         if quest.type == type then
-            table.insert(quests, {name = name, quest = quest})
+            table.insert(quests, { name = name, quest = quest })
         end
     end
     return quests
@@ -348,7 +348,7 @@ function Quests.GetByCategory(category)
     local quests = {}
     for name, quest in pairs(Quests) do
         if quest.category == category then
-            table.insert(quests, {name = name, quest = quest})
+            table.insert(quests, { name = name, quest = quest })
         end
     end
     return quests
@@ -359,7 +359,7 @@ function Quests.GetByDifficulty(difficulty)
     local quests = {}
     for name, quest in pairs(Quests) do
         if quest.difficulty == difficulty then
-            table.insert(quests, {name = name, quest = quest})
+            table.insert(quests, { name = name, quest = quest })
         end
     end
     return quests

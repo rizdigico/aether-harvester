@@ -89,7 +89,7 @@ local CreatureRarity = Enum.create("CreatureRarity", {
     Uncommon = 2,
     Rare = 3,
     Epic = 4,
-    Legendary = 5
+    Legendary = 5,
 })
 
 -- Creature type enum
@@ -98,14 +98,14 @@ local CreatureType = Enum.create("CreatureType", {
     Bird = 2,
     Reptile = 3,
     Insect = 4,
-    Mythical = 5
+    Mythical = 5,
 })
 
 -- Creature size enum
 local CreatureSize = Enum.create("CreatureSize", {
     Small = 1,
     Medium = 2,
-    Large = 3
+    Large = 3,
 })
 
 -- Base creatures
@@ -123,7 +123,7 @@ Creatures.Rabbit = {
         speed = 10,
         agility = 15,
         intelligence = 3,
-        luck = 5
+        luck = 5,
     },
     properties = {
         weight = 5,
@@ -132,7 +132,7 @@ Creatures.Rabbit = {
         breedable = true,
         aggressive = false,
         passive = true,
-        tamedByDefault = false
+        tamedByDefault = false,
     },
     abilities = {
         {
@@ -145,61 +145,61 @@ Creatures.Rabbit = {
                     humanoid.WalkSpeed = humanoid.WalkSpeed * 2
                     game:GetService("Debris"):AddItem(humanoid, 3)
                 end
-            end
-        }
+            end,
+        },
     },
     breeding = {
-        compatibleSpecies = {"Rabbit", "Fox"},
+        compatibleSpecies = { "Rabbit", "Fox" },
         offspring = {
             {
                 name = "Rabbit",
-                chance = 0.8
+                chance = 0.8,
             },
             {
                 name = "Fox",
-                chance = 0.2
-            }
-        }
+                chance = 0.2,
+            },
+        },
     },
     drops = {
         {
             itemName = "AetherShard",
             minQuantity = 1,
             maxQuantity = 2,
-            chance = 0.3
+            chance = 0.3,
         },
         {
             itemName = "Wood",
             minQuantity = 1,
             maxQuantity = 3,
-            chance = 1.0
-        }
+            chance = 1.0,
+        },
     },
     taming = {
         requiredItems = {
             {
                 itemName = "Wood",
-                quantity = 1
-            }
+                quantity = 1,
+            },
         },
-        successChance = 0.7
+        successChance = 0.7,
     },
     training = {
         stats = {
             health = {
                 base = 2,
-                growth = 0.2
+                growth = 0.2,
             },
             attack = {
                 base = 1,
-                growth = 0.1
+                growth = 0.1,
             },
             speed = {
                 base = 1,
-                growth = 0.2
-            }
-        }
-    }
+                growth = 0.2,
+            },
+        },
+    },
 }
 
 Creatures.Fox = {
@@ -216,7 +216,7 @@ Creatures.Fox = {
         speed = 12,
         agility = 18,
         intelligence = 8,
-        luck = 10
+        luck = 10,
     },
     properties = {
         weight = 8,
@@ -225,7 +225,7 @@ Creatures.Fox = {
         breedable = true,
         aggressive = false,
         passive = true,
-        tamedByDefault = false
+        tamedByDefault = false,
     },
     abilities = {
         {
@@ -239,61 +239,61 @@ Creatures.Fox = {
                     humanoid.JumpPower = humanoid.JumpPower * 1.1
                     game:GetService("Debris"):AddItem(humanoid, 5)
                 end
-            end
-        }
+            end,
+        },
     },
     breeding = {
-        compatibleSpecies = {"Fox", "Rabbit"},
+        compatibleSpecies = { "Fox", "Rabbit" },
         offspring = {
             {
                 name = "Fox",
-                chance = 0.7
+                chance = 0.7,
             },
             {
                 name = "Rabbit",
-                chance = 0.3
-            }
-        }
+                chance = 0.3,
+            },
+        },
     },
     drops = {
         {
             itemName = "AetherShard",
             minQuantity = 1,
             maxQuantity = 2,
-            chance = 0.4
+            chance = 0.4,
         },
         {
             itemName = "Stone",
             minQuantity = 1,
             maxQuantity = 2,
-            chance = 0.8
-        }
+            chance = 0.8,
+        },
     },
     taming = {
         requiredItems = {
             {
                 itemName = "Stone",
-                quantity = 1
-            }
+                quantity = 1,
+            },
         },
-        successChance = 0.8
+        successChance = 0.8,
     },
     training = {
         stats = {
             health = {
                 base = 3,
-                growth = 0.3
+                growth = 0.3,
             },
             attack = {
                 base = 2,
-                growth = 0.2
+                growth = 0.2,
             },
             agility = {
                 base = 2,
-                growth = 0.3
-            }
-        }
-    }
+                growth = 0.3,
+            },
+        },
+    },
 }
 
 -- Additional creatures (12 total)
@@ -311,7 +311,7 @@ Creatures.Bird = {
         speed = 15,
         agility = 20,
         intelligence = 4,
-        luck = 8
+        luck = 8,
     },
     properties = {
         weight = 2,
@@ -320,7 +320,7 @@ Creatures.Bird = {
         breedable = true,
         aggressive = false,
         passive = true,
-        tamedByDefault = false
+        tamedByDefault = false,
     },
     abilities = {
         {
@@ -333,33 +333,33 @@ Creatures.Bird = {
                     humanoid.WalkSpeed = 20
                     humanoid.PlatformStand = true
                 end
-            end
-        }
+            end,
+        },
     },
     drops = {
         {
             itemName = "Feather",
             minQuantity = 1,
             maxQuantity = 2,
-            chance = 1.0
-        }
+            chance = 1.0,
+        },
     },
     taming = {
         requiredItems = {
             {
                 itemName = "Wood",
-                quantity = 1
-            }
+                quantity = 1,
+            },
         },
-        successChance = 0.6
-    }
+        successChance = 0.6,
+    },
 }
 
 -- Function to get all creatures
 function Creatures.GetAll()
     local allCreatures = {}
     for name, creature in pairs(Creatures) do
-        table.insert(allCreatures, {name = name, creature = creature})
+        table.insert(allCreatures, { name = name, creature = creature })
     end
     return allCreatures
 end
@@ -374,7 +374,7 @@ function Creatures.GetByType(type)
     local creatures = {}
     for name, creature in pairs(Creatures) do
         if creature.type == type then
-            table.insert(creatures, {name = name, creature = creature})
+            table.insert(creatures, { name = name, creature = creature })
         end
     end
     return creatures
@@ -385,7 +385,7 @@ function Creatures.GetByRarity(rarity)
     local creatures = {}
     for name, creature in pairs(Creatures) do
         if creature.rarity == rarity then
-            table.insert(creatures, {name = name, creature = creature})
+            table.insert(creatures, { name = name, creature = creature })
         end
     end
     return creatures

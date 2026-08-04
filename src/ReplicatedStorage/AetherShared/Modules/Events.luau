@@ -56,7 +56,7 @@ local EventType = Enum.create("EventType", {
     Exploration = 3,
     Social = 4,
     Survival = 5,
-    PvP = 6
+    PvP = 6,
 })
 
 -- Event category enum
@@ -64,14 +64,14 @@ local EventCategory = Enum.create("EventCategory", {
     Daily = 1,
     Weekly = 2,
     Monthly = 3,
-    Special = 4
+    Special = 4,
 })
 
 -- Initialize event system
 function Events.New()
     return {
         events = {},
-        participants = {}
+        participants = {},
     }
 end
 
@@ -81,13 +81,13 @@ function Events:CreateEvent(eventData)
         warn("No event data provided.")
         return false
     end
-    
+
     -- Validate event data
     if not eventData.name or not eventData.displayName or not eventData.description then
         warn("Invalid event data.")
         return false
     end
-    
+
     -- Set default values
     eventData.startTime = eventData.startTime or os.time()
     eventData.endTime = eventData.startTime + EVENT_DURATION
@@ -96,10 +96,10 @@ function Events:CreateEvent(eventData)
     eventData.participants = eventData.participants or {}
     eventData.rewards = eventData.rewards or {}
     eventData.requirements = eventData.requirements or {}
-    
+
     -- Add event to the list
     table.insert(self.events, eventData)
-    
+
     return true, "Event created successfully."
 end
 
@@ -110,12 +110,12 @@ function Events:ScheduleEvent(eventName, startTime, duration)
         warn(string.format("Event %s not found.", eventName))
         return false, string.format("Event %s not found.", eventName)
     end
-    
+
     -- Set event time
     event.startTime = startTime or os.time()
     event.endTime = event.startTime + (duration or EVENT_DURATION)
     event.status = "scheduled"
-    
+
     return true, "Event scheduled successfully."
 end
 
@@ -126,23 +126,23 @@ function Events:StartEvent(eventName)
         warn(string.format("Event %s not found.", eventName))
         return false, string.format("Event %s not found.", eventName)
     end
-    
+
     -- Check if event is scheduled
     if event.status ~= "scheduled" then
         return false, "Event is not scheduled."
     end
-    
+
     -- Check if event time has arrived
     if os.time() < event.startTime then
         return false, "Event has not started yet."
     end
-    
+
     -- Start event
     event.status = "active"
-    
+
     -- Notify players
     self:NotifyPlayers(eventName)
-    
+
     return true, "Event started successfully."
 end
 
@@ -153,25 +153,25 @@ function Events:EndEvent(eventName)
         warn(string.format("Event %s not found.", eventName))
         return false, string.format("Event %s not found.", eventName)
     end
-    
+
     -- Check if event is active
     if event.status ~= "active" then
         return false, "Event is not active."
     end
-    
+
     -- Check if event time has passed
     if os.time() > event.endTime then
         event.status = "completed"
     else
         return false, "Event has not ended yet."
     end
-    
+
     -- Distribute rewards
     self:DistributeRewards(eventName)
-    
+
     -- Notify players
     self:NotifyPlayers(eventName)
-    
+
     return true, "Event ended successfully."
 end
 
@@ -182,25 +182,30 @@ function Events:Participate(eventName, player)
         warn(string.format("Event %s not found.", eventName))
         return false, string.format("Event %s not found.", eventName)
     end
-    
+
     -- Check if event is active
     if event.status ~= "active" then
         return false, "Event is not active."
     end
-    
+
     -- Check if player already participated
     for _, participant in ipairs(event.participants) do
         if participant.player == player then
             return false, "Player already participated in this event."
         end
     end
-    
+
     -- Check if player meets requirements
     for _, requirement in ipairs(event.requirements or {}) do
         if requirement.type == Enum.RequirementType.Item then
             local inventory = player:GetAttribute("Inventory") or Inventory.New()
             if inventory:GetItemCount(requirement.itemName) < requirement.value then
-                return false, string.format("Player does not meet requirement: %d %s needed.", requirement.value, requirement.itemName)
+                return false,
+                    string.format(
+                        "Player does not meet requirement: %d %s needed.",
+                        requirement.value,
+                        requirement.itemName
+                    )
             end
         elseif requirement.type == Enum.RequirementType.Level then
             local progression = player:GetAttribute("Progression") or Progression.New()
@@ -209,13 +214,13 @@ function Events:Participate(eventName, player)
             end
         end
     end
-    
+
     -- Add player to participants
     table.insert(event.participants, {
         player = player,
-        joinedAt = os.time()
+        joinedAt = os.time(),
     })
-    
+
     return true, "Player participated in event successfully."
 end
 
@@ -226,19 +231,19 @@ function Events:DistributeRewards(eventName)
         warn(string.format("Event %s not found.", eventName))
         return false
     end
-    
+
     -- Check if event is completed
     if event.status ~= "completed" then
         warn(string.format("Event %s is not completed.", eventName))
         return false
     end
-    
+
     -- Distribute rewards to participants
     for _, participant in ipairs(event.participants) do
         local rewards = event.rewards or {}
         for _, reward in ipairs(rewards) do
             local inventory = participant.player:GetAttribute("Inventory") or Inventory.New()
-            
+
             if reward.type == Enum.RewardType.Currency then
                 inventory:AddCurrency(reward.currency, reward.value)
             elseif reward.type == Enum.RewardType.XP then
@@ -249,7 +254,7 @@ function Events:DistributeRewards(eventName)
             end
         end
     end
-    
+
     return true
 end
 
@@ -317,12 +322,12 @@ function Events:IsPlayerInEventRange(player, event)
     if not player.Character or not event.location then
         return false
     end
-    
+
     local rootPart = player.Character:FindFirstChild("HumanoidRootPart")
     if not rootPart then
         return false
     end
-    
+
     local distance = (rootPart.Position - event.location).Magnitude
     return distance <= EVENT_RANGE
 end
@@ -334,9 +339,9 @@ function Events:NotifyPlayers(eventName)
         warn(string.format("Event %s not found.", eventName))
         return false
     end
-    
+
     local message = string.format("Event %s status: %s", event.displayName, event.status)
-    
+
     -- Notify all players
     for _, player in ipairs(game.Players:GetPlayers()) do
         if player.Character then
@@ -349,7 +354,7 @@ function Events:NotifyPlayers(eventName)
             end
         end
     end
-    
+
     return true
 end
 
