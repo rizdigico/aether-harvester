@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local WorldManager = require(game.ServerScriptService.AetherServer.GameServices.WorldManager)
 local GuildService = require(game.ServerScriptService.AetherServer.GameServices.GuildService)
+local PartyService = require(game.ServerScriptService.AetherServer.GameServices.PartyService)
 ChatService.Channels = {
     { Id = "global", Name = "Global", Description = "Global chat for all players" },
     { Id = "island", Name = "Island", Description = "Chat with players on your island" },
@@ -96,8 +97,26 @@ local function getRecipients(player, channelId)
         return recipients
     end
 
-    -- Party membership is not implemented yet; do not leak party messages
-    -- to unrelated players while that system is unavailable.
+    if channelId == "party" then
+        local party = PartyService.GetSnapshot(player)
+        if type(party.Id) ~= "string" or type(party.Members) ~= "table" then
+            return {}
+        end
+        local memberIds = {}
+        for _, member in ipairs(party.Members) do
+            if type(member) == "table" and type(member.UserId) == "number" then
+                memberIds[member.UserId] = true
+            end
+        end
+        local recipients = {}
+        for _, recipient in ipairs(Players:GetPlayers()) do
+            if memberIds[recipient.UserId] then
+                table.insert(recipients, recipient)
+            end
+        end
+        return recipients
+    end
+
     return {}
 end
 
@@ -125,7 +144,7 @@ function ChatService:HandleMessage(player, channelId, message)
         return
     end
 
-    if channelId == "party" then
+    if channelId == "party" and type(PartyService.GetSnapshot(player).Id) ~= "string" then
         return
     end
     if channelId == "guild" and not GuildService.GetGuildByPlayer(player) then

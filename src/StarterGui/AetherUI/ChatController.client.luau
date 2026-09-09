@@ -1,6 +1,6 @@
 --!strict
 -- ChatController: server-filtered chat with scoped channel selection.
--- History is requested only for global/trade; guild/island messages arrive live.
+-- History is requested only for global/trade; guild/island/party messages arrive live.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -29,6 +29,7 @@ local CHANNELS = {
     { Id = "trade", Label = "TRADE" },
     { Id = "island", Label = "ISLAND" },
     { Id = "guild", Label = "GUILD" },
+    { Id = "party", Label = "PARTY" },
 }
 
 local screen: ScreenGui
@@ -177,7 +178,7 @@ local function makeScreen(): (ScreenGui, Frame, TextLabel, ScrollingFrame, TextB
     for index, channel in ipairs(CHANNELS) do
         local channelButton = button(createdChannelBar, "Channel_" .. channel.Id, channel.Label, COLORS.Raised)
         channelButton.LayoutOrder = index
-        channelButton.Size = UDim2.new(0.25, -5, 1, 0)
+        channelButton.Size = UDim2.new(1 / #CHANNELS, -5, 1, 0)
         channelButtons[channel.Id] = channelButton
     end
 

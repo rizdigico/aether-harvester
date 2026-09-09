@@ -23,7 +23,7 @@ tree.
 
 The branch now includes server-authoritative harvesting, progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
-scoped chat, achievements, cosmetics, leaderboards, daily rewards, events,
+scoped global/island/guild/party chat, achievements, cosmetics, leaderboards, daily rewards, events,
 analytics, monetization boundaries, battle-pass progression, prestige/ascension,
 persistence, session party lifecycle,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
@@ -43,8 +43,9 @@ transition through `RequestPrestige`.
 The party flow is session-only by design: the server owns a four-player party,
 validates online invites and expiring responses, transfers ownership when the
 owner leaves, supports owner removal, broadcasts member snapshots, and cleans
-up membership on disconnect. It is intentionally not persisted into player
-profiles.
+up membership on disconnect. Party chat now routes only to the server-confirmed
+party membership and remains live-only rather than exposing unscoped history.
+It is intentionally not persisted into player profiles.
 
 ## Local MCP evidence
 
