@@ -1,11 +1,17 @@
 local EventService = {}
-local RunService = game:GetService("RunService")
-
 EventService.ActiveEvents = {}
 EventService.EventIdCounter = 1
 
 function EventService.Initialize()
     print("[EventService] Initializing...")
+
+    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
+    local GetActiveEvents = Remotes and Remotes:FindFirstChild("GetActiveEvents")
+    if GetActiveEvents then
+        GetActiveEvents.OnServerInvoke = function(_player)
+            return EventService.GetActiveEvents()
+        end
+    end
 
     -- Start event loop (background task so Initialize returns immediately)
     task.spawn(function()
