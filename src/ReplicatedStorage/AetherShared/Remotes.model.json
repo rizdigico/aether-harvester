@@ -210,6 +210,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "GetChatHistory",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "PurchaseCosmetic",
                          "className":  "RemoteEvent"
                      },

@@ -41,6 +41,25 @@ function ChatService:SetupChannels()
             ChatService:HandleMessage(player, channelId, message)
         end)
     end
+
+    -- History is restricted to channels whose membership is global by design.
+    -- Scoped history needs a per-message scope snapshot before it can be safe.
+    local GetChatHistory = Remotes:FindFirstChild("GetChatHistory")
+    if GetChatHistory then
+        GetChatHistory.OnServerInvoke = function(player, channelId, limit)
+            if not RateLimiter.Check(player, "GetChatHistory", 0.5) then
+                return {}
+            end
+            if channelId ~= "global" and channelId ~= "trade" then
+                return {}
+            end
+            local requestedLimit = type(limit) == "number" and limit or 50
+            if requestedLimit ~= requestedLimit then
+                requestedLimit = 50
+            end
+            return ChatService.GetHistory(channelId, math.clamp(math.floor(requestedLimit), 1, 100))
+        end
+    end
 end
 
 local function getRecipients(player, channelId)
@@ -103,6 +122,16 @@ function ChatService:HandleMessage(player, channelId, message)
     -- Check channel access
     local channel = ChatService:GetChannel(channelId)
     if not channel then
+        return
+    end
+
+    if channelId == "party" then
+        return
+    end
+    if channelId == "guild" and not GuildService.GetGuildByPlayer(player) then
+        return
+    end
+    if channelId == "island" and not WorldManager.GetPlayerIsland(player) then
         return
     end
 
