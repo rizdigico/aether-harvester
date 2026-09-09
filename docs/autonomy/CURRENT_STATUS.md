@@ -35,7 +35,8 @@ collection/crafting hooks advance only after successful grants, island discovery
 is unique and durable, named visit objectives use canonical world IDs, and
 delivery objectives consume inventory through an atomic server action.
 Extra reward claim state and anti-cheat action counters are also initialized and
-sanitized as part of the profile boundary.
+sanitized as part of the profile boundary. Upgrade Power and Speed effects now
+feed the server harvest yield and cooldown calculations.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and

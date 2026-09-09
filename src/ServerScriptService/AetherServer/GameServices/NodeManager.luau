@@ -13,6 +13,7 @@ local EventService = require(game.ServerScriptService.AetherServer.GameServices.
 local PetService = require(game.ServerScriptService.AetherServer.GameServices.PetService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local MonetizationService = require(game.ServerScriptService.AetherServer.GameServices.MonetizationService)
+local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30
@@ -166,8 +167,14 @@ function NodeManager.ProcessHarvest(player, node)
     local petMultiplier = 1 + harvestPower / 100
 
     local harvestComfortMultiplier = MonetizationService.GetHarvestMultiplier(player)
+    local upgradeMultiplier = UpgradeService.GetHarvestYieldMultiplier(player)
     yieldAmount = math.floor(
-        yieldAmount * boost * harvestComfortMultiplier * EventService.GetActiveYieldMultiplier() * petMultiplier
+        yieldAmount
+            * boost
+            * harvestComfortMultiplier
+            * EventService.GetActiveYieldMultiplier()
+            * petMultiplier
+            * upgradeMultiplier
     )
 
     -- Grant resources. Do not put a node reward into the currency wallet:
@@ -252,7 +259,7 @@ function NodeManager.Initialize()
             end
 
             -- Rate limit: max one harvest per second per player
-            if not RateLimiter.Check(player, "HarvestResource", 1) then
+            if not RateLimiter.Check(player, "HarvestResource", UpgradeService.GetHarvestCooldown(player)) then
                 return
             end
 
@@ -288,7 +295,7 @@ function NodeManager.Initialize()
                 prompt.RequiresLineOfSight = false
                 prompt.Parent = promptParent
                 prompt.Triggered:Connect(function(player)
-                    if not RateLimiter.Check(player, "HarvestResource", 1) then
+                    if not RateLimiter.Check(player, "HarvestResource", UpgradeService.GetHarvestCooldown(player)) then
                         return
                     end
                     local success, result = NodeManager.ProcessHarvest(player, node)

@@ -193,4 +193,28 @@ function UpgradeService.GetPlayerUpgrades(player)
     return data.Upgrades
 end
 
+function UpgradeService.GetEffectTotal(player, effectName)
+    if type(effectName) ~= "string" then
+        return 0
+    end
+    local total = 0
+    for upgradeId, definition in pairs(UpgradeService.Database) do
+        local level = math.max(0, math.floor(tonumber(UpgradeService.GetUpgradeLevel(player, upgradeId)) or 0))
+        local effect = definition.Effect and tonumber(definition.Effect[effectName])
+        if effect and effect > 0 then
+            total += effect * math.min(level, definition.MaxLevel or level)
+        end
+    end
+    return total
+end
+
+function UpgradeService.GetHarvestYieldMultiplier(player)
+    return 1 + math.clamp(UpgradeService.GetEffectTotal(player, "Power"), 0, 5)
+end
+
+function UpgradeService.GetHarvestCooldown(player)
+    local speedBonus = math.clamp(UpgradeService.GetEffectTotal(player, "Speed"), 0, 5)
+    return math.max(0.2, 1 / (1 + speedBonus))
+end
+
 return UpgradeService
