@@ -64,6 +64,47 @@ local function applyProduct(data, product)
     return false, "Unsupported product grant"
 end
 
+-- Capture the only profile fields a product can mutate. If persistence fails,
+-- the in-memory mutation must be rolled back before Roblox retries the receipt;
+-- otherwise a second attempt can observe a journaled purchase and acknowledge
+-- it without a durable save.
+local function snapshotProductGrant(data, product)
+    if product.Grant == "Currency" and type(product.Currency) == "string" then
+        local currency = data.Currency or {}
+        return {
+            Kind = "Currency",
+            Key = product.Currency,
+            Value = currency[product.Currency],
+        }
+    end
+
+    if product.Grant == "HarvestBoost" and type(product.BoostId) == "string" then
+        local boosts = data.Boosts or {}
+        local current = boosts[product.BoostId]
+        return {
+            Kind = "HarvestBoost",
+            Key = product.BoostId,
+            Value = if type(current) == "table" then table.clone(current) else current,
+        }
+    end
+
+    return nil
+end
+
+local function restoreProductGrant(data, snapshot)
+    if not snapshot then
+        return
+    end
+
+    if snapshot.Kind == "Currency" then
+        data.Currency = data.Currency or {}
+        data.Currency[snapshot.Key] = snapshot.Value
+    elseif snapshot.Kind == "HarvestBoost" then
+        data.Boosts = data.Boosts or {}
+        data.Boosts[snapshot.Key] = snapshot.Value
+    end
+end
+
 local function processReceipt(receiptInfo)
     if
         type(receiptInfo) ~= "table"
@@ -103,6 +144,7 @@ local function processReceipt(receiptInfo)
 
     processingReceipts[purchaseId] = true
     local grantApplied = false
+    local grantSnapshot = snapshotProductGrant(data, product)
     local ok, err = pcall(function()
         if not ReceiptJournal.TryMark(data.ProcessedReceipts, purchaseId, os.time()) then
             error("Receipt journal refused a new purchase")
@@ -116,9 +158,12 @@ local function processReceipt(receiptInfo)
         grantApplied = true
 
         -- Acknowledge only after the profile save path accepts the grant. If
-        -- saving fails, retain the journaled grant and ask Roblox to retry;
-        -- replays then become an idempotent PurchaseGranted response.
+        -- saving fails, roll back both grant and journal so Roblox can safely
+        -- retry the receipt.
         if not PlayerDataService.SaveNow(player) then
+            restoreProductGrant(data, grantSnapshot)
+            data.ProcessedReceipts[purchaseId] = nil
+            grantApplied = false
             error("Profile save failed; receipt remains pending")
         end
     end)

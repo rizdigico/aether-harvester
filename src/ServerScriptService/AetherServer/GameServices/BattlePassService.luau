@@ -74,24 +74,33 @@ end
 
 function BattlePassService.AddXP(player, amount)
     local data = PlayerDataService.GetData(player)
-    if not data then
-        return
+    local currentSeason = BattlePassService:GetCurrentSeason()
+    if not data or not currentSeason or type(amount) ~= "number" or amount <= 0 then
+        return false
     end
 
     data.BattlePassXP = (data.BattlePassXP or 0) + amount
 
     -- Check for level ups
     local currentLevel = data.BattlePassLevel or 1
+    currentLevel = math.clamp(currentLevel, 1, currentSeason.Levels)
+    data.BattlePassLevel = currentLevel
+    if currentLevel >= currentSeason.Levels then
+        data.BattlePassXP = 0
+        return false
+    end
     local xpRequired = BattlePassService.CalculateXPRequired(currentLevel)
 
-    while data.BattlePassXP >= xpRequired do
+    while data.BattlePassXP >= xpRequired and currentLevel < currentSeason.Levels do
         data.BattlePassXP -= xpRequired
         data.BattlePassLevel = currentLevel + 1
         currentLevel += 1
 
         -- Award rewards
         BattlePassService:AwardLevelRewards(player, currentLevel)
+        xpRequired = BattlePassService.CalculateXPRequired(currentLevel)
     end
+    return true
 end
 
 function BattlePassService.CalculateXPRequired(level)
@@ -160,10 +169,21 @@ end
 
 function BattlePassService:GetCurrentSeason()
     local now = os.time()
+    local latestSeason = nil
     for _, season in pairs(BattlePassService.Seasons) do
+        if not latestSeason or season.EndDate > latestSeason.EndDate then
+            latestSeason = season
+        end
         if now >= season.StartDate and now <= season.EndDate then
             return season
         end
+    end
+
+    -- Keep the latest authored season usable until a successor is configured.
+    -- This avoids silently accepting XP/premium purchases while awarding no
+    -- rewards in the gap between a fixed calendar season and the next release.
+    if latestSeason and now > latestSeason.EndDate then
+        return latestSeason
     end
     return nil
 end
@@ -188,6 +208,10 @@ function BattlePassService.PurchasePremium(player)
     local data = PlayerDataService.GetData(player)
     if not data then
         return false
+    end
+
+    if not BattlePassService:GetCurrentSeason() then
+        return false, "No active season"
     end
 
     if data.Currency.AetherShards < 2000 then
