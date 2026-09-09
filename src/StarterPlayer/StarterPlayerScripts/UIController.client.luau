@@ -64,10 +64,24 @@ function UIController:Initialize()
             NavQuests = "QuestLogScreen",
             NavPets = "PetScreen",
             NavGuild = "GuildScreen",
+            NavRewards = "RewardsScreen",
             NavSkillTree = "SkillTreeScreen",
             NavMap = "MapScreen",
             NavSettings = "SettingsScreen",
         }
+        local navContainer = MM:FindFirstChild("NavContainer", true)
+        if navContainer and navContainer:IsA("GuiObject") and not navContainer:FindFirstChild("NavRewards") then
+            local rewardsButton = Instance.new("TextButton")
+            rewardsButton.Name = "NavRewards"
+            rewardsButton.Size = UDim2.new(0.9, 0, 0.13, 0)
+            rewardsButton.BackgroundColor3 = Color3.fromRGB(38, 42, 60)
+            rewardsButton.BorderSizePixel = 0
+            rewardsButton.Text = "REWARDS"
+            rewardsButton.TextColor3 = Color3.fromRGB(230, 235, 245)
+            rewardsButton.Font = Enum.Font.GothamMedium
+            rewardsButton.TextSize = 18
+            rewardsButton.Parent = navContainer
+        end
         for buttonName, screenName in pairs(navMap) do
             local btn = MM:FindFirstChild(buttonName, true)
             if btn and btn:IsA("TextButton") then
