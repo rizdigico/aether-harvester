@@ -1,7 +1,128 @@
 local MailService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 MailService.Mailboxes = {}
+
+local MAX_ATTACHMENTS = 10
+local MAX_ATTACHMENT_AMOUNT = 9999
+local MAX_SUBJECT_LENGTH = 80
+local MAX_MESSAGE_LENGTH = 1000
+
+local function isPositiveInteger(value)
+    return type(value) == "number" and value >= 1 and value <= MAX_ATTACHMENT_AMOUNT and value == math.floor(value)
+end
+
+local function rollbackEscrow(player, removedItems, removedCurrencies)
+    for itemId, amount in pairs(removedItems) do
+        PlayerDataService.AddItem(player, itemId, amount)
+    end
+    for currency, amount in pairs(removedCurrencies) do
+        PlayerDataService.AddCurrency(player, currency, amount)
+    end
+end
+
+-- Validate and escrow attachments before creating a mail record. The sender's
+-- inventory/currency is the authority; client-provided grant data is never
+-- trusted. The normalized result is safe to persist and claim later.
+local function escrowAttachments(player, attachments)
+    if type(attachments) ~= "table" then
+        return nil, "Invalid attachments"
+    end
+
+    local normalized = {}
+    local requiredItems = {}
+    local requiredCurrencies = {}
+    local count = 0
+
+    for index, attachment in pairs(attachments) do
+        if type(index) ~= "number" or index < 1 or index > MAX_ATTACHMENTS or index ~= math.floor(index) then
+            return nil, "Invalid attachments"
+        end
+        if type(attachment) ~= "table" then
+            return nil, "Invalid attachment"
+        end
+
+        count += 1
+        if count > MAX_ATTACHMENTS then
+            return nil, "Too many attachments"
+        end
+
+        if attachment.ItemId ~= nil then
+            if
+                type(attachment.ItemId) ~= "string"
+                or attachment.ItemId == ""
+                or not isPositiveInteger(attachment.Amount)
+            then
+                return nil, "Invalid item attachment"
+            end
+            requiredItems[attachment.ItemId] = (requiredItems[attachment.ItemId] or 0) + attachment.Amount
+            if requiredItems[attachment.ItemId] > MAX_ATTACHMENT_AMOUNT then
+                return nil, "Item attachment too large"
+            end
+            table.insert(normalized, { ItemId = attachment.ItemId, Amount = attachment.Amount })
+        elseif attachment.Currency ~= nil then
+            if type(attachment.Currency) ~= "table" then
+                return nil, "Invalid currency attachment"
+            end
+            local currencyAttachment = {}
+            local currencyCount = 0
+            for currency, amount in pairs(attachment.Currency) do
+                if type(currency) ~= "string" or currency == "" or not isPositiveInteger(amount) then
+                    return nil, "Invalid currency attachment"
+                end
+                requiredCurrencies[currency] = (requiredCurrencies[currency] or 0) + amount
+                if requiredCurrencies[currency] > MAX_ATTACHMENT_AMOUNT then
+                    return nil, "Currency attachment too large"
+                end
+                currencyAttachment[currency] = amount
+                currencyCount += 1
+            end
+            if currencyCount == 0 then
+                return nil, "Empty currency attachment"
+            end
+            table.insert(normalized, { Currency = currencyAttachment })
+        else
+            return nil, "Invalid attachment"
+        end
+    end
+
+    for itemId, amount in pairs(requiredItems) do
+        if PlayerDataService.GetItemCount(player, itemId) < amount then
+            return nil, "You don't own the attached item"
+        end
+    end
+
+    local data = PlayerDataService.GetData(player)
+    if not data or type(data.Currency) ~= "table" then
+        return nil, "Player data not found"
+    end
+    for currency, amount in pairs(requiredCurrencies) do
+        if type(data.Currency[currency]) ~= "number" or data.Currency[currency] < amount then
+            return nil, "Insufficient currency for attachment"
+        end
+    end
+
+    local removedItems = {}
+    local removedCurrencies = {}
+    for itemId, amount in pairs(requiredItems) do
+        if not PlayerDataService.RemoveItem(player, itemId, amount) then
+            rollbackEscrow(player, removedItems, removedCurrencies)
+            return nil, "Could not escrow item attachment"
+        end
+        removedItems[itemId] = amount
+    end
+    for currency, amount in pairs(requiredCurrencies) do
+        if not PlayerDataService.RemoveCurrency(player, currency, amount) then
+            rollbackEscrow(player, removedItems, removedCurrencies)
+            return nil, "Could not escrow currency attachment"
+        end
+        removedCurrencies[currency] = amount
+    end
+
+    return normalized
+end
 
 function MailService.Initialize()
     print("[MailService] Initializing...")
@@ -15,9 +136,13 @@ function MailService.Initialize()
     local SendMail = Remotes:FindFirstChild("SendMail")
     if SendMail then
         SendMail.OnServerEvent:Connect(function(player, targetUserId, subject, message, attachments)
-            if type(targetUserId) ~= "number" or type(subject) ~= "string" then
+            if type(targetUserId) ~= "number" or type(subject) ~= "string" or subject == "" then
                 return
             end
+            if not RateLimiter.Check(player, "SendMail", 2) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local target = game.Players:GetPlayerByUserId(targetUserId)
             if not target then
                 local Error = Remotes:FindFirstChild("Error")
@@ -37,6 +162,10 @@ function MailService.Initialize()
             if type(mailId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "ReadMail", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             MailService.ReadMail(player, mailId)
         end)
     end
@@ -48,6 +177,10 @@ function MailService.Initialize()
             if type(mailId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "DeleteMail", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             MailService.DeleteMail(player, mailId)
         end)
     end
@@ -56,6 +189,13 @@ function MailService.Initialize()
 end
 
 function MailService.SendMail(fromPlayer, toPlayer, subject, message, attachments)
+    if type(subject) ~= "string" or subject == "" or #subject > MAX_SUBJECT_LENGTH then
+        return false, "Invalid subject"
+    end
+    if type(message) ~= "string" or #message > MAX_MESSAGE_LENGTH then
+        return false, "Invalid message"
+    end
+
     local toData = PlayerDataService.GetData(toPlayer)
     if not toData then
         return false, "Player not found"
@@ -64,6 +204,14 @@ function MailService.SendMail(fromPlayer, toPlayer, subject, message, attachment
     if not toData.Mailbox then
         toData.Mailbox = {}
     end
+    if #toData.Mailbox >= 100 then
+        return false, "Recipient mailbox is full"
+    end
+
+    local normalizedAttachments, attachmentError = escrowAttachments(fromPlayer, attachments or {})
+    if not normalizedAttachments then
+        return false, attachmentError or "Invalid attachments"
+    end
 
     local mail = {
         Id = "MAIL_" .. os.time() .. "_" .. math.random(1000, 9999),
@@ -71,7 +219,7 @@ function MailService.SendMail(fromPlayer, toPlayer, subject, message, attachment
         FromId = fromPlayer.UserId,
         Subject = subject,
         Message = message,
-        Attachments = attachments or {},
+        Attachments = normalizedAttachments,
         SentAt = os.time(),
         Read = false,
     }
@@ -107,22 +255,48 @@ function MailService.ReadMail(player, mailId)
 
     for _, mail in ipairs(data.Mailbox) do
         if mail.Id == mailId then
-            mail.Read = true
-
             -- Claim attachments
             if mail.Attachments then
+                local claimedItems = {}
+                local claimedCurrencies = {}
                 for _, attachment in ipairs(mail.Attachments) do
                     if attachment.ItemId then
-                        PlayerDataService.AddItem(player, attachment.ItemId, attachment.Amount or 1)
+                        local amount = attachment.Amount
+                        if type(attachment.ItemId) ~= "string" or not isPositiveInteger(amount) then
+                            return false, "Invalid stored attachment"
+                        end
+                        if not PlayerDataService.AddItem(player, attachment.ItemId, amount) then
+                            for itemId, itemAmount in pairs(claimedItems) do
+                                PlayerDataService.RemoveItem(player, itemId, itemAmount)
+                            end
+                            for currency, currencyAmount in pairs(claimedCurrencies) do
+                                PlayerDataService.RemoveCurrency(player, currency, currencyAmount)
+                            end
+                            return false, "Could not claim item attachment"
+                        end
+                        claimedItems[attachment.ItemId] = (claimedItems[attachment.ItemId] or 0) + amount
                     end
                     if attachment.Currency then
                         for currency, amount in pairs(attachment.Currency) do
-                            PlayerDataService.AddCurrency(player, currency, amount)
+                            if
+                                not isPositiveInteger(amount)
+                                or not PlayerDataService.AddCurrency(player, currency, amount)
+                            then
+                                for itemId, itemAmount in pairs(claimedItems) do
+                                    PlayerDataService.RemoveItem(player, itemId, itemAmount)
+                                end
+                                for claimedCurrency, currencyAmount in pairs(claimedCurrencies) do
+                                    PlayerDataService.RemoveCurrency(player, claimedCurrency, currencyAmount)
+                                end
+                                return false, "Could not claim currency attachment"
+                            end
+                            claimedCurrencies[currency] = (claimedCurrencies[currency] or 0) + amount
                         end
                     end
                 end
                 mail.Attachments = {}
             end
+            mail.Read = true
 
             -- Notify client
             local Remotes = game.ReplicatedStorage.AetherShared.Remotes
