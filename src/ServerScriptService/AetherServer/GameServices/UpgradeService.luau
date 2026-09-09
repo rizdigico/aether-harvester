@@ -1,5 +1,7 @@
 local UpgradeService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local UpgradeMath = require(game.ReplicatedStorage.AetherShared.Modules.UpgradeMath)
 
 UpgradeService.Database = {
     ["pickaxe_power_1"] = {
@@ -80,6 +82,9 @@ function UpgradeService.Initialize()
             if type(upgradeId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "PurchaseUpgrade", 1) then
+                return
+            end
             local success, message = UpgradeService.PurchaseUpgrade(player, upgradeId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -141,7 +146,7 @@ function UpgradeService.CalculateCost(player, upgradeId)
 
     local currentLevel = UpgradeService.GetUpgradeLevel(player, upgradeId)
     local baseCost = upgrade.BaseCost.AetherShards or 0
-    return math.floor(baseCost * math.pow(upgrade.CostMultiplier, currentLevel))
+    return UpgradeMath.CalculateCost(baseCost, upgrade.CostMultiplier, currentLevel)
 end
 
 function UpgradeService.PurchaseUpgrade(player, upgradeId)
@@ -154,7 +159,9 @@ function UpgradeService.PurchaseUpgrade(player, upgradeId)
     local cost = UpgradeService.CalculateCost(player, upgradeId)
 
     -- Deduct cost
-    PlayerDataService.RemoveCurrency(player, "AetherShards", cost)
+    if not PlayerDataService.RemoveCurrency(player, "AetherShards", cost) then
+        return false, "Not enough currency"
+    end
 
     -- Increase level
     if not data.Upgrades then
