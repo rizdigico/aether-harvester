@@ -271,9 +271,11 @@ if invScreen then
     if tabBar then
         for _, tab in ipairs(tabBar:GetChildren()) do
             if tab:IsA("TextButton") then
-                tab.MouseButton1Click:Connect(function()
-                    ScreenController:PopulateInventory(tab.Name)
-                end)
+                if tab.Name ~= "TabCrafting" then
+                    tab.MouseButton1Click:Connect(function()
+                        ScreenController:PopulateInventory(tab.Name)
+                    end)
+                end
             end
         end
     end

@@ -2,65 +2,11 @@ local CraftingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local RecipesData = require(game.ReplicatedStorage.AetherShared.Data.Recipes)
 
-CraftingService.Recipes = {
-    ["crystal_pickaxe"] = {
-        Id = "crystal_pickaxe",
-        Name = "Crystal Pickaxe",
-        ResultItemId = "crystal_pickaxe",
-        Ingredients = {
-            { ItemId = "crystal_fragment", Amount = 10 },
-            { ItemId = "aether_shard", Amount = 50 },
-        },
-        RequiredLevel = 10,
-        CraftingTime = 5,
-    },
-    ["aether_pickaxe"] = {
-        Id = "aether_pickaxe",
-        Name = "Aether Pickaxe",
-        ResultItemId = "aether_pickaxe",
-        Ingredients = {
-            { ItemId = "aether_crystal", Amount = 5 },
-            { ItemId = "storm_essence", Amount = 3 },
-            { ItemId = "void_shard", Amount = 1 },
-        },
-        RequiredLevel = 25,
-        CraftingTime = 15,
-    },
-    ["pet_food"] = {
-        Id = "pet_food",
-        Name = "Pet Food",
-        ResultItemId = "pet_food",
-        Ingredients = {
-            { ItemId = "ancient_wood", Amount = 5 },
-            { ItemId = "aether_shard", Amount = 10 },
-        },
-        RequiredLevel = 5,
-        CraftingTime = 3,
-    },
-    ["energy_potion"] = {
-        Id = "energy_potion",
-        Name = "Energy Potion",
-        ResultItemId = "energy_potion",
-        Ingredients = {
-            { ItemId = "crystal_fragment", Amount = 3 },
-            { ItemId = "aether_shard", Amount = 15 },
-        },
-        RequiredLevel = 3,
-        CraftingTime = 2,
-    },
-    ["harvest_boost"] = {
-        Id = "harvest_boost",
-        Name = "Harvest Boost",
-        ResultItemId = "harvest_boost",
-        Ingredients = {
-            { ItemId = "storm_essence", Amount = 2 },
-            { ItemId = "aether_crystal", Amount = 1 },
-        },
-        RequiredLevel = 15,
-        CraftingTime = 10,
-    },
-}
+-- Keep the server and client on one recipe catalog. The client may display
+-- this data, but CanCraft and the ingredient removals below remain server-only.
+CraftingService.Recipes = RecipesData.GetAll()
 
 function CraftingService.Initialize()
     print("[CraftingService] Initializing...")
