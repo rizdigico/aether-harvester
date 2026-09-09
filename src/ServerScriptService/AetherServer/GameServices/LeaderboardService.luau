@@ -1,4 +1,7 @@
 local LeaderboardService = {}
+local DataStoreService = game:GetService("DataStoreService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
@@ -10,9 +13,60 @@ LeaderboardService.Leaderboards = {
 }
 
 local CATEGORIES = { "Level", "Wealth", "Pets", "Quests" }
+local LEADERBOARD_CACHE_SECONDS = 15
+local PERSIST_RETRY_SECONDS = 60
+local DATASTORE_SUFFIX = RunService:IsStudio() and "_Studio_v1" or "_v1"
+local orderedStores = {}
+local persistentValues = {}
+local persistAttemptAt = {}
+local cachedAt = {}
+
+for _, category in ipairs(CATEGORIES) do
+    orderedStores[category] = DataStoreService:GetOrderedDataStore("AetherLeaderboard_" .. category .. DATASTORE_SUFFIX)
+    persistentValues[category] = {}
+    persistAttemptAt[category] = {}
+    cachedAt[category] = 0
+end
 
 local function isCategory(category)
     return type(category) == "string" and LeaderboardService.Leaderboards[category] ~= nil
+end
+
+local function getPlayerName(userId)
+    local player = Players:GetPlayerByUserId(userId)
+    if player then
+        return player.Name
+    end
+    local success, name = pcall(function()
+        return Players:GetNameFromUserIdAsync(userId)
+    end)
+    return success and name or tostring(userId)
+end
+
+local function refreshDurableLeaderboard(category)
+    local success, pages = pcall(function()
+        return orderedStores[category]:GetSortedAsync(false, 100)
+    end)
+    if not success then
+        cachedAt[category] = os.time()
+        return false
+    end
+
+    local snapshot = {}
+    local page = pages:GetCurrentPage()
+    for _, entry in ipairs(page) do
+        local userId = tonumber(entry.key)
+        if userId and type(entry.value) == "number" then
+            table.insert(snapshot, {
+                PlayerId = userId,
+                PlayerName = getPlayerName(userId),
+                Value = entry.value,
+            })
+        end
+    end
+    LeaderboardService.Leaderboards[category] = snapshot
+    cachedAt[category] = os.time()
+    return true
 end
 
 function LeaderboardService.Initialize()
@@ -125,6 +179,28 @@ function LeaderboardService.UpdateLeaderboard(player, category)
     while #leaderboard > 100 do
         table.remove(leaderboard)
     end
+
+    -- OrderedDataStore writes are isolated per category and only happen when a
+    -- player's score changes. Studio uses a separate namespace, and failures
+    -- leave the local leaderboard usable without claiming persistence.
+    local now = os.time()
+    if
+        persistentValues[category][player.UserId] ~= value
+        and now - (persistAttemptAt[category][player.UserId] or 0) >= PERSIST_RETRY_SECONDS
+    then
+        persistAttemptAt[category][player.UserId] = now
+        local success, err = pcall(function()
+            orderedStores[category]:SetAsync(tostring(player.UserId), value)
+        end)
+        if success then
+            persistentValues[category][player.UserId] = value
+            cachedAt[category] = 0
+        else
+            warn(
+                "[LeaderboardService] Failed to persist " .. category .. " for " .. player.Name .. ": " .. tostring(err)
+            )
+        end
+    end
 end
 
 function LeaderboardService.UpdateAll(player)
@@ -144,6 +220,9 @@ function LeaderboardService.GetTopPlayers(category, count)
         count = 10
     end
     count = math.clamp(math.floor(count), 1, 100)
+    if os.time() - cachedAt[category] >= LEADERBOARD_CACHE_SECONDS then
+        refreshDurableLeaderboard(category)
+    end
     local topPlayers = {}
     for i = 1, math.min(count, #leaderboard) do
         table.insert(topPlayers, leaderboard[i])

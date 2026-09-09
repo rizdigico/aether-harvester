@@ -43,6 +43,9 @@ per-profile transaction journal for crash-safe retry of each side of a sale.
 Trade acceptance likewise validates both inventories, rolls back failed item
 moves, persists both profiles before reporting success, and only cancels
 pending offers on disconnect.
+Leaderboards now persist category scores in isolated OrderedDataStores with a
+15-second cached top-100 read path and a local fallback when Studio API access
+is unavailable.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and
