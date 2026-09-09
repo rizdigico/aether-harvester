@@ -7,9 +7,29 @@ param(
     [int]$TimeoutSec = 120
 )
 
-$exe = "$env:LOCALAPPDATA\Roblox\Versions\version-ff6341faef444107\StudioMCP.exe"
-if (-not (Test-Path $exe)) {
-    Write-Error "StudioMCP.exe not found"
+$versionsRoot = Join-Path $env:LOCALAPPDATA 'Roblox\Versions'
+$exe = $null
+
+# Roblox rotates the version directory on every Studio update. Resolve the
+# installed bridge instead of pinning a historical version hash.
+if (Test-Path $versionsRoot) {
+    $exe = Get-ChildItem -LiteralPath $versionsRoot -Directory -ErrorAction SilentlyContinue |
+        ForEach-Object { Join-Path $_.FullName 'StudioMCP.exe' } |
+        Where-Object { Test-Path $_ } |
+        Sort-Object { (Get-Item -LiteralPath $_).LastWriteTime } -Descending |
+        Select-Object -First 1
+}
+
+if (-not $exe) {
+    $contentFolder = (Get-ItemProperty -Path 'HKCU:\Software\Roblox\RobloxStudio' -Name ContentFolder -ErrorAction SilentlyContinue).ContentFolder
+    if ($contentFolder) {
+        $candidate = Join-Path (Split-Path $contentFolder -Parent) 'StudioMCP.exe'
+        if (Test-Path $candidate) { $exe = $candidate }
+    }
+}
+
+if (-not $exe) {
+    Write-Error "StudioMCP.exe not found under $versionsRoot or the RobloxStudio ContentFolder"
     exit 1
 }
 
@@ -18,16 +38,40 @@ $reqs = @(
     '{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}',
     "{`"jsonrpc`":`"2.0`",`"id`":2,`"method`":`"$Method`",`"params`":$Params}"
 )
-$input = $reqs -join "`n"
+$processInfo = New-Object System.Diagnostics.ProcessStartInfo
+$processInfo.FileName = $exe
+$processInfo.UseShellExecute = $false
+$processInfo.CreateNoWindow = $true
+$processInfo.RedirectStandardInput = $true
+$processInfo.RedirectStandardOutput = $true
+$processInfo.RedirectStandardError = $true
+$process = New-Object System.Diagnostics.Process
+$process.StartInfo = $processInfo
+[void]$process.Start()
 
-$output = $input | & $exe 2>$null | Out-String
+# Give StudioMCP time to bind its proxy WebSocket and for Roblox Studio to
+# reconnect before issuing the first Studio-facing request.
+$process.StandardInput.WriteLine($reqs[0])
+$process.StandardInput.Flush()
+Start-Sleep -Milliseconds 750
+$process.StandardInput.WriteLine($reqs[1])
+$process.StandardInput.Flush()
+Start-Sleep -Milliseconds 2250
+$process.StandardInput.WriteLine($reqs[2])
+$process.StandardInput.Flush()
+$process.StandardInput.Close()
+
+$output = $process.StandardOutput.ReadToEnd()
+$diagnostics = $process.StandardError.ReadToEnd()
+$process.WaitForExit([Math]::Max(1000, $TimeoutSec * 1000))
 # Extract the last JSON line (the response to id:2)
-$lines = $output -split "`n" | Where-Object { $_ -match '"id":2' }
-if ($lines.Count -eq 0) {
-    Write-Error "No response for id:2. Raw: $output"
+$lines = $output -split "`n" | Where-Object { $_.Contains('"id":2') }
+if (@($lines).Count -eq 0) {
+    Write-Error "No response for id:2. Raw: $output Diagnostics: $diagnostics"
     exit 1
 }
-$resp = $lines[-1] | ConvertFrom-Json
+$responseLine = @($lines) | Select-Object -Last 1
+$resp = $responseLine | ConvertFrom-Json
 if ($resp.error) {
     Write-Error "MCP error: $($resp.error | ConvertTo-Json -Compress)"
     exit 1
