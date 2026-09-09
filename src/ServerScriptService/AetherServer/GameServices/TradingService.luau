@@ -2,12 +2,53 @@ local TradingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 TradingService.ActiveTrades = {}
 TradingService.TradeIdCounter = 0
 
 local MAX_TRADE_ENTRIES = 20
 local MAX_ITEM_AMOUNT = 9999
+local MAX_TRADE_DISTANCE = 50
+
+local function getRemotes()
+    return game.ReplicatedStorage.AetherShared.Remotes
+end
+
+local function notify(player, message)
+    local remotes = getRemotes()
+    local errorRemote = remotes and remotes:FindFirstChild("Error")
+    if errorRemote then
+        errorRemote:FireClient(player, message)
+    end
+end
+
+local function playersAreNearby(firstPlayer, secondPlayer)
+    local firstCharacter = firstPlayer.Character
+    local secondCharacter = secondPlayer.Character
+    local firstRoot = firstCharacter and firstCharacter:FindFirstChild("HumanoidRootPart")
+    local secondRoot = secondCharacter and secondCharacter:FindFirstChild("HumanoidRootPart")
+    if not firstRoot or not secondRoot then
+        return false
+    end
+    return (firstRoot.Position - secondRoot.Position).Magnitude <= MAX_TRADE_DISTANCE
+end
+
+local function notifyTradePlayers(trade, remoteName)
+    local remotes = getRemotes()
+    local remote = remotes and remotes:FindFirstChild(remoteName)
+    if not remote then
+        return
+    end
+    local offerer = game.Players:GetPlayerByUserId(trade.PlayerId)
+    local target = game.Players:GetPlayerByUserId(trade.TargetPlayerId)
+    if offerer then
+        remote:FireClient(offerer, trade)
+    end
+    if target then
+        remote:FireClient(target, trade)
+    end
+end
 
 function TradingService.ValidateItemMap(items)
     if type(items) ~= "table" then
@@ -19,7 +60,10 @@ function TradingService.ValidateItemMap(items)
         if type(itemId) ~= "string" or itemId == "" or type(amount) ~= "number" then
             return false
         end
-        if amount < 1 or amount > MAX_ITEM_AMOUNT or amount ~= math.floor(amount) then
+        if not ItemsData.GetItem(itemId) then
+            return false
+        end
+        if amount ~= amount or amount < 1 or amount > MAX_ITEM_AMOUNT or amount ~= math.floor(amount) then
             return false
         end
         entries += 1
@@ -43,11 +87,16 @@ function TradingService.Initialize()
         return
     end
 
-    -- CreateTrade: open a new trade offer
+    -- CreateTrade: open a new targeted trade offer.
     local CreateTrade = Remotes:FindFirstChild("CreateTrade")
     if CreateTrade then
-        CreateTrade.OnServerEvent:Connect(function(player, offerItems, requestItems)
+        CreateTrade.OnServerEvent:Connect(function(player, targetUserId, offerItems, requestItems)
+            if type(targetUserId) ~= "number" or targetUserId ~= math.floor(targetUserId) then
+                notify(player, "Select a nearby player first")
+                return
+            end
             if not TradingService.ValidateItemMap(offerItems) or not TradingService.ValidateItemMap(requestItems) then
+                notify(player, "Invalid trade items")
                 return
             end
             if next(offerItems) == nil and next(requestItems) == nil then
@@ -58,7 +107,10 @@ function TradingService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            TradingService.CreateTrade(player, offerItems, requestItems)
+            local tradeId, message = TradingService.CreateTrade(player, targetUserId, offerItems, requestItems)
+            if not tradeId and message then
+                notify(player, message)
+            end
         end)
     end
 
@@ -94,14 +146,24 @@ function TradingService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            TradingService.CancelTrade(player, tradeId)
+            local success, message = TradingService.CancelTrade(player, tradeId)
+            if not success and message then
+                notify(player, message)
+            end
         end)
     end
+
+    game.Players.PlayerRemoving:Connect(function(player)
+        TradingService.CancelTradesForPlayer(player)
+    end)
 
     print("[TradingService] Initialized")
 end
 
-function TradingService.CreateTrade(player, offerItems, requestItems)
+function TradingService.CreateTrade(player, targetUserId, offerItems, requestItems)
+    if type(targetUserId) ~= "number" or targetUserId ~= math.floor(targetUserId) then
+        return nil, "Invalid trade recipient"
+    end
     if not TradingService.ValidateItemMap(offerItems) or not TradingService.ValidateItemMap(requestItems) then
         return nil, "Invalid trade payload"
     end
@@ -109,11 +171,28 @@ function TradingService.CreateTrade(player, offerItems, requestItems)
         return nil, "Trade must contain an item"
     end
 
+    local targetPlayer = game.Players:GetPlayerByUserId(targetUserId)
+    if not targetPlayer or targetPlayer == player then
+        return nil, "Trade recipient is unavailable"
+    end
+    if not playersAreNearby(player, targetPlayer) then
+        return nil, "Trade players must be nearby"
+    end
+    if not PlayerDataService.GetData(player) or not PlayerDataService.GetData(targetPlayer) then
+        return nil, "Player data is still loading"
+    end
+    for itemId, amount in pairs(offerItems) do
+        if PlayerDataService.GetItemCount(player, itemId) < amount then
+            return nil, "You no longer own the offered items"
+        end
+    end
+
     TradingService.TradeIdCounter += 1
     local tradeId = "TRADE_" .. player.UserId .. "_" .. TradingService.TradeIdCounter
     local trade = {
         Id = tradeId,
         PlayerId = player.UserId,
+        TargetPlayerId = targetPlayer.UserId,
         OfferItems = cloneItemMap(offerItems),
         RequestItems = cloneItemMap(requestItems),
         Status = "Pending",
@@ -122,14 +201,7 @@ function TradingService.CreateTrade(player, offerItems, requestItems)
 
     TradingService.ActiveTrades[tradeId] = trade
 
-    -- Notify client
-    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
-    if Remotes then
-        local TradeCreated = Remotes:FindFirstChild("TradeCreated")
-        if TradeCreated then
-            TradeCreated:FireClient(player, trade)
-        end
-    end
+    notifyTradePlayers(trade, "TradeCreated")
 
     return tradeId, trade
 end
@@ -158,6 +230,15 @@ function TradingService.AcceptTrade(player, tradeId)
     if not offerer then
         return false, "Trade partner left the game"
     end
+    if trade.TargetPlayerId ~= player.UserId then
+        return false, "This trade is not addressed to you"
+    end
+    if not playersAreNearby(offerer, player) then
+        return false, "Trade players must remain nearby"
+    end
+    if not PlayerDataService.GetData(offerer) or not PlayerDataService.GetData(player) then
+        return false, "Player data is still loading"
+    end
 
     -- Phase 1: validate ownership for BOTH sides before any mutation (atomic)
     for itemId, amount in pairs(trade.OfferItems) do
@@ -171,14 +252,42 @@ function TradingService.AcceptTrade(player, tradeId)
         end
     end
 
-    -- Phase 2: execute transfers (validated above -> cannot fail)
+    -- Phase 2: execute transfers. Keep a journal so an unexpected profile
+    -- failure cannot silently destroy an item during the exchange.
+    local removed = {}
+    local added = {}
+    local function rollback()
+        for _, entry in ipairs(added) do
+            PlayerDataService.RemoveItem(entry.player, entry.itemId, entry.amount)
+        end
+        for _, entry in ipairs(removed) do
+            PlayerDataService.AddItem(entry.player, entry.itemId, entry.amount)
+        end
+    end
+
+    local function moveItem(fromPlayer, toPlayer, itemId, amount)
+        if not PlayerDataService.RemoveItem(fromPlayer, itemId, amount) then
+            return false
+        end
+        table.insert(removed, { player = fromPlayer, itemId = itemId, amount = amount })
+        if not PlayerDataService.AddItem(toPlayer, itemId, amount) then
+            return false
+        end
+        table.insert(added, { player = toPlayer, itemId = itemId, amount = amount })
+        return true
+    end
+
     for itemId, amount in pairs(trade.OfferItems) do
-        PlayerDataService.RemoveItem(offerer, itemId, amount)
-        PlayerDataService.AddItem(player, itemId, amount)
+        if not moveItem(offerer, player, itemId, amount) then
+            rollback()
+            return false, "Trade could not be completed"
+        end
     end
     for itemId, amount in pairs(trade.RequestItems) do
-        PlayerDataService.RemoveItem(player, itemId, amount)
-        PlayerDataService.AddItem(offerer, itemId, amount)
+        if not moveItem(player, offerer, itemId, amount) then
+            rollback()
+            return false, "Trade could not be completed"
+        end
     end
 
     trade.Status = "Accepted"
@@ -186,15 +295,7 @@ function TradingService.AcceptTrade(player, tradeId)
 
     print("[TradingService] Trade accepted: " .. tradeId)
 
-    -- Notify both players
-    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
-    if Remotes then
-        local TradeCompleted = Remotes:FindFirstChild("TradeCompleted")
-        if TradeCompleted then
-            TradeCompleted:FireClient(offerer, trade)
-            TradeCompleted:FireClient(player, trade)
-        end
-    end
+    notifyTradePlayers(trade, "TradeCompleted")
 
     -- Clean up trade after delay
     task.delay(60, function()
@@ -210,23 +311,33 @@ function TradingService.CancelTrade(player, tradeId)
         return false, "Trade not found"
     end
 
-    if trade.PlayerId ~= player.UserId then
+    if trade.PlayerId ~= player.UserId and trade.TargetPlayerId ~= player.UserId then
         return false, "Not your trade"
     end
 
     trade.Status = "Cancelled"
     TradingService.ActiveTrades[tradeId] = nil
 
-    -- Notify client
-    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
-    if Remotes then
-        local TradeCancelled = Remotes:FindFirstChild("TradeCancelled")
-        if TradeCancelled then
-            TradeCancelled:FireClient(player, tradeId)
-        end
-    end
+    notifyTradePlayers(trade, "TradeCancelled")
 
     return true, "Trade cancelled"
+end
+
+function TradingService.CancelTradesForPlayer(player)
+    local toCancel = {}
+    for tradeId, trade in pairs(TradingService.ActiveTrades) do
+        if trade.PlayerId == player.UserId or trade.TargetPlayerId == player.UserId then
+            table.insert(toCancel, tradeId)
+        end
+    end
+    for _, tradeId in ipairs(toCancel) do
+        local trade = TradingService.ActiveTrades[tradeId]
+        if trade then
+            trade.Status = "Cancelled"
+            TradingService.ActiveTrades[tradeId] = nil
+            notifyTradePlayers(trade, "TradeCancelled")
+        end
+    end
 end
 
 function TradingService.GetActiveTrades()
