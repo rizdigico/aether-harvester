@@ -16,6 +16,7 @@ local MonetizationService = require(game.ServerScriptService.AetherServer.GameSe
 local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
 local PlayerVitalsService = require(game.ServerScriptService.AetherServer.GameServices.PlayerVitalsService)
 local ToolService = require(game.ServerScriptService.AetherServer.GameServices.ToolService)
+local SkillTreeService = require(game.ServerScriptService.AetherServer.GameServices.SkillTreeService)
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30
@@ -162,7 +163,8 @@ function NodeManager.ProcessHarvest(player, node)
         return false, toolError
     end
 
-    local spentEnergy, energyError = PlayerVitalsService.ConsumeEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
+    local harvestEnergyCost = PlayerVitalsService.GetHarvestEnergyCost(player)
+    local spentEnergy, energyError = PlayerVitalsService.ConsumeEnergy(player, harvestEnergyCost)
     if not spentEnergy then
         return false, energyError
     end
@@ -184,6 +186,7 @@ function NodeManager.ProcessHarvest(player, node)
 
     local harvestComfortMultiplier = MonetizationService.GetHarvestMultiplier(player)
     local upgradeMultiplier = UpgradeService.GetHarvestYieldMultiplier(player)
+    local skillMultiplier = 1 + math.clamp(SkillTreeService.GetEffectTotal(player, "HarvestYield"), 0, 2)
     yieldAmount = math.floor(
         yieldAmount
             * boost
@@ -191,19 +194,20 @@ function NodeManager.ProcessHarvest(player, node)
             * EventService.GetActiveYieldMultiplier()
             * petMultiplier
             * upgradeMultiplier
+            * skillMultiplier
             * ToolService.GetHarvestYieldMultiplier(player)
     )
 
     -- Grant resources. Do not put a node reward into the currency wallet:
     -- resources are inventory items and are consumed by crafting/trading.
     if not PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount) then
-        PlayerVitalsService.RestoreEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
+        PlayerVitalsService.RestoreEnergy(player, harvestEnergyCost)
         return false, "Unable to grant resource"
     end
 
     if not ToolService.ConsumeDurability(player) then
         PlayerDataService.RemoveItem(player, nodeType.ResourceId, yieldAmount)
-        PlayerVitalsService.RestoreEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
+        PlayerVitalsService.RestoreEnergy(player, harvestEnergyCost)
         return false, "Unable to use equipped tool"
     end
 

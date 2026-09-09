@@ -34,6 +34,14 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "PurchaseSkill",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "SkillPurchased",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "EquipPet",
                          "className":  "RemoteEvent"
                      },
@@ -322,6 +330,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "RepairTool",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "ToolUpdated",
                          "className":  "RemoteEvent"
                      },
@@ -382,6 +394,10 @@
                          "className":  "RemoteFunction"
                      },
                      {
+                         "name":  "GetTool",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "GetInventory",
                          "className":  "RemoteFunction"
                      },
@@ -395,6 +411,10 @@
                       },
                      {
                          "name":  "GetUpgrades",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetSkillTree",
                          "className":  "RemoteFunction"
                      },
                      {

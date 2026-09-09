@@ -48,4 +48,22 @@ return {
             },
         },
     },
+    {
+        name = "ToolRules.Repair",
+        tests = {
+            {
+                name = "prices only missing durability and requires balance",
+                fn = function()
+                    expectEqual(ToolRules.GetRepairCost(50, 100, 10), 50, "half repair cost")
+                    expectEqual(ToolRules.GetRepairCost(100, 100, 10), 0, "full tool is free")
+                    local ok, cost = ToolRules.CanRepair(50, 100, 10, 49)
+                    expectEqual(ok, false, "insufficient balance")
+                    expectEqual(cost, 50, "reported cost")
+                    ok, cost = ToolRules.CanRepair(50, 100, 10, 50)
+                    expectEqual(ok, true, "repair allowed")
+                    expectEqual(cost, 50, "allowed cost")
+                end,
+            },
+        },
+    },
 }

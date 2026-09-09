@@ -5,6 +5,7 @@ local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateL
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
+local SkillTreeRules = require(game.ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -459,7 +460,7 @@ local function SanitizeProfile(userId, raw)
     merged.Boosts = sanitizeBoosts(merged.Boosts)
     merged.Quests = type(merged.Quests) == "table" and merged.Quests or {}
     merged.ClaimedRewards = sanitizeStringBooleanMap(merged.ClaimedRewards)
-    merged.Skills = sanitizeNumberMap(merged.Skills, 0, 100)
+    merged.Skills = SkillTreeRules.NormalizeLevels(merged.Skills)
     merged.Achievements = sanitizeStringBooleanMap(merged.Achievements)
     merged.Settings = {
         MusicVolume = isFiniteNumber(merged.Settings and merged.Settings.MusicVolume)

@@ -44,7 +44,7 @@
         [petId: string]: boolean
     },
     Skills: {
-        [skillId: string]: number
+        [skillId: string]: number -- server-catalogued rank, 0..5
     },
     Upgrades: {
         [upgradeId: string]: number

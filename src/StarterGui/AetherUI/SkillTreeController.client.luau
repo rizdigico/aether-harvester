@@ -1,18 +1,15 @@
 --!strict
--- SkillTreeController: renders the server-owned upgrade catalog and sends
--- unlock requests. Currency, levels, and affordability are revalidated by the
--- server's UpgradeService.
+-- SkillTreeController: renders the server-owned skill catalog and sends
+-- bounded rank requests. Skill points, gates, and effects are authoritative
+-- on the server; this screen only provides presentation and input.
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 local aetherUI = playerGui:WaitForChild("AetherUI")
 local screens = aetherUI:WaitForChild("Screens")
-local shared = ReplicatedStorage:WaitForChild("AetherShared")
-local remotes = shared:WaitForChild("Remotes")
-local upgradeMath = require(shared:WaitForChild("Modules"):WaitForChild("UpgradeMath"))
+local remotes = game:GetService("ReplicatedStorage"):WaitForChild("AetherShared"):WaitForChild("Remotes")
 local toast = require(script.Parent.Components.Toast)
 
 local screen = screens:FindFirstChild("SkillTreeScreen")
@@ -39,9 +36,10 @@ end
 
 local nodeRows: { Frame } = {}
 local uiConnections: { RBXScriptConnection } = {}
-local upgrades: any = {}
-local purchased: any = {}
-local playerCurrency = 0
+local skills: { [string]: any } = {}
+local levels: { [string]: number } = {}
+local skillPoints = 0
+local playerLevel = 1
 local selectedId: string? = nil
 local toastHost: any = nil
 
@@ -72,16 +70,28 @@ local function getDetailLabel(name: string): TextLabel?
     return nil
 end
 
-local function getCost(definition: any, level: number): number
-    return upgradeMath.CalculateCost(
-        tonumber(definition.BaseCost and definition.BaseCost.AetherShards) or 0,
-        tonumber(definition.CostMultiplier) or 1,
-        level
-    )
+local function getLevel(skillId: string): number
+    return math.max(0, math.floor(tonumber(levels[skillId]) or 0))
+end
+
+local function prerequisitesReady(definition: any): boolean
+    for _, prerequisite in ipairs(definition.Prerequisites or {}) do
+        if getLevel(prerequisite.Id) < (tonumber(prerequisite.Level) or 0) then
+            return false
+        end
+    end
+    return true
+end
+
+local function canPurchase(definition: any): boolean
+    return getLevel(definition.Id) < (tonumber(definition.MaxLevel) or 1)
+        and skillPoints > 0
+        and playerLevel >= (tonumber(definition.RequiredLevel) or 1)
+        and prerequisitesReady(definition)
 end
 
 local function renderDetail()
-    local definition = selectedId and upgrades[selectedId]
+    local definition = selectedId and skills[selectedId]
     local title = getDetailLabel("DetailTitle")
     local description = getDetailLabel("DetailDesc")
     local unlock = detail:FindFirstChild("UnlockButton")
@@ -90,63 +100,88 @@ local function renderDetail()
             title.Text = "Select a skill"
         end
         if description then
-            description.Text = "Click a skill node to see details."
+            description.Text = "Choose a node to inspect its real progression gates."
         end
         return
     end
-    local level = math.max(0, math.floor(tonumber(purchased[selectedId]) or 0))
-    local cost = getCost(definition, level)
+
+    local level = getLevel(definition.Id)
+    local maxLevel = tonumber(definition.MaxLevel) or 1
+    local requiredLevel = tonumber(definition.RequiredLevel) or 1
+    local gate = "Ready"
+    if level >= maxLevel then
+        gate = "MAXED"
+    elseif playerLevel < requiredLevel then
+        gate = "Requires player level " .. tostring(requiredLevel)
+    elseif not prerequisitesReady(definition) then
+        gate = "Prerequisite rank required"
+    elseif skillPoints <= 0 then
+        gate = "No skill points available"
+    end
+
     if title then
-        title.Text = string.format("%s  •  Lv. %d/%d", definition.Name or selectedId, level, definition.MaxLevel or 1)
+        title.Text = string.format("%s  •  Lv. %d/%d", definition.Name or definition.Id, level, maxLevel)
     end
     if description then
-        description.Text =
-            string.format("%s\nCost: %d Aether Shards\nBalance: %d", definition.Description or "", cost, playerCurrency)
+        description.Text = string.format(
+            "%s\nBranch: %s\n%s\nAvailable skill points: %d",
+            definition.Description or "",
+            definition.Branch or "Fieldwork",
+            gate,
+            skillPoints
+        )
     end
     if unlock and unlock:IsA("TextButton") then
-        if level >= (definition.MaxLevel or 1) then
-            unlock.Text = "MAXED"
-            unlock.Active = false
-        elseif playerCurrency < cost then
-            unlock.Text = "NOT ENOUGH SHARDS"
-            unlock.Active = false
-        else
-            unlock.Text = "UNLOCK"
-            unlock.Active = true
-        end
+        unlock.Text = level >= maxLevel and "MAXED" or (canPurchase(definition) and "UNLOCK" or gate:upper())
+        unlock.Active = canPurchase(definition)
+        unlock.AutoButtonColor = unlock.Active
     end
 end
 
 local function renderNodes()
     clearNodes()
     local ids: { string } = {}
-    for id in pairs(upgrades) do
+    for id in pairs(skills) do
         table.insert(ids, id)
     end
-    table.sort(ids)
-    local columns = 3
-    local cellWidth = 0.29
-    local cellHeight = 80
+    table.sort(ids, function(left, right)
+        local leftDefinition = skills[left]
+        local rightDefinition = skills[right]
+        local leftBranch = tostring(leftDefinition.Branch or "")
+        local rightBranch = tostring(rightDefinition.Branch or "")
+        if leftBranch == rightBranch then
+            return left < right
+        end
+        return leftBranch < rightBranch
+    end)
+    local columns = 2
+    local cellWidth = 0.46
+    local cellHeight = 82
     local rowCount = math.ceil(#ids / columns)
     canvas.CanvasSize = UDim2.new(0, 0, 0, math.max(360, rowCount * cellHeight + 30))
 
     for index, id in ipairs(ids) do
-        local definition = upgrades[id]
+        local definition = skills[id]
         local node = template:Clone()
         node.Name = "Skill_" .. id
         node.Visible = true
-        node.BackgroundColor3 = id == selectedId and Color3.fromRGB(54, 91, 128) or Color3.fromRGB(255, 183, 77)
+        local level = getLevel(id)
+        local maxLevel = tonumber(definition.MaxLevel) or 1
+        node.BackgroundColor3 = id == selectedId and Color3.fromRGB(54, 91, 128)
+            or level >= maxLevel and Color3.fromRGB(74, 130, 100)
+            or canPurchase(definition) and Color3.fromRGB(255, 183, 77)
+            or Color3.fromRGB(88, 92, 105)
         node.Position = UDim2.new(
             0.04 + ((index - 1) % columns) * cellWidth,
             0,
             0,
             15 + math.floor((index - 1) / columns) * cellHeight
         )
-        node.Size = UDim2.new(cellWidth - 0.03, 0, 0, 58)
+        node.Size = UDim2.new(cellWidth - 0.03, 0, 0, 62)
         local nodeLabel = node:FindFirstChild("NodeLabel")
         if nodeLabel and nodeLabel:IsA("TextLabel") then
-            local level = math.max(0, math.floor(tonumber(purchased[id]) or 0))
-            nodeLabel.Text = string.format("%s\n%d/%d", definition.Name or id, level, definition.MaxLevel or 1)
+            nodeLabel.Text =
+                string.format("%s\n%s\n%d/%d", definition.Name or id, definition.Branch or "Fieldwork", level, maxLevel)
         end
         local clickTarget = Instance.new("TextButton")
         clickTarget.Name = "Select"
@@ -165,24 +200,27 @@ local function renderNodes()
 end
 
 local function fetchState()
-    local getUpgrades = remotes:FindFirstChild("GetUpgrades")
-    if getUpgrades and getUpgrades:IsA("RemoteFunction") then
-        local ok, result = pcall(function()
-            return getUpgrades:InvokeServer()
-        end)
-        if ok and type(result) == "table" then
-            upgrades = type(result.Database) == "table" and result.Database or {}
-            purchased = type(result.Purchased) == "table" and result.Purchased or {}
-        end
+    local getSkillTree = remotes:FindFirstChild("GetSkillTree")
+    if not getSkillTree or not getSkillTree:IsA("RemoteFunction") then
+        return
     end
-    local getPlayerData = remotes:FindFirstChild("GetPlayerData")
-    if getPlayerData and getPlayerData:IsA("RemoteFunction") then
-        local ok, data = pcall(function()
-            return getPlayerData:InvokeServer()
-        end)
-        if ok and type(data) == "table" then
-            local currency = type(data.Currency) == "table" and data.Currency.AetherShards or 0
-            playerCurrency = math.max(0, math.floor(tonumber(currency) or 0))
+    local ok, result = pcall(function()
+        return getSkillTree:InvokeServer()
+    end)
+    if not ok or type(result) ~= "table" then
+        return
+    end
+    skills = type(result.Catalog) == "table" and result.Catalog or {}
+    levels = type(result.Levels) == "table" and result.Levels or {}
+    skillPoints = math.max(0, math.floor(tonumber(result.SkillPoints) or 0))
+    playerLevel = math.max(1, math.floor(tonumber(result.PlayerLevel) or 1))
+    if selectedId and not skills[selectedId] then
+        selectedId = nil
+    end
+    if not selectedId then
+        for id in pairs(skills) do
+            selectedId = id
+            break
         end
     end
 end
@@ -194,32 +232,35 @@ local function render()
     local unlock = detail:FindFirstChild("UnlockButton")
     if unlock and unlock:IsA("TextButton") then
         uiConnections[#uiConnections + 1] = unlock.MouseButton1Click:Connect(function()
-            if not selectedId then
-                return
-            end
-            local purchase = remotes:FindFirstChild("PurchaseUpgrade")
-            if purchase and purchase:IsA("RemoteEvent") then
-                purchase:FireServer(selectedId)
+            if selectedId then
+                local purchase = remotes:FindFirstChild("PurchaseSkill")
+                if purchase and purchase:IsA("RemoteEvent") and canPurchase(skills[selectedId]) then
+                    purchase:FireServer(selectedId)
+                end
             end
         end)
     end
 end
 
-local purchaseEvent = remotes:FindFirstChild("UpgradePurchased")
-if purchaseEvent and purchaseEvent:IsA("RemoteEvent") then
-    purchaseEvent.OnClientEvent:Connect(function(upgradeId, level, currency)
-        if type(upgradeId) == "string" then
-            purchased[upgradeId] = tonumber(level) or purchased[upgradeId]
+local skillPurchased = remotes:FindFirstChild("SkillPurchased")
+if skillPurchased and skillPurchased:IsA("RemoteEvent") then
+    skillPurchased.OnClientEvent:Connect(function(skillId, level, snapshot)
+        if type(snapshot) == "table" then
+            skills = type(snapshot.Catalog) == "table" and snapshot.Catalog or skills
+            levels = type(snapshot.Levels) == "table" and snapshot.Levels or levels
+            skillPoints = math.max(0, math.floor(tonumber(snapshot.SkillPoints) or skillPoints))
+            playerLevel = math.max(1, math.floor(tonumber(snapshot.PlayerLevel) or playerLevel))
+        elseif type(skillId) == "string" then
+            levels[skillId] = tonumber(level) or levels[skillId]
+            skillPoints = math.max(0, skillPoints - 1)
         end
-        if type(currency) == "table" then
-            playerCurrency = tonumber(currency.AetherShards) or playerCurrency
-        end
-        showToast("Upgrade purchased", "success")
+        showToast("Skill rank unlocked", "success")
         if screen.Enabled then
             render()
         end
     end)
 end
+
 local errorRemote = remotes:FindFirstChild("Error")
 if errorRemote and errorRemote:IsA("RemoteEvent") then
     errorRemote.OnClientEvent:Connect(function(message)

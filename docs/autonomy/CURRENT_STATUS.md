@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 75 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 79 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |
 
@@ -49,7 +49,10 @@ moves, persists both profiles before reporting success, and only cancels
 pending offers on disconnect.
 Leaderboards now persist category scores in isolated OrderedDataStores with a
 15-second cached top-100 read path and a local fallback when Studio API access
-is unavailable.
+is unavailable. The skill-tree screen now consumes a server-owned catalog with
+bounded prerequisites and durable ranks; its harvesting, vitality, and
+tool-output effects are applied by server services. Tool durability also has a
+server-priced repair path exposed in inventory for the equipped tool.
 Profile autosave now snapshots active user IDs and saves them sequentially with
 small request spacing instead of launching one concurrent task per player. Save
 locks are rechecked after waits and player removal blocks stale profile

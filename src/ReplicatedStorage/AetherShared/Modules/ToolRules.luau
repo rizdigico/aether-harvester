@@ -49,4 +49,24 @@ function ToolRules.GetCooldownMultiplier(speed: any): number
     return math.clamp(1 / speed, 0.25, 2)
 end
 
+function ToolRules.GetRepairCost(durability: any, maximum: any, itemValue: any): number
+    local maxDurability = ToolRules.NormalizeDurability(nil, maximum)
+    local currentDurability = ToolRules.NormalizeDurability(durability, maxDurability)
+    if not isFiniteNumber(itemValue) or itemValue < 1 or currentDurability >= maxDurability then
+        return 0
+    end
+    return math.max(1, math.ceil((maxDurability - currentDurability) * itemValue * 0.1))
+end
+
+function ToolRules.CanRepair(durability: any, maximum: any, itemValue: any, balance: any): (boolean, number, string)
+    local cost = ToolRules.GetRepairCost(durability, maximum, itemValue)
+    if cost <= 0 then
+        return false, 0, "Tool is already fully repaired"
+    end
+    if not isFiniteNumber(balance) or balance < cost then
+        return false, cost, "Not enough currency"
+    end
+    return true, cost, "Tool can be repaired"
+end
+
 return ToolRules

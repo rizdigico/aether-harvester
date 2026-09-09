@@ -10,6 +10,7 @@ local Remotes = Shared:WaitForChild("Remotes")
 local ItemsData = require(Shared:WaitForChild("Data"):WaitForChild("Items"))
 local PetsData = require(Shared:WaitForChild("Data"):WaitForChild("Pets"))
 local Screens = AetherUI:WaitForChild("Screens")
+local GameClient = require(Shared:WaitForChild("Modules"):WaitForChild("GameClient"))
 
 local ScreenController = {}
 local activeInventoryTab = nil
@@ -58,6 +59,21 @@ function ScreenController:PopulateInventory(activeTab)
     end)
     if not ok or not inv then
         return
+    end
+
+    local equippedToolId = GameClient.State.CurrentTool
+    local equippedDurability = nil
+    local getTool = Remotes:FindFirstChild("GetTool")
+    if getTool and getTool:IsA("RemoteFunction") then
+        local toolOk, snapshot = pcall(function()
+            return getTool:InvokeServer()
+        end)
+        if toolOk and type(snapshot) == "table" then
+            equippedToolId = snapshot.EquippedTool or equippedToolId
+            equippedDurability = snapshot.Durability
+            GameClient.State.ToolDurability = snapshot.Durability or GameClient.State.ToolDurability
+            GameClient.State.MaxToolDurability = snapshot.MaxDurability or GameClient.State.MaxToolDurability
+        end
     end
 
     local entries = {}
@@ -148,11 +164,24 @@ function ScreenController:PopulateInventory(activeTab)
             equipButton.TextColor3 = Color3.fromRGB(230, 245, 255)
             equipButton.Font = Enum.Font.GothamBold
             equipButton.TextSize = 11
-            equipButton.Text = "EQUIP"
+            local isEquipped = entry.Id == equippedToolId
+            local isDamaged = isEquipped
+                and type(equippedDurability) == "number"
+                and equippedDurability < (entry.Def.Durability or 1)
+            equipButton.Text = isDamaged and "REPAIR" or isEquipped and "EQUIPPED" or "EQUIP"
+            equipButton.Active = not isEquipped or isDamaged
+            equipButton.AutoButtonColor = equipButton.Active
             equipButton.Activated:Connect(function()
-                local equipTool = Remotes:FindFirstChild("EquipTool")
-                if equipTool then
-                    equipTool:FireServer(entry.Id)
+                if isDamaged then
+                    local repairTool = Remotes:FindFirstChild("RepairTool")
+                    if repairTool then
+                        repairTool:FireServer(entry.Id)
+                    end
+                elseif not isEquipped then
+                    local equipTool = Remotes:FindFirstChild("EquipTool")
+                    if equipTool then
+                        equipTool:FireServer(entry.Id)
+                    end
                 end
             end)
             equipButton.Parent = item
@@ -359,6 +388,18 @@ end
 local itemUsed = Remotes:FindFirstChild("ItemUsed")
 if itemUsed and itemUsed:IsA("RemoteEvent") then
     itemUsed.OnClientEvent:Connect(function()
+        local inventoryScreen = Screens:FindFirstChild("InventoryScreen")
+        if inventoryScreen and inventoryScreen.Enabled then
+            task.defer(function()
+                ScreenController:PopulateInventory(activeInventoryTab)
+            end)
+        end
+    end)
+end
+
+local toolUpdated = Remotes:FindFirstChild("ToolUpdated")
+if toolUpdated and toolUpdated:IsA("RemoteEvent") then
+    toolUpdated.OnClientEvent:Connect(function()
         local inventoryScreen = Screens:FindFirstChild("InventoryScreen")
         if inventoryScreen and inventoryScreen.Enabled then
             task.defer(function()

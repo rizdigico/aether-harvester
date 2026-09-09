@@ -1,6 +1,7 @@
 local ProgressionService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local PrestigeMath = require(game.ReplicatedStorage.AetherShared.Modules.PrestigeMath)
+local SkillTreeRules = require(game.ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
 
 -- Cross-cutting progression systems are wired by ServerMain after all modules
 -- load. This keeps the data layer independent and avoids require cycles.
@@ -139,12 +140,15 @@ function ProgressionService.AddSkillPoint(player, skillId)
         return false
     end
 
-    if (data.SkillPoints or 0) <= 0 then
-        return false, "No skill points available"
+    data.Skills = SkillTreeRules.NormalizeLevels(data.Skills)
+    local canPurchase, reason = SkillTreeRules.CanPurchase(skillId, data.Skills, data.SkillPoints, data.Level)
+    if not canPurchase then
+        return false, reason
     end
 
     data.SkillPoints -= 1
-    data.Skills[skillId] = (data.Skills[skillId] or 0) + 1
+    local definition = SkillTreeRules.GetDefinition(skillId)
+    data.Skills[skillId] = math.min(definition.MaxLevel, (data.Skills[skillId] or 0) + 1)
 
     return true, "Skill point added"
 end

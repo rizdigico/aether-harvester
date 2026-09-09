@@ -8,6 +8,7 @@ local RunService = game:GetService("RunService")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
+local SkillTreeService = require(game.ServerScriptService.AetherServer.GameServices.SkillTreeService)
 local VitalsMath = require(ReplicatedStorage.AetherShared.Modules.VitalsMath)
 
 local PlayerVitalsService = {}
@@ -25,14 +26,20 @@ local function getData(player)
     return PlayerDataService.GetData(player)
 end
 
+local function getMaxEnergy(player, data): number
+    local baseMaxEnergy = VitalsMath.NormalizeMaxEnergy(data and data.MaxEnergy)
+    local skillBonus = math.max(0, math.floor(SkillTreeService.GetEffectTotal(player, "MaxEnergy")))
+    return VitalsMath.NormalizeMaxEnergy(baseMaxEnergy + skillBonus)
+end
+
 local function getSnapshot(player): { Energy: number, MaxEnergy: number }?
     local data = getData(player)
     if not data then
         return nil
     end
 
-    local maxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
-    data.MaxEnergy = maxEnergy
+    local maxEnergy = getMaxEnergy(player, data)
+    data.MaxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
     data.Energy = VitalsMath.NormalizeEnergy(data.Energy, maxEnergy)
     return {
         Energy = data.Energy,
@@ -60,12 +67,12 @@ function PlayerVitalsService.ConsumeEnergy(player, amount)
         return false, "Player data is still loading"
     end
 
-    local maxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
+    local maxEnergy = getMaxEnergy(player, data)
     local remaining, consumed = VitalsMath.ConsumeEnergy(data.Energy, amount, maxEnergy)
     if not consumed then
         return false, "Not enough energy"
     end
-    data.MaxEnergy = maxEnergy
+    data.MaxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
     data.Energy = remaining
     notifyVitals(player)
     return true, "Energy consumed"
@@ -77,8 +84,8 @@ function PlayerVitalsService.RestoreEnergy(player, amount)
         return false
     end
 
-    local maxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
-    data.MaxEnergy = maxEnergy
+    local maxEnergy = getMaxEnergy(player, data)
+    data.MaxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
     data.Energy = math.min(maxEnergy, VitalsMath.NormalizeEnergy(data.Energy, maxEnergy) + amount)
     notifyVitals(player)
     return true
@@ -113,6 +120,11 @@ function PlayerVitalsService.UseItem(player, itemId): (boolean, string, { Energy
         return false, "Could not restore energy"
     end
     return true, "Energy restored", getSnapshot(player)
+end
+
+function PlayerVitalsService.GetHarvestEnergyCost(player): number
+    local efficiency = math.clamp(SkillTreeService.GetEffectTotal(player, "EnergyEfficiency"), 0, 0.75)
+    return math.max(1, math.ceil(VitalsMath.HARVEST_ENERGY_COST * (1 - efficiency)))
 end
 
 function PlayerVitalsService.Initialize()
@@ -155,13 +167,18 @@ function PlayerVitalsService.Initialize()
         for _, player in ipairs(Players:GetPlayers()) do
             local data = getData(player)
             if data then
-                local maxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
-                local regenBonus = math.clamp(UpgradeService.GetEffectTotal(player, "EnergyRegen"), 0, 5)
+                local maxEnergy = getMaxEnergy(player, data)
+                local regenBonus = math.clamp(
+                    UpgradeService.GetEffectTotal(player, "EnergyRegen")
+                        + SkillTreeService.GetEffectTotal(player, "EnergyRegen"),
+                    0,
+                    5
+                )
                 local regenRate = VitalsMath.BASE_REGEN_PER_SECOND * (1 + regenBonus)
                 local current = VitalsMath.NormalizeEnergy(data.Energy, maxEnergy)
                 local nextEnergy = VitalsMath.RegenEnergy(current, elapsed, regenRate, maxEnergy)
                 if nextEnergy ~= current then
-                    data.MaxEnergy = maxEnergy
+                    data.MaxEnergy = VitalsMath.NormalizeMaxEnergy(data.MaxEnergy)
                     data.Energy = nextEnergy
                     notifyVitals(player)
                 end

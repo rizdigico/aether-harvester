@@ -7,6 +7,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local ItemsData = require(ReplicatedStorage.AetherShared.Data.Items)
 local ToolRules = require(ReplicatedStorage.AetherShared.Modules.ToolRules)
+local SkillTreeService = require(game.ServerScriptService.AetherServer.GameServices.SkillTreeService)
 
 local ToolService = {}
 local initialized = false
@@ -98,6 +99,29 @@ function ToolService.GetSnapshot(player)
     return getSnapshot(player)
 end
 
+function ToolService.RepairTool(player, toolId)
+    local data = getData(player)
+    local definition = getToolDefinition(player, toolId)
+    if not data or not definition then
+        return false, "You do not own that tool"
+    end
+
+    data.ToolDurability = data.ToolDurability or {}
+    local maximum = math.max(1, math.floor(definition.Durability or 1))
+    local current = ToolRules.NormalizeDurability(data.ToolDurability[toolId], maximum)
+    local balance = data.Currency and data.Currency.AetherShards or 0
+    local canRepair, cost, reason = ToolRules.CanRepair(current, maximum, definition.Value, balance)
+    if not canRepair then
+        return false, reason
+    end
+    if not PlayerDataService.RemoveCurrency(player, "AetherShards", cost) then
+        return false, "Not enough currency"
+    end
+    data.ToolDurability[toolId] = maximum
+    local snapshot = if data.EquippedTool == toolId then notifyTool(player) else nil
+    return true, "Tool repaired", snapshot
+end
+
 function ToolService.GetEquippedDefinition(player)
     local snapshot = getSnapshot(player)
     return snapshot and snapshot.EquippedTool and ItemsData.GetItem(snapshot.EquippedTool) or nil
@@ -145,12 +169,15 @@ end
 
 function ToolService.GetHarvestYieldMultiplier(player)
     local definition = ToolService.GetEquippedDefinition(player)
-    return ToolRules.GetYieldMultiplier(definition and definition.Power)
+    local skillBonus = math.clamp(SkillTreeService.GetEffectTotal(player, "ToolPower"), 0, 2)
+    return ToolRules.GetYieldMultiplier(definition and definition.Power) * (1 + skillBonus)
 end
 
 function ToolService.GetHarvestCooldownMultiplier(player)
     local definition = ToolService.GetEquippedDefinition(player)
-    return ToolRules.GetCooldownMultiplier(definition and definition.Speed)
+    local base = ToolRules.GetCooldownMultiplier(definition and definition.Speed)
+    local skillBonus = math.clamp(SkillTreeService.GetEffectTotal(player, "HarvestSpeed"), 0, 1)
+    return base / (1 + skillBonus)
 end
 
 function ToolService.Initialize()
@@ -161,6 +188,13 @@ function ToolService.Initialize()
     print("[ToolService] Initializing...")
 
     local remotes = getRemotes()
+    local getTool = remotes and remotes:FindFirstChild("GetTool")
+    if getTool and getTool:IsA("RemoteFunction") then
+        getTool.OnServerInvoke = function(player)
+            return ToolService.GetSnapshot(player)
+        end
+    end
+
     local equipTool = remotes and remotes:FindFirstChild("EquipTool")
     if equipTool and equipTool:IsA("RemoteEvent") then
         equipTool.OnServerEvent:Connect(function(player, toolId)
@@ -170,6 +204,22 @@ function ToolService.Initialize()
             local success, message = ToolService.EquipTool(player, toolId)
             if not success then
                 local errorRemote = remotes:FindFirstChild("Error")
+                if errorRemote and errorRemote:IsA("RemoteEvent") then
+                    errorRemote:FireClient(player, message)
+                end
+            end
+        end)
+    end
+
+    local repairTool = remotes and remotes:FindFirstChild("RepairTool")
+    if repairTool and repairTool:IsA("RemoteEvent") then
+        repairTool.OnServerEvent:Connect(function(player, toolId)
+            if type(toolId) ~= "string" or not RateLimiter.Check(player, "RepairTool", 0.5) then
+                return
+            end
+            local success, message = ToolService.RepairTool(player, toolId)
+            if not success then
+                local errorRemote = remotes and remotes:FindFirstChild("Error")
                 if errorRemote and errorRemote:IsA("RemoteEvent") then
                     errorRemote:FireClient(player, message)
                 end
