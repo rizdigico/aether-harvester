@@ -2,6 +2,8 @@ local PlayerDataService = {}
 local DataStoreService = game:GetService("DataStoreService")
 local RunService = game:GetService("RunService")
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
+local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -12,11 +14,21 @@ local playerData = {}
 local playerSaveEnabled = {}
 local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
-local SCHEMA_VERSION = 1
+local SCHEMA_VERSION = 2
 local MAX_TRANSACTION_AMOUNT = 1000000000
 
 local function isPositiveInteger(value)
-    return type(value) == "number" and value >= 1 and value <= MAX_TRANSACTION_AMOUNT and value == math.floor(value)
+    return type(value) == "number"
+        and value == value
+        and value < math.huge
+        and value > -math.huge
+        and value >= 1
+        and value <= MAX_TRANSACTION_AMOUNT
+        and value == math.floor(value)
+end
+
+local function isFiniteNumber(value)
+    return type(value) == "number" and value == value and value < math.huge and value > -math.huge
 end
 
 local function cloneProfile(value)
@@ -29,6 +41,192 @@ local function cloneProfile(value)
         copy[key] = cloneProfile(nestedValue)
     end
     return copy
+end
+
+local function sanitizeInventory(value)
+    local inventory = {}
+    if type(value) ~= "table" then
+        return inventory
+    end
+    for itemId, amount in pairs(value) do
+        if type(itemId) == "string" and ItemsData.GetItem(itemId) and isPositiveInteger(amount) then
+            inventory[itemId] = amount
+        end
+    end
+    return inventory
+end
+
+local function sanitizeMailbox(value)
+    local mailbox = {}
+    if type(value) ~= "table" then
+        return mailbox
+    end
+    for _, rawMail in ipairs(value) do
+        if
+            type(rawMail) == "table"
+            and type(rawMail.Id) == "string"
+            and rawMail.Id ~= ""
+            and type(rawMail.Subject) == "string"
+            and type(rawMail.Message) == "string"
+        then
+            local mail = {
+                Id = rawMail.Id:sub(1, 100),
+                From = type(rawMail.From) == "string" and rawMail.From:sub(1, 64) or "Unknown",
+                FromId = isFiniteNumber(rawMail.FromId) and math.floor(rawMail.FromId) or 0,
+                Subject = rawMail.Subject:sub(1, 80),
+                Message = rawMail.Message:sub(1, 1000),
+                SentAt = isFiniteNumber(rawMail.SentAt) and math.floor(rawMail.SentAt) or 0,
+                Read = rawMail.Read == true,
+                Attachments = {},
+            }
+            if type(rawMail.Attachments) == "table" then
+                for _, attachment in ipairs(rawMail.Attachments) do
+                    if type(attachment) == "table" and type(attachment.ItemId) == "string" then
+                        if ItemsData.GetItem(attachment.ItemId) and isPositiveInteger(attachment.Amount) then
+                            table.insert(mail.Attachments, {
+                                ItemId = attachment.ItemId,
+                                Amount = attachment.Amount,
+                            })
+                        end
+                    elseif type(attachment) == "table" and type(attachment.Currency) == "table" then
+                        local currencyCopy = {}
+                        for currency, amount in pairs(attachment.Currency) do
+                            if
+                                (
+                                    currency == "AetherShards"
+                                    or currency == "AetherGems"
+                                    or currency == "EventTokens"
+                                    or currency == "FamePoints"
+                                )
+                                and isPositiveInteger(amount)
+                            then
+                                currencyCopy[currency] = amount
+                            end
+                        end
+                        if next(currencyCopy) then
+                            table.insert(mail.Attachments, { Currency = currencyCopy })
+                        end
+                    end
+                    if #mail.Attachments >= 10 then
+                        break
+                    end
+                end
+            end
+            table.insert(mailbox, mail)
+            if #mailbox >= 100 then
+                break
+            end
+        end
+    end
+    return mailbox
+end
+
+local function sanitizePetInventory(value)
+    local inventory = {}
+    local seenInstanceIds = {}
+    if type(value) ~= "table" then
+        return inventory
+    end
+    for index, rawPet in ipairs(value) do
+        local petId = type(rawPet) == "string" and rawPet or type(rawPet) == "table" and rawPet.PetId or nil
+        local petDefinition = type(petId) == "string" and PetsData.GetPet(petId) or nil
+        if petDefinition then
+            local rawInstanceId = type(rawPet) == "table" and rawPet.InstanceId or index
+            local instanceId = isFiniteNumber(rawInstanceId) and math.floor(rawInstanceId) or index
+            if instanceId < 1 or seenInstanceIds[instanceId] then
+                instanceId = index
+            end
+            while seenInstanceIds[instanceId] do
+                instanceId += 1
+            end
+            seenInstanceIds[instanceId] = true
+            table.insert(inventory, {
+                InstanceId = instanceId,
+                PetId = petId,
+                Level = type(rawPet) == "table"
+                        and isFiniteNumber(rawPet.Level)
+                        and math.clamp(math.floor(rawPet.Level), 1, 100)
+                    or 1,
+                XP = type(rawPet) == "table"
+                        and isFiniteNumber(rawPet.XP)
+                        and math.clamp(math.floor(rawPet.XP), 0, MAX_TRANSACTION_AMOUNT)
+                    or 0,
+                Hunger = type(rawPet) == "table"
+                        and isFiniteNumber(rawPet.Hunger)
+                        and math.clamp(rawPet.Hunger, 0, 100)
+                    or 100,
+                Happiness = type(rawPet) == "table"
+                        and isFiniteNumber(rawPet.Happiness)
+                        and math.clamp(rawPet.Happiness, 0, 100)
+                    or 100,
+                Energy = type(rawPet) == "table"
+                        and isFiniteNumber(rawPet.Energy)
+                        and math.clamp(rawPet.Energy, 0, 100)
+                    or 100,
+                IsEquipped = type(rawPet) == "table" and rawPet.IsEquipped == true,
+            })
+        end
+    end
+    return inventory
+end
+
+local function sanitizeStringBooleanMap(value)
+    local result = {}
+    if type(value) ~= "table" then
+        return result
+    end
+    for key, enabled in pairs(value) do
+        if type(key) == "string" and enabled == true then
+            result[key] = true
+        end
+    end
+    return result
+end
+
+local function sanitizeNumberMap(value, minimum, maximum)
+    local result = {}
+    if type(value) ~= "table" then
+        return result
+    end
+    for key, number in pairs(value) do
+        if type(key) == "string" and isFiniteNumber(number) then
+            result[key] = math.clamp(math.floor(number), minimum, maximum)
+        end
+    end
+    return result
+end
+
+local function sanitizeBoosts(value)
+    local boosts = {}
+    if type(value) ~= "table" then
+        return boosts
+    end
+    for boostId, boost in pairs(value) do
+        if type(boostId) == "string" and type(boost) == "table" then
+            local expiresAt = boost.ExpiresAt
+            local multiplier = boost.Multiplier
+            if isFiniteNumber(expiresAt) and isFiniteNumber(multiplier) then
+                boosts[boostId] = {
+                    ExpiresAt = math.max(0, math.floor(expiresAt)),
+                    Multiplier = math.clamp(multiplier, 1, 1.25),
+                }
+            end
+        end
+    end
+    return boosts
+end
+
+local function sanitizeReceiptJournal(value)
+    local journal = {}
+    if type(value) ~= "table" then
+        return journal
+    end
+    for purchaseId, timestamp in pairs(value) do
+        if type(purchaseId) == "string" and purchaseId ~= "" and isFiniteNumber(timestamp) and timestamp >= 0 then
+            journal[purchaseId] = math.floor(timestamp)
+        end
+    end
+    return journal
 end
 
 -- Default profile (v1). New players and migrated old profiles get this shape.
@@ -50,6 +248,15 @@ local function CreateDefaultProfile(userId)
         Skills = {},
         Quests = {},
         Achievements = {},
+        Cosmetics = {},
+        EquippedCosmetic = nil,
+        Entitlements = {},
+        ProcessedReceipts = {},
+        Boosts = {},
+        Mailbox = {},
+        BattlePassLevel = 1,
+        BattlePassXP = 0,
+        BattlePassPremium = false,
         Stats = {
             HarvestCount = 0,
             CombatKills = 0,
@@ -64,6 +271,7 @@ local function CreateDefaultProfile(userId)
         },
         PrestigeLevel = 0,
         GuildId = nil,
+        GuildRank = nil,
         DailyStreak = 0,
         LastDailyReward = nil,
         LastDailyRewardAt = 0,
@@ -98,10 +306,60 @@ local function SanitizeProfile(userId, raw)
     end
     merged.SchemaVersion = SCHEMA_VERSION
     merged.PlayerId = tostring(userId)
-    -- Guard: currencies/inventory must exist
-    merged.Currency = merged.Currency or base.Currency
-    merged.Inventory = merged.Inventory or {}
-    merged.PetInventory = merged.PetInventory or {}
+    -- Normalize every persisted container before services read it. A truthy
+    -- string or malformed number in a DataStore record must never reach a
+    -- state-changing service as if it were valid profile data.
+    merged.Currency = type(merged.Currency) == "table" and merged.Currency or {}
+    for currency, default in pairs(base.Currency) do
+        local value = merged.Currency[currency]
+        merged.Currency[currency] = isFiniteNumber(value) and math.clamp(value, 0, MAX_TRANSACTION_AMOUNT) or default
+    end
+    merged.Inventory = sanitizeInventory(merged.Inventory)
+    merged.Mailbox = sanitizeMailbox(merged.Mailbox)
+    merged.PetInventory = sanitizePetInventory(merged.PetInventory)
+    merged.EquippedPets = sanitizeStringBooleanMap(merged.EquippedPets)
+    merged.Cosmetics = type(merged.Cosmetics) == "table" and merged.Cosmetics or {}
+    merged.Entitlements = sanitizeStringBooleanMap(merged.Entitlements)
+    merged.ProcessedReceipts = sanitizeReceiptJournal(merged.ProcessedReceipts)
+    merged.Boosts = sanitizeBoosts(merged.Boosts)
+    merged.Quests = type(merged.Quests) == "table" and merged.Quests or {}
+    merged.Skills = sanitizeNumberMap(merged.Skills, 0, 100)
+    merged.Achievements = sanitizeStringBooleanMap(merged.Achievements)
+    merged.Settings = {
+        MusicVolume = isFiniteNumber(merged.Settings and merged.Settings.MusicVolume)
+                and math.clamp(merged.Settings.MusicVolume, 0, 1)
+            or base.Settings.MusicVolume,
+        SFXVolume = isFiniteNumber(merged.Settings and merged.Settings.SFXVolume)
+                and math.clamp(merged.Settings.SFXVolume, 0, 1)
+            or base.Settings.SFXVolume,
+        GraphicsQuality = isFiniteNumber(merged.Settings and merged.Settings.GraphicsQuality)
+                and math.clamp(math.floor(merged.Settings.GraphicsQuality), 1, 10)
+            or base.Settings.GraphicsQuality,
+    }
+    merged.Stats = type(merged.Stats) == "table" and merged.Stats or table.clone(base.Stats)
+    for statName, default in pairs(base.Stats) do
+        local value = merged.Stats[statName]
+        merged.Stats[statName] = isFiniteNumber(value) and math.clamp(math.floor(value), 0, MAX_TRANSACTION_AMOUNT)
+            or default
+    end
+    merged.Level = isFiniteNumber(merged.Level) and math.clamp(math.floor(merged.Level), 1, 1000) or base.Level
+    merged.XP = isFiniteNumber(merged.XP) and math.clamp(math.floor(merged.XP), 0, MAX_TRANSACTION_AMOUNT) or base.XP
+    merged.PrestigeLevel = isFiniteNumber(merged.PrestigeLevel)
+            and math.clamp(math.floor(merged.PrestigeLevel), 0, 1000)
+        or base.PrestigeLevel
+    merged.BattlePassLevel = isFiniteNumber(merged.BattlePassLevel)
+            and math.clamp(math.floor(merged.BattlePassLevel), 1, 100)
+        or base.BattlePassLevel
+    merged.BattlePassXP = isFiniteNumber(merged.BattlePassXP)
+            and math.clamp(merged.BattlePassXP, 0, MAX_TRANSACTION_AMOUNT)
+        or base.BattlePassXP
+    merged.BattlePassPremium = merged.BattlePassPremium == true
+    if type(merged.GuildId) ~= "string" or not merged.GuildId:match("^GUILD_%d+$") then
+        merged.GuildId = nil
+    end
+    if type(merged.GuildRank) ~= "string" then
+        merged.GuildRank = nil
+    end
     return merged
 end
 
@@ -118,8 +376,9 @@ local function SaveProfile(userId, data, attempt)
         task.wait()
     end
     saveLocks[userId] = true
+    local snapshot = cloneProfile(data)
     local ok, err = pcall(function()
-        PlayerDataStore:SetAsync(tostring(userId), data)
+        PlayerDataStore:SetAsync(tostring(userId), snapshot)
     end)
     saveLocks[userId] = nil
     if ok then
@@ -171,15 +430,13 @@ function PlayerDataService.Initialize()
         end
     end
 
-    -- Auto-save loop (background task so Initialize returns immediately)
+    -- Auto-save loop (background task so Initialize returns immediately). Pass
+    -- the live profile into SaveProfile; SaveProfile clones only after its
+    -- per-user lock is acquired, avoiding stale pre-loop snapshots.
     task.spawn(function()
         while true do
             task.wait(SAVE_INTERVAL)
-            local snapshot = {}
             for uid, data in pairs(playerData) do
-                snapshot[uid] = cloneProfile(data)
-            end
-            for uid, data in pairs(snapshot) do
                 task.spawn(function()
                     SaveProfile(uid, data, 1)
                 end)
