@@ -1,7 +1,7 @@
 # DATA SCHEMA
 
 > **Current-status note (2026-09-10):** The original schema below is a v1
-> recovery snapshot. The live implementation now uses schema version 2,
+> recovery snapshot. The live implementation now uses schema version 3,
 > sanitizes loaded profiles, keeps Studio data in `PlayerData_Studio_v1`, and
 > uses per-player save locking plus cloned save snapshots. See
 > `GameServices/PlayerDataService.luau` and [`CURRENT_STATUS.md`](CURRENT_STATUS.md)
@@ -90,6 +90,7 @@
     EquippedCosmetic: string | nil,
     Entitlements: { [key: string]: boolean },
     ProcessedReceipts: { [purchaseId: string]: number },
+    MarketplaceTransactions: { [listingId: string]: "BuyerSettled" | "SellerSettled" },
     Boosts: {
         [boostId: string]: { ExpiresAt: number, Multiplier: number }
     },

@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 63 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 66 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, and upgrade effects |
 
@@ -36,7 +36,10 @@ is unique and durable, named visit objectives use canonical world IDs, and
 delivery objectives consume inventory through an atomic server action.
 Extra reward claim state and anti-cheat action counters are also initialized and
 sanitized as part of the profile boundary. Upgrade Power and Speed effects now
-feed the server harvest yield and cooldown calculations.
+feed the server harvest yield and cooldown calculations. Marketplace listings
+now use a dedicated durable DataStore with bounded records, UpdateAsync-backed
+claims, expiring processing locks, saved escrow, same-server settlement, and a
+per-profile transaction journal for crash-safe retry of each side of a sale.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and

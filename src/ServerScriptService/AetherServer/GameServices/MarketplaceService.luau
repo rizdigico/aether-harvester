@@ -1,14 +1,155 @@
 local MarketplaceService = {}
+local DataStoreService = game:GetService("DataStoreService")
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local MarketplaceDataStore = DataStoreService:GetDataStore("MarketplaceData_v2")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
+local MarketplaceRules = require(game.ReplicatedStorage.AetherShared.Modules.MarketplaceRules)
 
 MarketplaceService.Listings = {}
 MarketplaceService.ListingIdCounter = 1
 local processingListings = {}
+local PERSISTENT_KEY = "ActiveListings"
+local lastPersistentLoad = 0
+
+local function cloneListing(listing)
+    return table.clone(listing)
+end
+
+local function normalizeListings(rawListings, now)
+    local listings = {}
+    if type(rawListings) ~= "table" then
+        return listings
+    end
+    for listingId, rawListing in pairs(rawListings) do
+        local listing = MarketplaceRules.NormalizeListing(rawListing, listingId, now)
+        if listing and ItemsData.GetItem(listing.ItemId) then
+            listings[listingId] = listing
+        end
+    end
+    return listings
+end
+
+local function updatePersistentListings(mutator)
+    local updated
+    local success, err = pcall(function()
+        updated = MarketplaceDataStore:UpdateAsync(PERSISTENT_KEY, function(rawListings)
+            local listings = normalizeListings(rawListings, os.time())
+            local nextListings = mutator(listings)
+            return nextListings or listings
+        end)
+    end)
+    if not success then
+        warn("[MarketplaceService] Persistent listing update failed: ", err)
+    end
+    return success, updated
+end
+
+local function loadPersistentListings()
+    local success, rawListings = pcall(function()
+        return MarketplaceDataStore:GetAsync(PERSISTENT_KEY)
+    end)
+    if not success then
+        warn("[MarketplaceService] Persistent listing load failed: ", rawListings)
+        return false
+    end
+    MarketplaceService.Listings = normalizeListings(rawListings, os.time())
+    lastPersistentLoad = os.time()
+    return true
+end
+
+local function getPersistentListing(listingId)
+    local success, rawListings = pcall(function()
+        return MarketplaceDataStore:GetAsync(PERSISTENT_KEY)
+    end)
+    if not success then
+        return nil
+    end
+    local listings = normalizeListings(rawListings, os.time())
+    return listings[listingId]
+end
+
+local function addPersistentListing(listing)
+    local inserted = false
+    local success = updatePersistentListings(function(listings)
+        inserted = false
+        if listings[listing.Id] == nil then
+            listings[listing.Id] = cloneListing(listing)
+            inserted = true
+        else
+            inserted = false
+        end
+        return listings
+    end)
+    return success and inserted
+end
+
+local function claimPersistentListing(listingId, buyerUserId)
+    local claimed
+    local success = updatePersistentListings(function(listings)
+        claimed = nil
+        local listing = listings[listingId]
+        if not listing then
+            return listings
+        end
+        if listing.Status == "Processing" then
+            if listing.ProcessingBy ~= buyerUserId then
+                return listings
+            end
+        elseif listing.Status ~= "Active" then
+            return listings
+        end
+        listing.Status = "Processing"
+        listing.ProcessingBy = buyerUserId
+        listing.ProcessingAt = os.time()
+        claimed = cloneListing(listing)
+        return listings
+    end)
+    return success and claimed or nil
+end
+
+local function releasePersistentListing(listingId, buyerUserId)
+    local released = false
+    local success = updatePersistentListings(function(listings)
+        released = false
+        local listing = listings[listingId]
+        if listing and listing.Status == "Processing" and listing.ProcessingBy == buyerUserId then
+            listing.Status = "Active"
+            listing.ProcessingBy = nil
+            listing.ProcessingAt = nil
+            released = true
+        end
+        return listings
+    end)
+    return success and released
+end
+
+local function removePersistentListing(listingId, expectedSellerId, expectedBuyerId, expectedStatus)
+    local removed = false
+    local success = updatePersistentListings(function(listings)
+        removed = false
+        local listing = listings[listingId]
+        if
+            listing
+            and (expectedSellerId == nil or listing.SellerId == expectedSellerId)
+            and (expectedBuyerId == nil or (listing.Status == "Processing" and listing.ProcessingBy == expectedBuyerId))
+            and (expectedStatus == nil or listing.Status == expectedStatus)
+        then
+            listings[listingId] = nil
+            removed = true
+        end
+        return listings
+    end)
+    return success and removed
+end
 
 function MarketplaceService.Initialize()
+    -- Listings survive server restarts. Any stale processing claim is reset by
+    -- normalizeListings so an interrupted buyer cannot lock an item forever.
+    loadPersistentListings()
     print("[MarketplaceService] Initializing...")
 
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
@@ -102,10 +243,10 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
     if not ItemsData.GetItem(itemId) then
         return false, "Unknown item"
     end
-    if type(amount) ~= "number" or amount ~= amount or amount < 1 or amount > 9999 or amount ~= math.floor(amount) then
+    if not MarketplaceRules.IsValidAmount(amount) then
         return false, "Invalid amount"
     end
-    if type(price) ~= "number" or price ~= price or price < 1 or price > 1000000 or price ~= math.floor(price) then
+    if not MarketplaceRules.IsValidPrice(price) then
         return false, "Invalid price"
     end
 
@@ -118,7 +259,7 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
         return false, "You don't own enough of that item"
     end
 
-    local listingId = "LISTING_" .. MarketplaceService.ListingIdCounter
+    local listingId = string.format("LISTING_%d_%d_%s", player.UserId, os.time(), HttpService:GenerateGUID(false))
     MarketplaceService.ListingIdCounter += 1
 
     local listing = {
@@ -132,15 +273,28 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
         CreatedAt = os.time(),
     }
 
-    MarketplaceService.Listings[listingId] = listing
-
     -- Remove item from seller's inventory (verified ownership above)
     local removed = PlayerDataService.RemoveItem(player, itemId, amount)
     if not removed then
-        -- Ownership changed between check and removal (race): abort listing
-        MarketplaceService.Listings[listingId] = nil
+        -- Ownership changed between check and removal (race): abort listing.
         return false, "Could not remove item"
     end
+
+    -- Persist the escrowed inventory state before publishing the listing. This
+    -- prevents a server restart from exposing an item that was never removed.
+    if not PlayerDataService.SaveNow(player) then
+        PlayerDataService.AddItem(player, itemId, amount)
+        PlayerDataService.SaveNow(player)
+        return false, "Could not save escrowed item"
+    end
+
+    if not addPersistentListing(listing) then
+        PlayerDataService.AddItem(player, itemId, amount)
+        PlayerDataService.SaveNow(player)
+        return false, "Could not save marketplace listing"
+    end
+
+    MarketplaceService.Listings[listingId] = listing
 
     -- Notify all clients
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
@@ -156,12 +310,18 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
 end
 
 function MarketplaceService.PurchaseListing(player, listingId)
-    local listing = MarketplaceService.Listings[listingId]
+    if not MarketplaceRules.IsValidListingId(listingId) then
+        return false, "Invalid listing"
+    end
+
+    local listing = MarketplaceService.Listings[listingId] or getPersistentListing(listingId)
     if not listing then
         return false, "Listing not found"
     end
 
-    if listing.Status ~= "Active" then
+    if
+        listing.Status ~= "Active" and not (listing.Status == "Processing" and listing.ProcessingBy == player.UserId)
+    then
         return false, "Listing not available"
     end
 
@@ -183,35 +343,113 @@ function MarketplaceService.PurchaseListing(player, listingId)
         return fail("Player data not found")
     end
 
-    -- Listings are held in server memory. Require the seller to be present so
-    -- a sale can never deduct a buyer and silently lose the seller payout.
-    local seller = game.Players:GetPlayerByUserId(listing.SellerId)
+    -- Settlement remains same-server by design: both profiles must be loaded so
+    -- the buyer debit, item grant, and seller payout can be rolled back as one
+    -- guarded operation. The listing itself is durable across restarts.
+    local seller = Players:GetPlayerByUserId(listing.SellerId)
     if not seller or not PlayerDataService.GetData(seller) then
         return fail("Seller is unavailable")
     end
 
-    if buyerData.Currency.AetherShards < listing.Price then
+    local buyerAlreadySettled = PlayerDataService.GetMarketplaceTransaction(player, listingId) == "BuyerSettled"
+    if not buyerAlreadySettled and buyerData.Currency.AetherShards < listing.Price then
         return fail("Not enough currency")
     end
 
-    -- Deduct price from buyer
-    if not PlayerDataService.RemoveCurrency(player, "AetherShards", listing.Price) then
-        return fail("Not enough currency")
+    local claimedListing = claimPersistentListing(listingId, player.UserId)
+    if not claimedListing then
+        return fail("Listing is no longer available")
+    end
+    listing = claimedListing
+    MarketplaceService.Listings[listingId] = listing
+
+    local sellerAlreadySettled = PlayerDataService.GetMarketplaceTransaction(seller, listingId) == "SellerSettled"
+    local buyerDebited = false
+    local buyerItemAdded = false
+    local sellerCredited = false
+    local buyerMarked = false
+    local sellerMarked = false
+
+    local function rollback()
+        if sellerCredited then
+            PlayerDataService.RemoveCurrency(seller, "AetherShards", listing.Price)
+        end
+        if buyerItemAdded then
+            PlayerDataService.RemoveItem(player, listing.ItemId, listing.Amount)
+        end
+        if buyerDebited then
+            PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
+        end
+        if buyerMarked then
+            PlayerDataService.ClearMarketplaceTransaction(player, listingId, "BuyerSettled")
+        end
+        if sellerMarked then
+            PlayerDataService.ClearMarketplaceTransaction(seller, listingId, "SellerSettled")
+        end
+        -- Best-effort profile snapshots keep the in-memory rollback durable.
+        PlayerDataService.SaveNow(player)
+        PlayerDataService.SaveNow(seller)
+        releasePersistentListing(listingId, player.UserId)
+        local released = getPersistentListing(listingId)
+        if released then
+            MarketplaceService.Listings[listingId] = released
+        end
     end
 
-    -- Add item to buyer. Roll back the debit if the inventory mutation fails.
-    if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
-        PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
-        return fail("Could not deliver purchased item")
+    -- Resume already-saved sides after a crash; only apply each mutation once.
+    if not buyerAlreadySettled then
+        if not PlayerDataService.RemoveCurrency(player, "AetherShards", listing.Price) then
+            rollback()
+            return fail("Not enough currency")
+        end
+        buyerDebited = true
+
+        -- Add item to buyer.
+        if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
+            rollback()
+            return fail("Could not deliver purchased item")
+        end
+        buyerItemAdded = true
+
+        if not PlayerDataService.MarkMarketplaceTransaction(player, listingId, "BuyerSettled") then
+            rollback()
+            return fail("Could not record buyer settlement")
+        end
+        buyerMarked = true
     end
 
-    -- Give money to seller
-    if not PlayerDataService.AddCurrency(seller, "AetherShards", listing.Price) then
-        -- This should be unreachable after the seller data check. Keep the
-        -- sale active if the payout cannot be recorded.
-        PlayerDataService.RemoveItem(player, listing.ItemId, listing.Amount)
-        PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
-        return fail("Seller payout failed")
+    -- Give money to seller.
+    if not sellerAlreadySettled then
+        if not PlayerDataService.AddCurrency(seller, "AetherShards", listing.Price) then
+            rollback()
+            return fail("Seller payout failed")
+        end
+        sellerCredited = true
+
+        if not PlayerDataService.MarkMarketplaceTransaction(seller, listingId, "SellerSettled") then
+            rollback()
+            return fail("Could not record seller settlement")
+        end
+        sellerMarked = true
+    end
+
+    -- Persist both profile mutations before removing the durable listing. If
+    -- either save fails, restore all in-memory mutations and release the claim.
+    local saved = true
+    if buyerDebited or buyerItemAdded or buyerMarked then
+        saved = PlayerDataService.SaveNow(player) and saved
+    end
+    if sellerCredited or sellerMarked then
+        saved = PlayerDataService.SaveNow(seller) and saved
+    end
+    if not saved then
+        rollback()
+        return fail("Could not save marketplace settlement")
+    end
+
+    if not removePersistentListing(listingId, seller.UserId, player.UserId, "Processing") then
+        rollback()
+        return fail("Could not finalize marketplace settlement")
     end
 
     -- Mark listing as sold
@@ -233,34 +471,22 @@ function MarketplaceService.PurchaseListing(player, listingId)
 end
 
 function MarketplaceService.OnPlayerRemoving(player)
-    -- Return all escrowed items before PlayerDataService saves and clears the
-    -- player's profile. This prevents disconnects from destroying listings.
-    local cancelled = {}
+    -- Durable listings remain active while their seller is offline. The item
+    -- stays escrowed in the saved profile and will be returned only by an
+    -- explicit cancellation, preventing a disconnect from erasing a listing.
     for listingId, listing in pairs(MarketplaceService.Listings) do
-        if listing.SellerId == player.UserId and listing.Status == "Active" then
-            if PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
-                listing.Status = "Cancelled"
-                MarketplaceService.Listings[listingId] = nil
-                table.insert(cancelled, listingId)
-            end
-        end
-    end
-
-    if #cancelled == 0 then
-        return
-    end
-
-    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
-    local ListingCancelled = Remotes and Remotes:FindFirstChild("ListingCancelled")
-    if ListingCancelled then
-        for _, listingId in ipairs(cancelled) do
-            ListingCancelled:FireAllClients(listingId)
+        if listing.SellerId == player.UserId then
+            MarketplaceService.Listings[listingId] = nil
         end
     end
 end
 
 function MarketplaceService.CancelListing(player, listingId)
-    local listing = MarketplaceService.Listings[listingId]
+    if not MarketplaceRules.IsValidListingId(listingId) then
+        return false, "Invalid listing"
+    end
+
+    local listing = MarketplaceService.Listings[listingId] or getPersistentListing(listingId)
     if not listing then
         return false, "Listing not found"
     end
@@ -269,17 +495,30 @@ function MarketplaceService.CancelListing(player, listingId)
         return false, "Not your listing"
     end
 
-    -- Return item to seller before deleting the listing. If the profile is
-    -- unavailable or the escrow return fails, keep the listing intact.
+    if listing.Status ~= "Active" then
+        return false, "Listing is being processed"
+    end
+
+    -- Remove the durable listing before returning escrow. If the profile save
+    -- fails, restore the listing so an item can never be both returned and
+    -- purchasable.
     local data = PlayerDataService.GetData(player)
     if not data then
         return false, "Player data not found"
     end
+    if not removePersistentListing(listingId, player.UserId, nil, "Active") then
+        return false, "Could not save listing cancellation"
+    end
     if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
+        addPersistentListing(listing)
         return false, "Could not return escrowed item"
     end
+    if not PlayerDataService.SaveNow(player) then
+        PlayerDataService.RemoveItem(player, listing.ItemId, listing.Amount)
+        addPersistentListing(listing)
+        return false, "Could not save returned item"
+    end
 
-    -- Remove listing
     MarketplaceService.Listings[listingId] = nil
 
     -- Notify clients
@@ -295,12 +534,25 @@ function MarketplaceService.CancelListing(player, listingId)
 end
 
 function MarketplaceService.GetActiveListings()
+    -- Refresh other servers' durable listings periodically. Do not replace a
+    -- local snapshot while a same-server settlement is in progress.
+    if os.time() - lastPersistentLoad >= 10 and next(processingListings) == nil then
+        loadPersistentListings()
+    end
     local listings = {}
     for _, listing in pairs(MarketplaceService.Listings) do
-        if listing.Status == "Active" then
-            table.insert(listings, listing)
+        -- The same-server settlement rule means only show listings that can
+        -- actually be purchased in this server.
+        if listing.Status == "Active" and Players:GetPlayerByUserId(listing.SellerId) then
+            table.insert(listings, cloneListing(listing))
         end
     end
+    table.sort(listings, function(a, b)
+        if a.CreatedAt == b.CreatedAt then
+            return a.Id < b.Id
+        end
+        return a.CreatedAt < b.CreatedAt
+    end)
     return listings
 end
 

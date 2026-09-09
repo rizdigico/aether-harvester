@@ -47,12 +47,11 @@ Aesther Harvest is a Rojo-managed, server-authoritative sky resource-management 
 The current build has a strong foundation: dynamic world generation, core harvesting, quest/progression flows, pets, upgrades, portals, UI screens, and server/client boot orchestration. The repository’s own recovery documents also identify incomplete or weak areas that must not be hidden by a passing boot:
 
 - trading item transfer is incomplete;
-- marketplace persistence remains an economy-risk area even though offline-seller payout loss is now blocked;
+- marketplace settlement is durable and crash-resumable, but remains same-server by design until a cross-server settlement bus is added;
 - anti-cheat is not fully integrated;
 - leaderboard updates are incomplete;
 - analytics are in-memory only;
 - cosmetic equip is not fully visual;
-- guild state is not durable;
 - rewards overlap between two services;
 - roadmap systems such as battle, breeding, base building, and deeper world layers are not finished.
 
@@ -121,7 +120,7 @@ Roblox’s monetization documentation also requires correct receipt processing f
 3. Split or gate DataStore integration so local Edit-mode tests use deterministic mocks while a published staging experience tests real persistence.
 4. Add deterministic MCP smoke tests for harvesting, quest progression, pet equip/summon, travel, UI screens, and save/load in staging.
 5. Add multi-client/device-simulator coverage and a screenshot baseline workflow.
-6. Finish economy-critical systems before monetization: trade payload hardening, durable marketplace/guild/leaderboard state, anti-cheat integration, and receipt processing. Marketplace now blocks offline-seller purchases and returns escrow on disconnect, but listings remain in-memory until persistence is implemented.
+6. Finish economy-critical systems before monetization: trade payload hardening, cross-server marketplace settlement, durable leaderboard state, anti-cheat integration, and receipt processing. Marketplace listings and per-profile settlement markers are now durable; the current explicit boundary is same-server settlement with seller presence.
 7. Only after those gates pass, prepare—not automatically execute—the production release checklist.
 
 ## Sources

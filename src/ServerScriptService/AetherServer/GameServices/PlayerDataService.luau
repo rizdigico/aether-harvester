@@ -15,8 +15,9 @@ local playerData = {}
 local playerSaveEnabled = {}
 local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
-local SCHEMA_VERSION = 2
+local SCHEMA_VERSION = 3
 local MAX_TRANSACTION_AMOUNT = 1000000000
+local MAX_MARKETPLACE_TRANSACTIONS = 500
 
 local function isPositiveInteger(value)
     return type(value) == "number"
@@ -230,6 +231,29 @@ local function sanitizeReceiptJournal(value)
     return journal
 end
 
+local function sanitizeMarketplaceTransactions(value)
+    local transactions = {}
+    if type(value) ~= "table" then
+        return transactions
+    end
+    local count = 0
+    for transactionId, role in pairs(value) do
+        if
+            type(transactionId) == "string"
+            and transactionId ~= ""
+            and #transactionId <= 80
+            and (role == "BuyerSettled" or role == "SellerSettled")
+        then
+            transactions[transactionId] = role
+            count += 1
+            if count >= MAX_MARKETPLACE_TRANSACTIONS then
+                break
+            end
+        end
+    end
+    return transactions
+end
+
 local function sanitizeBase(value)
     local base = { Level = 1, Decorations = {} }
     if type(value) ~= "table" then
@@ -303,6 +327,7 @@ local function CreateDefaultProfile(userId)
         EquippedCosmetic = nil,
         Entitlements = {},
         ProcessedReceipts = {},
+        MarketplaceTransactions = {},
         Boosts = {},
         Mailbox = {},
         BattlePassLevel = 1,
@@ -377,6 +402,7 @@ local function SanitizeProfile(userId, raw)
     merged.Cosmetics = type(merged.Cosmetics) == "table" and merged.Cosmetics or {}
     merged.Entitlements = sanitizeStringBooleanMap(merged.Entitlements)
     merged.ProcessedReceipts = sanitizeReceiptJournal(merged.ProcessedReceipts)
+    merged.MarketplaceTransactions = sanitizeMarketplaceTransactions(merged.MarketplaceTransactions)
     merged.Boosts = sanitizeBoosts(merged.Boosts)
     merged.Quests = type(merged.Quests) == "table" and merged.Quests or {}
     merged.ClaimedRewards = sanitizeStringBooleanMap(merged.ClaimedRewards)
@@ -628,6 +654,46 @@ function PlayerDataService.SaveNow(player)
         return false
     end
     return SaveProfile(player.UserId, data, 1)
+end
+
+function PlayerDataService.GetMarketplaceTransaction(player, transactionId)
+    local data = playerData[player.UserId]
+    if not data or type(transactionId) ~= "string" then
+        return nil
+    end
+    return data.MarketplaceTransactions and data.MarketplaceTransactions[transactionId] or nil
+end
+
+function PlayerDataService.MarkMarketplaceTransaction(player, transactionId, role)
+    local data = playerData[player.UserId]
+    if
+        not data
+        or type(transactionId) ~= "string"
+        or transactionId == ""
+        or #transactionId > 80
+        or (role ~= "BuyerSettled" and role ~= "SellerSettled")
+    then
+        return false
+    end
+    data.MarketplaceTransactions = data.MarketplaceTransactions or {}
+    local existing = data.MarketplaceTransactions[transactionId]
+    if existing and existing ~= role then
+        return false
+    end
+    data.MarketplaceTransactions[transactionId] = role
+    return true
+end
+
+function PlayerDataService.ClearMarketplaceTransaction(player, transactionId, role)
+    local data = playerData[player.UserId]
+    if not data or type(transactionId) ~= "string" then
+        return false
+    end
+    if data.MarketplaceTransactions and data.MarketplaceTransactions[transactionId] == role then
+        data.MarketplaceTransactions[transactionId] = nil
+        return true
+    end
+    return false
 end
 
 function PlayerDataService.AddPet(player, petId)
