@@ -1,8 +1,14 @@
 local PlayerDataService = {}
 local DataStoreService = game:GetService("DataStoreService")
-local PlayerDataStore = DataStoreService:GetDataStore("PlayerData_v1")
+local RunService = game:GetService("RunService")
+-- Studio must never point at the production profile namespace. Keep the
+-- production key stable for published servers until an explicit migration is
+-- performed.
+local DATASTORE_NAME = RunService:IsStudio() and "PlayerData_Studio_v1" or "PlayerData_v1"
+local PlayerDataStore = DataStoreService:GetDataStore(DATASTORE_NAME)
 
 local playerData = {}
+local playerSaveEnabled = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
 local SCHEMA_VERSION = 1
 local MAX_TRANSACTION_AMOUNT = 1000000000
@@ -87,6 +93,9 @@ end
 
 -- Save with retry + backoff (P0: never silently drop a save)
 local function SaveProfile(userId, data, attempt)
+    if playerSaveEnabled[userId] == false then
+        return false
+    end
     attempt = attempt or 1
     local ok, err = pcall(function()
         PlayerDataStore:SetAsync(tostring(userId), data)
@@ -161,13 +170,18 @@ function PlayerDataService.OnPlayerAdded(player)
         return PlayerDataStore:GetAsync(tostring(player.UserId))
     end)
 
+    playerSaveEnabled[player.UserId] = success
     if success and data then
         playerData[player.UserId] = SanitizeProfile(player.UserId, data)
         print("[PlayerDataService] Loaded data for " .. player.Name)
     else
         -- Create new player data
         playerData[player.UserId] = CreateDefaultProfile(player.UserId)
-        print("[PlayerDataService] Created new data for " .. player.Name)
+        if success then
+            print("[PlayerDataService] Created new data for " .. player.Name)
+        else
+            warn("[PlayerDataService] Load failed; saves disabled for " .. player.Name)
+        end
     end
 
     -- Send data to client
@@ -182,11 +196,12 @@ function PlayerDataService.OnPlayerRemoving(player)
 
     -- Save data (with retry)
     local data = playerData[player.UserId]
-    if data then
+    if data and playerSaveEnabled[player.UserId] ~= false then
         SaveProfile(player.UserId, data, 1)
     end
 
     playerData[player.UserId] = nil
+    playerSaveEnabled[player.UserId] = nil
 end
 
 function PlayerDataService.GetData(player)
