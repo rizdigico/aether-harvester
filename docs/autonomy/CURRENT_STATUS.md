@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 66 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 69 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, and bounded autosave |
 
@@ -24,8 +24,9 @@ tree.
 The branch now includes server-authoritative harvesting, progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped global/island/guild/party chat, achievements, cosmetics, leaderboards,
-daily rewards, events,
-analytics, monetization boundaries, battle-pass progression, prestige/ascension,
+daily rewards and active event effects,
+analytics, monetization boundaries, battle-pass progression, event XP/resource
+bonuses, prestige/ascension,
 persistence, session party lifecycle, deterministic pet fusion, personal base
 placement,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,

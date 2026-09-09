@@ -184,7 +184,7 @@ function NodeManager.ProcessHarvest(player, node)
     end
 
     -- Grant XP
-    local xpGain = math.floor(nodeType.XP * boost * harvestComfortMultiplier)
+    local xpGain = math.floor(nodeType.XP * boost * harvestComfortMultiplier * EventService.GetActiveXPMultiplier())
     ProgressionService.AddXP(player, xpGain)
 
     -- Track stats

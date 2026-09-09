@@ -1,4 +1,5 @@
 local EventService = {}
+local EventMath = require(game.ReplicatedStorage.AetherShared.Modules.EventMath)
 EventService.ActiveEvents = {}
 EventService.EventIdCounter = 1
 
@@ -95,14 +96,7 @@ function EventService.GetActiveEvents()
 end
 
 function EventService.GetEventBonus(eventType)
-    local bonuses = {
-        ["DoubleXP"] = 2.0,
-        ["ResourceRush"] = 1.5,
-        ["PetWeekend"] = 1.3,
-        ["GuildWars"] = 1.0,
-        ["HarvestFestival"] = 1.5,
-    }
-    return bonuses[eventType] or 1.0
+    return EventMath.GetBonus(eventType)
 end
 
 -- True if at least one event is currently active
@@ -113,16 +107,12 @@ end
 -- Combined gameplay multiplier from all active events (1.0 if none).
 -- Only yield-affecting events contribute (ResourceRush, HarvestFestival).
 function EventService.GetActiveYieldMultiplier()
-    local multiplier = 1.0
-    for _, event in pairs(EventService.ActiveEvents) do
-        if event.Active then
-            local bonus = EventService.GetEventBonus(event.Type)
-            if event.Type == "ResourceRush" or event.Type == "HarvestFestival" then
-                multiplier = multiplier * bonus
-            end
-        end
-    end
-    return multiplier
+    return EventMath.GetYieldMultiplier(EventService.ActiveEvents)
+end
+
+-- Combined XP multiplier from all active XP-affecting events.
+function EventService.GetActiveXPMultiplier()
+    return EventMath.GetXPMultiplier(EventService.ActiveEvents)
 end
 
 return EventService
