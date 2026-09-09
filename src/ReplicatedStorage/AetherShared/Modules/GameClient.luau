@@ -118,6 +118,13 @@ function GameClient:ConnectRemotes()
             end
         end)
     end
+
+    local ItemUsed = self.Remotes:FindFirstChild("ItemUsed")
+    if ItemUsed then
+        ItemUsed.OnClientEvent:Connect(function(itemId, remainingCount, vitals)
+            self:OnItemUsed(itemId, remainingCount, vitals)
+        end)
+    end
 end
 
 function GameClient:SetupInput()
@@ -192,10 +199,27 @@ function GameClient:OnPlayerDataLoaded(data)
     GameClient.State.PetInventory = data.PetInventory or {}
     GameClient.State.Quests = data.Quests or {}
     GameClient.State.Settings = data.Settings or GameClient.State.Settings
+    GameClient.State.Energy = data.Energy or GameClient.State.Energy
+    GameClient.State.MaxEnergy = data.MaxEnergy or GameClient.State.MaxEnergy
 
     -- Notify HUD to refresh immediately
     if self.OnDataUpdated then
         self:OnDataUpdated()
+    end
+end
+
+function GameClient:OnItemUsed(itemId, remainingCount, vitals)
+    if type(itemId) == "string" and type(remainingCount) == "number" then
+        self.State.Inventory = self.State.Inventory or {}
+        if remainingCount > 0 then
+            self.State.Inventory[itemId] = remainingCount
+        else
+            self.State.Inventory[itemId] = nil
+        end
+    end
+    if type(vitals) == "table" then
+        self.State.Energy = vitals.Energy or self.State.Energy
+        self.State.MaxEnergy = vitals.MaxEnergy or self.State.MaxEnergy
     end
 end
 
@@ -313,6 +337,17 @@ function GameClient:EquipPet(petId)
         if EquipPet then
             EquipPet:FireServer(petId)
         end
+    end
+end
+
+function GameClient:UseItem(itemId)
+    if type(itemId) ~= "string" then
+        return
+    end
+    local Remotes = self.Remotes
+    local UseItem = Remotes and Remotes:FindFirstChild("UseItem")
+    if UseItem then
+        UseItem:FireServer(itemId)
     end
 end
 

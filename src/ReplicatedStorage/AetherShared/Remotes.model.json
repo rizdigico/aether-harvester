@@ -310,6 +310,14 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "UseItem",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ItemUsed",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "EventStarted",
                          "className":  "RemoteEvent"
                      },

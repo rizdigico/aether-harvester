@@ -14,6 +14,7 @@ local PetService = require(game.ServerScriptService.AetherServer.GameServices.Pe
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local MonetizationService = require(game.ServerScriptService.AetherServer.GameServices.MonetizationService)
 local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
+local PlayerVitalsService = require(game.ServerScriptService.AetherServer.GameServices.PlayerVitalsService)
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30
@@ -151,6 +152,11 @@ function NodeManager.ProcessHarvest(player, node)
         return false, "No player data"
     end
 
+    local spentEnergy, energyError = PlayerVitalsService.ConsumeEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
+    if not spentEnergy then
+        return false, energyError
+    end
+
     -- Calculate yield
     local yieldAmount = math.random(nodeType.MinYield, nodeType.MaxYield)
 
@@ -180,6 +186,7 @@ function NodeManager.ProcessHarvest(player, node)
     -- Grant resources. Do not put a node reward into the currency wallet:
     -- resources are inventory items and are consumed by crafting/trading.
     if not PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount) then
+        PlayerVitalsService.RestoreEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
         return false, "Unable to grant resource"
     end
 
@@ -228,6 +235,8 @@ function NodeManager.ProcessHarvest(player, node)
                 XP = data.XP,
                 Level = data.Level,
                 Currency = data.Currency,
+                Energy = data.Energy,
+                MaxEnergy = data.MaxEnergy,
             })
         end
     end

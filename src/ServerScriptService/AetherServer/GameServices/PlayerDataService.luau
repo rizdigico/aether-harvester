@@ -16,6 +16,7 @@ local playerSaveEnabled = {}
 local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
 local AUTOSAVE_SPACING = 0.1 -- Avoid bursting every active player into the DataStore budget at once.
+local DEFAULT_MAX_ENERGY = 100
 local SCHEMA_VERSION = 3
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
@@ -314,6 +315,8 @@ local function CreateDefaultProfile(userId)
             EventTokens = 0,
             FamePoints = 0,
         },
+        MaxEnergy = DEFAULT_MAX_ENERGY,
+        Energy = DEFAULT_MAX_ENERGY,
         Inventory = {},
         PetInventory = {},
         EquippedPets = {},
@@ -391,6 +394,9 @@ local function SanitizeProfile(userId, raw)
         local value = merged.Currency[currency]
         merged.Currency[currency] = isFiniteNumber(value) and math.clamp(value, 0, MAX_TRANSACTION_AMOUNT) or default
     end
+    merged.MaxEnergy = isFiniteNumber(merged.MaxEnergy) and math.clamp(math.floor(merged.MaxEnergy), 1, 1000)
+        or base.MaxEnergy
+    merged.Energy = isFiniteNumber(merged.Energy) and math.clamp(merged.Energy, 0, merged.MaxEnergy) or merged.MaxEnergy
     merged.Inventory = sanitizeInventory(merged.Inventory)
     merged.Mailbox = sanitizeMailbox(merged.Mailbox)
     merged.PetInventory = sanitizePetInventory(merged.PetInventory)

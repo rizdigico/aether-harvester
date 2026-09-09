@@ -26,7 +26,8 @@ crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped global/island/guild/party chat, achievements, cosmetics, leaderboards,
 daily rewards and active event effects,
 analytics, monetization boundaries, battle-pass progression, event XP/resource
-bonuses, prestige/ascension,
+bonuses, server-owned energy regeneration and energy-potion use,
+prestige/ascension,
 persistence, session party lifecycle, deterministic pet fusion, personal base
 placement,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,

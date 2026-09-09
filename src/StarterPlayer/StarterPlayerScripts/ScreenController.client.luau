@@ -12,6 +12,7 @@ local PetsData = require(Shared:WaitForChild("Data"):WaitForChild("Pets"))
 local Screens = AetherUI:WaitForChild("Screens")
 
 local ScreenController = {}
+local activeInventoryTab = nil
 
 local RARITY_COLORS = {
     Common = Color3.fromRGB(180, 180, 180),
@@ -29,6 +30,7 @@ local TAB_TYPES = {
 }
 
 function ScreenController:PopulateInventory(activeTab)
+    activeInventoryTab = activeTab
     local screen = Screens:FindFirstChild("InventoryScreen")
     if not screen then
         return
@@ -114,6 +116,27 @@ function ScreenController:PopulateInventory(activeTab)
         local stroke = item:FindFirstChildOfClass("UIStroke")
         if stroke then
             stroke.Color = RARITY_COLORS[rarity] or RARITY_COLORS.Common
+        end
+
+        if entry.Id == "energy_potion" then
+            local useButton = Instance.new("TextButton")
+            useButton.Name = "UseButton"
+            useButton.AnchorPoint = Vector2.new(1, 1)
+            useButton.Position = UDim2.new(0.97, 0, 0.92, 0)
+            useButton.Size = UDim2.new(0.28, 0, 0.22, 0)
+            useButton.BackgroundColor3 = Color3.fromRGB(31, 77, 91)
+            useButton.BorderSizePixel = 0
+            useButton.TextColor3 = Color3.fromRGB(230, 245, 255)
+            useButton.Font = Enum.Font.GothamBold
+            useButton.TextSize = 11
+            useButton.Text = "USE"
+            useButton.Activated:Connect(function()
+                local useItem = Remotes:FindFirstChild("UseItem")
+                if useItem then
+                    useItem:FireServer(entry.Id)
+                end
+            end)
+            useButton.Parent = item
         end
 
         item.Parent = content
@@ -310,6 +333,18 @@ if petUpdated and petUpdated:IsA("RemoteEvent") then
         local petScreen = Screens:FindFirstChild("PetScreen")
         if petScreen and petScreen.Enabled then
             ScreenController:PopulatePets()
+        end
+    end)
+end
+
+local itemUsed = Remotes:FindFirstChild("ItemUsed")
+if itemUsed and itemUsed:IsA("RemoteEvent") then
+    itemUsed.OnClientEvent:Connect(function()
+        local inventoryScreen = Screens:FindFirstChild("InventoryScreen")
+        if inventoryScreen and inventoryScreen.Enabled then
+            task.defer(function()
+                ScreenController:PopulateInventory(activeInventoryTab)
+            end)
         end
     end)
 end

@@ -21,6 +21,8 @@
         EventTokens: number,
         FamePoints: number
     },
+    MaxEnergy: number,
+    Energy: number,
     Inventory: {
         [itemId: string]: number
     },
