@@ -334,6 +334,10 @@
                          "className":  "RemoteFunction"
                      },
                      {
+                         "name":  "GetCosmeticCatalog",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "GetActiveEvents",
                          "className":  "RemoteFunction"
                      },

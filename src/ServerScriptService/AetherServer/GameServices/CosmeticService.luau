@@ -96,6 +96,17 @@ function CosmeticService.Initialize()
         end)
     end
 
+    -- GetCosmeticCatalog: return a public catalog plus this player's ownership.
+    local GetCosmeticCatalog = Remotes:FindFirstChild("GetCosmeticCatalog")
+    if GetCosmeticCatalog then
+        GetCosmeticCatalog.OnServerInvoke = function(player)
+            if not RateLimiter.Check(player, "GetCosmeticCatalog", 0.5) then
+                return { Cosmetics = {}, Owned = {}, Equipped = nil }
+            end
+            return CosmeticService.GetCatalogForPlayer(player)
+        end
+    end
+
     print("[CosmeticService] Initialized")
 end
 
@@ -113,6 +124,42 @@ function CosmeticService.GetOwnedCosmetics(player)
         return {}
     end
     return data.Cosmetics or {}
+end
+
+function CosmeticService.GetCatalogForPlayer(player)
+    local data = PlayerDataService.GetData(player)
+    local owned = {}
+    if data and type(data.Cosmetics) == "table" then
+        for _, cosmeticId in ipairs(data.Cosmetics) do
+            if type(cosmeticId) == "string" then
+                owned[cosmeticId] = true
+            end
+        end
+    end
+
+    local cosmetics = {}
+    for _, cosmetic in pairs(CosmeticService.Cosmetics) do
+        table.insert(cosmetics, {
+            Id = cosmetic.Id,
+            Name = cosmetic.Name,
+            Type = cosmetic.Type,
+            Rarity = cosmetic.Rarity,
+            Price = cosmetic.Price,
+            Effect = cosmetic.Effect,
+        })
+    end
+    table.sort(cosmetics, function(a, b)
+        if a.Price == b.Price then
+            return a.Name < b.Name
+        end
+        return a.Price < b.Price
+    end)
+
+    return {
+        Cosmetics = cosmetics,
+        Owned = owned,
+        Equipped = data and data.EquippedCosmetic or nil,
+    }
 end
 
 function CosmeticService.PurchaseCosmetic(player, cosmeticId)
@@ -134,7 +181,11 @@ function CosmeticService.PurchaseCosmetic(player, cosmeticId)
         end
     end
 
-    if data.Currency.AetherShards < cosmetic.Price then
+    if
+        not data.Currency
+        or type(data.Currency.AetherShards) ~= "number"
+        or data.Currency.AetherShards < cosmetic.Price
+    then
         return false, "Not enough currency"
     end
 
