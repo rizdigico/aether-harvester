@@ -61,6 +61,15 @@ function NodeManager.IsNodeAvailable(node)
 end
 
 function NodeManager.ProcessHarvest(player, node)
+    if
+        typeof(node) ~= "Instance"
+        or not node:IsA("Model")
+        or not IslandsFolder
+        or not node:IsDescendantOf(IslandsFolder)
+    then
+        return false, "Invalid node"
+    end
+
     local nodeType = NodeManager.GetNodeType(node)
     if not nodeType then
         return false, "Invalid node"
@@ -73,10 +82,13 @@ function NodeManager.ProcessHarvest(player, node)
     local MAX_HARVEST_DISTANCE = 30
     local character = player.Character
     local hrp = character and character:FindFirstChild("HumanoidRootPart")
-    local nodePivot = pcall(function()
+    local pivotOk, nodePivot = pcall(function()
         return node:GetPivot()
-    end) and node:GetPivot()
-    if hrp and nodePivot then
+    end)
+    if not pivotOk or not nodePivot then
+        return false, "Invalid node position"
+    end
+    if hrp then
         local distance = (hrp.Position - nodePivot.Position).Magnitude
         if distance > MAX_HARVEST_DISTANCE then
             return false, "Too far from node"
