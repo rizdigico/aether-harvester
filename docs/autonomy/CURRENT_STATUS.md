@@ -15,9 +15,9 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 59 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 63 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, and the quest progression slice |
+| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, and upgrade effects |
 
 ## Implemented source surfaces
 
@@ -92,9 +92,13 @@ server-controlled visit action. Base data is sanitized during profile load.
 ## Asset pipeline
 
 The governed imagegen → Godot → Roblox workflow has concept PNGs, deterministic
-Godot GLB exports, and a generated asset registry. The registry records the
-Godot exports as verified. Roblox import status remains `not_run` until the
-assets are imported into Studio and inspected in a connected play-mode/session.
+Godot GLB exports, and a generated asset registry. The latest imagegen bloom
+concept is checked into `assets/concepts/aether_bloom_concept_v1.png` and was
+turned into `AetherBloom_Godot_v1.glb` through the Godot local bridge; the GLB
+contains 11 nodes, 10 meshes/primitives, 768 triangles, and 10 materials. The
+registry records the Godot export as verified. Roblox import status remains
+`not_run` until the assets are imported into Studio and inspected in a
+connected play-mode/session.
 
 ## Remaining release gates
 

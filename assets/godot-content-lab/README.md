@@ -13,5 +13,9 @@ Current slice:
 - `PortalExportRunner.tscn` — MCP-runnable portal export scene.
 - `portal_export_runner.gd` — exports the portal through the Godot runtime.
 - `export_aether_portal.gd` — standalone GLB export script for local tooling.
+- `../concepts/aether_bloom_concept_v1.png` — new imagegen bloom-node concept reference.
+- `aether_bloom_factory.gd` — deterministic, Roblox-friendly bloom assembly derived from that reference.
+- `export_aether_bloom.gd` — standalone GLB export script for the bloom candidate.
+- `BloomExportRunner.tscn` / `bloom_export_runner.gd` — MCP-runnable Godot scene used to produce the bloom GLB.
 
 Release rule: the GLB is only an intermediate. Before Roblox use, verify studs scale, pivot, collision, materials, triangle/texture budget, streaming behavior, and live Studio placement. Record the result in the autonomy asset registry.

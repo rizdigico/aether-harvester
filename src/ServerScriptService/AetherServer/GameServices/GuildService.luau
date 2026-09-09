@@ -4,6 +4,7 @@ local GuildDataStore = DataStoreService:GetDataStore("GuildData_v1")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local GuildRules = require(game.ReplicatedStorage.AetherShared.Modules.GuildRules)
 
 GuildService.Guilds = {}
 GuildService.GuildIdCounter = 1
@@ -23,15 +24,27 @@ function GuildService.LoadGuilds()
     local success, guilds = pcall(function()
         return GuildDataStore:GetAsync("Guilds")
     end)
-    if success and guilds then
-        GuildService.Guilds = guilds or {}
+    if success then
+        local sanitizedGuilds = {}
+        local seenNames = {}
         local highestId = 0
-        for guildId in pairs(GuildService.Guilds) do
-            local numericId = tonumber(tostring(guildId):match("^GUILD_(%d+)$"))
-            if numericId and numericId > highestId then
-                highestId = numericId
+        if type(guilds) == "table" then
+            for guildId, rawGuild in pairs(guilds) do
+                local normalized = GuildRules.NormalizeGuild(rawGuild, guildId)
+                if normalized then
+                    local normalizedName = string.lower(normalized.Name)
+                    if not seenNames[normalizedName] then
+                        sanitizedGuilds[guildId] = normalized
+                        seenNames[normalizedName] = true
+                        local numericId = tonumber(tostring(guildId):match("^GUILD_(%d+)$"))
+                        if numericId and numericId > highestId then
+                            highestId = numericId
+                        end
+                    end
+                end
             end
         end
+        GuildService.Guilds = sanitizedGuilds
         GuildService.GuildIdCounter = highestId + 1
     end
 end
@@ -155,10 +168,11 @@ end
 
 function GuildService.CreateGuild(player, guildName, description)
     -- VALIDATION: name length (3-24 chars), case-insensitive uniqueness, desc cap
-    local nameLen = utf8.len(guildName) or 0
-    if nameLen < 3 or nameLen > 24 then
+    local normalizedGuildName = GuildRules.NormalizeName(guildName)
+    if not normalizedGuildName then
         return nil, "Guild name must be 3-24 characters"
     end
+    guildName = normalizedGuildName
     local normalizedName = string.lower(guildName)
     for _, existing in pairs(GuildService.Guilds) do
         if type(existing.Name) == "string" and string.lower(existing.Name) == normalizedName then
@@ -233,6 +247,10 @@ function GuildService.InvitePlayer(player, targetPlayer)
         return false, "Only owner can invite"
     end
 
+    if not GuildRules.CanAddMember(#guild.Members) then
+        return false, "Guild is full"
+    end
+
     -- Check if target is already in a guild
     local targetData = PlayerDataService.GetData(targetPlayer)
     if not targetData then
@@ -293,6 +311,11 @@ function GuildService.JoinGuild(player, guildId)
         if memberId == player.UserId then
             return false, "Already in guild"
         end
+    end
+
+    if not GuildRules.CanAddMember(#guild.Members) then
+        GuildService.PendingInvites[player.UserId] = nil
+        return false, "Guild is full"
     end
 
     -- Add member
