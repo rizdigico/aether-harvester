@@ -29,7 +29,8 @@ analytics, monetization boundaries, battle-pass progression, prestige/ascension,
 persistence, session party lifecycle, deterministic pet fusion, personal base
 placement,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
-and the rebuilt screen/controller layer. Quest progression is now persisted,
+and the rebuilt screen/controller layer. Upgrade levels now have a durable,
+sanitized profile field alongside persisted quest progression,
 collection/crafting hooks advance only after successful grants, island discovery
 is unique and durable, named visit objectives use canonical world IDs, and
 delivery objectives consume inventory through an atomic server action.

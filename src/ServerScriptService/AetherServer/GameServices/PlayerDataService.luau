@@ -293,6 +293,7 @@ local function CreateDefaultProfile(userId)
         PetInventory = {},
         EquippedPets = {},
         Skills = {},
+        Upgrades = {},
         SkillPoints = 0,
         Base = { Level = 1, Decorations = {} },
         Quests = {},
@@ -368,6 +369,7 @@ local function SanitizeProfile(userId, raw)
     merged.SkillPoints = isFiniteNumber(merged.SkillPoints)
             and math.clamp(math.floor(merged.SkillPoints), 0, MAX_TRANSACTION_AMOUNT)
         or base.SkillPoints
+    merged.Upgrades = sanitizeNumberMap(merged.Upgrades, 0, 100)
     merged.Base = sanitizeBase(merged.Base)
     merged.Cosmetics = type(merged.Cosmetics) == "table" and merged.Cosmetics or {}
     merged.Entitlements = sanitizeStringBooleanMap(merged.Entitlements)

@@ -42,6 +42,9 @@
     Skills: {
         [skillId: string]: number
     },
+    Upgrades: {
+        [upgradeId: string]: number
+    },
     SkillPoints: number,
     Base: {
         Level: number,
