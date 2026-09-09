@@ -1,5 +1,7 @@
 local CosmeticService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 CosmeticService.Cosmetics = {
     ["hat_phoenix"] = {
@@ -59,6 +61,10 @@ function CosmeticService.Initialize()
             if type(cosmeticId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "PurchaseCosmetic", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = CosmeticService.PurchaseCosmetic(player, cosmeticId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -76,6 +82,10 @@ function CosmeticService.Initialize()
             if type(cosmeticId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "EquipCosmetic", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = CosmeticService.EquipCosmetic(player, cosmeticId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -116,12 +126,22 @@ function CosmeticService.PurchaseCosmetic(player, cosmeticId)
         return false, "Cosmetic not found"
     end
 
+    if data.Cosmetics then
+        for _, ownedId in ipairs(data.Cosmetics) do
+            if ownedId == cosmeticId then
+                return false, "Cosmetic already owned"
+            end
+        end
+    end
+
     if data.Currency.AetherShards < cosmetic.Price then
         return false, "Not enough currency"
     end
 
     -- Deduct cost
-    PlayerDataService.RemoveCurrency(player, "AetherShards", cosmetic.Price)
+    if not PlayerDataService.RemoveCurrency(player, "AetherShards", cosmetic.Price) then
+        return false, "Not enough currency"
+    end
 
     -- Add to owned cosmetics
     if not data.Cosmetics then
@@ -146,6 +166,10 @@ function CosmeticService.EquipCosmetic(player, cosmeticId)
     local data = PlayerDataService.GetData(player)
     if not data then
         return false
+    end
+
+    if not CosmeticService.Cosmetics[cosmeticId] then
+        return false, "Cosmetic not found"
     end
 
     -- Check if owned

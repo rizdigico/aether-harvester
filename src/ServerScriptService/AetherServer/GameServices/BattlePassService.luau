@@ -214,11 +214,17 @@ function BattlePassService.PurchasePremium(player)
         return false, "No active season"
     end
 
-    if data.Currency.AetherShards < 2000 then
+    if data.BattlePassPremium == true then
+        return false, "Premium already owned"
+    end
+
+    if not data.Currency or data.Currency.AetherShards < 2000 then
         return false, "Not enough currency"
     end
 
-    PlayerDataService.RemoveCurrency(player, "AetherShards", 2000)
+    if not PlayerDataService.RemoveCurrency(player, "AetherShards", 2000) then
+        return false, "Not enough currency"
+    end
     data.BattlePassPremium = true
 
     -- Notify client
