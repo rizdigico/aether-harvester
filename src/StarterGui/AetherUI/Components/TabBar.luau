@@ -78,7 +78,7 @@ function TabBar.new(props: TabBarProps): Frame
                 for _, b in ipairs(buttons) do
                     b.TextColor3 = Theme.Color.TEXT_SECONDARY
                     local ind = b:FindFirstChild("Indicator")
-                    if ind then
+                    if ind and ind:IsA("Frame") then
                         ind.BackgroundColor3 = Theme.Color.BG_DIM
                     end
                 end

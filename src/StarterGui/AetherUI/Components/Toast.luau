@@ -72,23 +72,21 @@ function Toast.new(props: ToastProps): Frame
     -- entrance: slide from right
     frame.Position = UDim2.new(1, 20, 0, 0)
     frame.AnchorPoint = Vector2.new(1, 0)
-    frame.Transparency = 1
+    frame.BackgroundTransparency = 1
 
     local TweenService = game:GetService("TweenService")
     local enterInfo = TweenInfo.new(Theme.Animation.BASE, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    TweenService
-        :Create(
-            frame,
-            enterInfo,
-            { Position = UDim2.new(1, -Theme.Spacing.SP5, 0, Theme.Spacing.SP5), Transparency = 0 }
-        )
-        :Play()
+    TweenService:Create(frame, enterInfo, {
+        Position = UDim2.new(1, -Theme.Spacing.SP5, 0, Theme.Spacing.SP5),
+        BackgroundTransparency = 0,
+    }):Play()
 
     -- auto dismiss
     task.delay(duration, function()
         if frame and frame.Parent then
             local exitInfo = TweenInfo.new(Theme.Animation.BASE, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-            TweenService:Create(frame, exitInfo, { Position = UDim2.new(1, 20, 0, 0), Transparency = 1 }):Play()
+            TweenService:Create(frame, exitInfo, { Position = UDim2.new(1, 20, 0, 0), BackgroundTransparency = 1 })
+                :Play()
             task.wait(Theme.Animation.BASE)
             frame:Destroy()
         end
@@ -145,6 +143,9 @@ function Toast.enqueue(parent: Instance, props: ToastProps): ToastHost
         -- Dismiss oldest beyond the cap, oldest first.
         while #stack > MAX_VISIBLE do
             local oldest = table.remove(stack, 1)
+            if not oldest then
+                break
+            end
             local d = oldest:GetAttribute("_AetherDestroy")
             if type(d) == "function" then
                 (d :: () -> ())()

@@ -110,7 +110,7 @@ function Input.new(props: InputProps): Frame
     local connections: { RBXScriptConnection } = {}
     table.insert(
         connections,
-        textbox.TextChanged:Connect(function()
+        textbox:GetPropertyChangedSignal("Text"):Connect(function()
             if onChanged then
                 onChanged(textbox.Text)
             end

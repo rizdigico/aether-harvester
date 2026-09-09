@@ -32,7 +32,6 @@ function Card.new(props: CardProps): Frame
     frame.Name = "AetherCard"
     frame.Size = size or UDim2.new(0, 160, 0, 180)
     frame.BackgroundColor3 = Theme.Color.BG_DIM
-    frame.AutoButtonColor = false
 
     local corner = Instance.new("UICorner")
     corner.Name = "Corner"

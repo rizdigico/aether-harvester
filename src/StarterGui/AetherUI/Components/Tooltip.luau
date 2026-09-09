@@ -93,7 +93,10 @@ function Tooltip.new(props: TooltipProps): Frame
     local hideThread: thread? = nil
 
     local function show()
-        hideThread = task.cancel(hideThread)
+        if hideThread then
+            task.cancel(hideThread)
+            hideThread = nil
+        end
         showThread = task.delay(delay, function()
             frame.Visible = true
             position()
@@ -101,7 +104,10 @@ function Tooltip.new(props: TooltipProps): Frame
     end
 
     local function hide()
-        showThread = task.cancel(showThread)
+        if showThread then
+            task.cancel(showThread)
+            showThread = nil
+        end
         hideThread = task.delay(0.2, function()
             frame.Visible = false
         end)
@@ -118,8 +124,14 @@ function Tooltip.new(props: TooltipProps): Frame
             conn:Disconnect()
         end
         table.clear(connections)
-        showThread = task.cancel(showThread)
-        hideThread = task.cancel(hideThread)
+        if showThread then
+            task.cancel(showThread)
+            showThread = nil
+        end
+        if hideThread then
+            task.cancel(hideThread)
+            hideThread = nil
+        end
         frame:Destroy()
     end
 

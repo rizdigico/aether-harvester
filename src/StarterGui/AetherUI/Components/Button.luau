@@ -65,25 +65,35 @@ local function applyVariant(button: TextButton, variant: ButtonVariant)
 
     -- stroke
     local stroke = button:FindFirstChild("Stroke")
-    if not stroke then
-        stroke = Instance.new("UIStroke")
-        stroke.Name = "Stroke"
-        stroke.Parent = button
+    if not stroke or not stroke:IsA("UIStroke") then
+        if stroke then
+            stroke:Destroy()
+        end
+        local createdStroke = Instance.new("UIStroke")
+        createdStroke.Name = "Stroke"
+        createdStroke.Parent = button
+        stroke = createdStroke
     end
-    stroke.Color = border or Theme.Color.BORDER_SUBTLE
-    stroke.Thickness = if border then borderWidth else 0
+    local strokeObject = stroke :: UIStroke
+    strokeObject.Color = border or Theme.Color.BORDER_SUBTLE
+    strokeObject.Thickness = if border then borderWidth else 0
 
     -- shadow
     local shadowGrad = button:FindFirstChild("ShadowGrad")
-    if not shadowGrad then
-        shadowGrad = Instance.new("UIGradient")
-        shadowGrad.Name = "ShadowGrad"
-        shadowGrad.Parent = button
+    if not shadowGrad or not shadowGrad:IsA("UIGradient") then
+        if shadowGrad then
+            shadowGrad:Destroy()
+        end
+        local createdShadowGrad = Instance.new("UIGradient")
+        createdShadowGrad.Name = "ShadowGrad"
+        createdShadowGrad.Parent = button
+        shadowGrad = createdShadowGrad
     end
+    local shadowGradient = shadowGrad :: UIGradient
     if shadow then
-        shadowGrad.Color = ColorSequence.new(Theme.Color.AETHER_CYAN)
+        shadowGradient.Color = ColorSequence.new(Theme.Color.AETHER_CYAN)
     else
-        shadowGrad.Color = ColorSequence.new(Theme.Color.BG_ELEVATED)
+        shadowGradient.Color = ColorSequence.new(Theme.Color.BG_ELEVATED)
     end
 end
 

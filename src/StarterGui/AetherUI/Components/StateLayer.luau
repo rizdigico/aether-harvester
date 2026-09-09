@@ -37,7 +37,7 @@ local RESERVED = {
 local StateLayer = {}
 
 function StateLayer.new(target: Frame, opts: StateLayerOptions?): StateLayer
-    opts = opts or {}
+    local options: StateLayerOptions = opts or {}
 
     local dim = Instance.new("Frame")
     dim.Name = "AetherStateLayer"
@@ -64,9 +64,10 @@ function StateLayer.new(target: Frame, opts: StateLayerOptions?): StateLayer
 
     local function showSpinner(label: string?)
         if not spinner then
-            spinner = LoadingSpinner.new({ Parent = spinnerHost, Label = label or opts.LoadingLabel })
-            spinner.AnchorPoint = Vector2.new(0.5, 0.5)
-            spinner.Position = UDim2.fromScale(0.5, 0.5)
+            local createdSpinner = LoadingSpinner.new({ Parent = spinnerHost, Label = label or options.LoadingLabel })
+            createdSpinner.AnchorPoint = Vector2.new(0.5, 0.5)
+            createdSpinner.Position = UDim2.fromScale(0.5, 0.5)
+            spinner = createdSpinner
         elseif label then
             local lbl = spinner:FindFirstChild("Label")
             if lbl and lbl:IsA("TextLabel") then
@@ -77,25 +78,29 @@ function StateLayer.new(target: Frame, opts: StateLayerOptions?): StateLayer
 
     local function showEmpty(title: string?, body: string?)
         if not emptyState then
-            emptyState = EmptyState.new({
-                Title = title or opts.EmptyTitle or "Nothing here",
-                Body = body or opts.EmptyBody,
-                Icon = opts.EmptyIcon,
-                CtaText = opts.CtaText,
-                OnCta = opts.OnCta,
+            local createdEmptyState = EmptyState.new({
+                Title = title or options.EmptyTitle or "Nothing here",
+                Body = body or options.EmptyBody,
+                Icon = options.EmptyIcon,
+                CtaText = options.CtaText,
+                OnCta = options.OnCta,
                 Parent = target,
             })
+            emptyState = createdEmptyState
         else
             local titleLabel = emptyState:FindFirstChild("Title")
             if titleLabel and titleLabel:IsA("TextLabel") then
-                titleLabel.Text = title or opts.EmptyTitle or "Nothing here"
+                titleLabel.Text = title or options.EmptyTitle or "Nothing here"
             end
             local bodyLabel = emptyState:FindFirstChild("Body")
             if body ~= nil and bodyLabel and bodyLabel:IsA("TextLabel") then
                 bodyLabel.Text = body
             end
         end
-        emptyState.Visible = true
+        local currentEmptyState = emptyState
+        if currentEmptyState then
+            currentEmptyState.Visible = true
+        end
     end
 
     local function setLoading(enabled: boolean, label: string?)

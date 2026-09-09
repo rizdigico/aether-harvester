@@ -35,7 +35,7 @@ local TradeController = {}
 local conns: { RBXScriptConnection } = {}
 local toastHost: any = nil
 local offerMap: { [string]: number } = {}
-local offerRows: { Frame } = {}
+local offerRows: { TextButton } = {}
 
 local function disconnectAll()
     for _, c in conns do
@@ -82,7 +82,11 @@ local function refreshOfferList()
         return
     end
 
-    local slots = mainFrame() and mainFrame():FindFirstChild("TradeSlots")
+    local frame = mainFrame()
+    if not frame then
+        return
+    end
+    local slots = frame:FindFirstChild("TradeSlots")
     if not slots then
         return
     end
@@ -140,7 +144,11 @@ function TradeController.Cancel(tradeId: string)
 end
 
 local function wireCreateButton()
-    local createBtn = mainFrame() and mainFrame():FindFirstChild("ConfirmButton")
+    local frame = mainFrame()
+    if not frame then
+        return
+    end
+    local createBtn = frame:FindFirstChild("ConfirmButton")
     if not createBtn or not createBtn:IsA("TextButton") then
         return
     end
@@ -209,5 +217,3 @@ if window.Enabled then
 end
 
 print("[TradeController] Initialized")
-
-return TradeController

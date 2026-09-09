@@ -16,7 +16,7 @@ export type ListItemProps = {
 
 local ListItem = {}
 
-function ListItem.new(props: ListItemProps): Frame
+function ListItem.new(props: ListItemProps): TextButton
     local title: string = props.Title
     local subtitle: string? = props.Subtitle
     local icon: string? = props.Icon
@@ -25,10 +25,12 @@ function ListItem.new(props: ListItemProps): Frame
     local onClick: (() -> ())? = props.OnClick
     local last: boolean? = props.Last
 
-    local frame = Instance.new("Frame")
+    local frame = Instance.new("TextButton")
     frame.Name = "AetherListItem"
     frame.Size = UDim2.new(1, 0, 0, Theme.Size.LIST_ITEM_HEIGHT)
     frame.BackgroundColor3 = Theme.Color.BG_DIM
+    frame.AutoButtonColor = false
+    frame.Text = ""
     frame.Parent = parent
 
     -- hover / active feedback

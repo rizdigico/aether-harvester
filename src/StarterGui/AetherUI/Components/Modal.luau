@@ -5,13 +5,19 @@
 local Theme = require(script.Parent.Theme)
 local Button = require(script.Parent.Button)
 
+export type ModalAction = {
+    Text: string,
+    Variant: Button.ButtonVariant,
+    OnClick: (() -> ())?,
+}
+
 export type ModalProps = {
     Title: string,
     Body: string?,
     Parent: Instance?,
     Size: UDim2?,
     OnClose: (() -> ())?,
-    Actions: { { Text: string, Variant: Button.ButtonVariant, OnClick: (() -> ())? } }?,
+    Actions: { ModalAction }?,
 }
 
 local Modal = {}
@@ -22,7 +28,7 @@ function Modal.new(props: ModalProps): Frame
     local parent: Instance? = props.Parent
     local size: UDim2? = props.Size
     local onClose: (() -> ())? = props.OnClose
-    local actions: { { Text: string, Variant: Button.ButtonVariant, OnClick: (() -> ())? } }? = props.Actions
+    local actions: { ModalAction }? = props.Actions
 
     local TweenService = game:GetService("TweenService")
 

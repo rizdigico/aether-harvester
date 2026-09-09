@@ -140,10 +140,11 @@ btnLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 btnLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 btnLayout.Parent = btnSection
 
-for _, variant in { "primary", "secondary", "danger", "ghost" } do
+local buttonVariants: { Button.ButtonVariant } = { "primary", "secondary", "danger", "ghost" }
+for _, variant in buttonVariants do
     Button.new({
         Text = variant:gsub("^%l", string.upper),
-        Variant = variant,
+        Variant = variant :: Button.ButtonVariant,
         Size = "medium",
         Parent = btnSection,
         OnClick = function()
@@ -322,6 +323,16 @@ Button.new({
     Variant = "primary",
     Parent = actionSection,
     OnClick = function()
+        local demoActions: { Modal.ModalAction } = {
+            { Text = "Cancel", Variant = "secondary", OnClick = function() end },
+            {
+                Text = "Confirm",
+                Variant = "primary",
+                OnClick = function()
+                    Toast.new({ Text = "Confirmed!", Type = "success", Parent = root })
+                end,
+            },
+        }
         Modal.new({
             Title = "Confirm Action",
             Body = "This is a demonstration modal with confirmation actions.",
@@ -329,16 +340,7 @@ Button.new({
             OnClose = function()
                 Toast.new({ Text = "Modal closed", Type = "info", Parent = root })
             end,
-            Actions = {
-                { Text = "Cancel", Variant = "secondary", OnClick = function() end },
-                {
-                    Text = "Confirm",
-                    Variant = "primary",
-                    OnClick = function()
-                        Toast.new({ Text = "Confirmed!", Type = "success", Parent = root })
-                    end,
-                },
-            },
+            Actions = demoActions,
         })
     end,
 })
