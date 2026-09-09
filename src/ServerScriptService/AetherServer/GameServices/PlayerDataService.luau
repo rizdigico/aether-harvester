@@ -316,13 +316,10 @@ end
 function PlayerDataService.AddXP(player, amount)
     local data = playerData[player.UserId]
     if not data or not isPositiveInteger(amount) or amount > 10000 then
-        return
+        return false
     end
     data.XP = (data.XP or 0) + math.floor(amount)
-
-    -- Update battle pass XP
-    local BattlePassService = require(game.ServerScriptService.AetherServer.GameServices.BattlePassService)
-    BattlePassService.AddXP(player, amount)
+    return true
 end
 
 function PlayerDataService.IncrementStat(player, statName, amount)

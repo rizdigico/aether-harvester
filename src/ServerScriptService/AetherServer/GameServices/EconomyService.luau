@@ -107,7 +107,8 @@ end
 
 function EconomyService.Initialize()
     print("[EconomyService] Initializing...")
-    print("[EconomyService] Currencies: " .. tostring(next(EconomyService.Currencies)))
+    local firstCurrency = next(EconomyService.Currencies)
+    print("[EconomyService] Currencies: " .. tostring(firstCurrency))
 end
 
 return EconomyService

@@ -140,7 +140,7 @@ function CraftingService.CanCraft(player, recipeId)
 
     -- Check ingredients
     for _, ingredient in ipairs(recipe.Ingredients) do
-        local itemData = require(game.ReplicatedStorage.AetherShared.Data.Items):GetItem(ingredient.ItemId)
+        local itemData = require(game.ReplicatedStorage.AetherShared.Data.Items).GetItem(ingredient.ItemId)
         if not itemData then
             return false, "Invalid ingredient: " .. ingredient.ItemId
         end

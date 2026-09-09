@@ -132,7 +132,7 @@ function GuildService.CreateGuild(player, guildName, description)
         description = description:sub(1, 200)
     end
 
-    local existingGuild = GuildService:GetGuildByPlayer(player)
+    local existingGuild = GuildService.GetGuildByPlayer(player)
     if existingGuild then
         return nil, "Already in a guild"
     end

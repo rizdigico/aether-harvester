@@ -5,9 +5,30 @@
 
 local Monetization = {}
 
+type GamePass = {
+    Key: string,
+    Id: number,
+    Name: string,
+    Description: string,
+    Grant: string,
+}
+
+type DeveloperProduct = {
+    Key: string,
+    Id: number,
+    Name: string,
+    Description: string,
+    Grant: string,
+    Currency: string?,
+    Amount: number?,
+    BoostId: string?,
+    DurationSeconds: number?,
+    Multiplier: number?,
+}
+
 Monetization.Environment = "Development"
 
-Monetization.GamePasses = {
+local gamePasses: { [string]: GamePass } = {
     supporter = {
         Key = "supporter",
         Id = 0,
@@ -17,7 +38,7 @@ Monetization.GamePasses = {
     },
 }
 
-Monetization.DeveloperProducts = {
+local developerProducts: { [string]: DeveloperProduct } = {
     shard_bundle_small = {
         Key = "shard_bundle_small",
         Id = 0,
@@ -48,7 +69,10 @@ Monetization.DeveloperProducts = {
     },
 }
 
-function Monetization.GetDeveloperProductById(productId: number)
+Monetization.GamePasses = gamePasses
+Monetization.DeveloperProducts = developerProducts
+
+function Monetization.GetDeveloperProductById(productId: number): DeveloperProduct?
     for _, product in pairs(Monetization.DeveloperProducts) do
         if product.Id == productId and product.Id > 0 then
             return product

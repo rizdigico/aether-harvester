@@ -36,6 +36,16 @@ function ServerMain.Initialize()
     Services.ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
     Services.RewardService = require(game.ServerScriptService.AetherServer.GameServices.RewardService)
 
+    -- Wire cross-cutting XP listeners only after all modules have loaded.
+    -- This preserves one-way module dependencies while keeping progression
+    -- and battle-pass rewards in sync.
+    Services.ProgressionService.SetBattlePassAwarder(function(player, amount)
+        return Services.BattlePassService.AddXP(player, amount)
+    end)
+    Services.BattlePassService.SetProgressionGrant(function(player, amount)
+        return Services.ProgressionService.AddXPWithoutBattlePass(player, amount)
+    end)
+
     -- Initialize each service
     for _, service in pairs(Services) do
         if service.Initialize then

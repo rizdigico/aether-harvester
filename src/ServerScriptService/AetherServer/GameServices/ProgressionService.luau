@@ -1,6 +1,44 @@
 local ProgressionService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
-local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
+
+-- Cross-cutting progression systems are wired by ServerMain after all modules
+-- load. This keeps the data layer independent and avoids require cycles.
+local battlePassAwarder = function(_player, _amount) end
+
+function ProgressionService.SetBattlePassAwarder(awarder)
+    if type(awarder) == "function" then
+        battlePassAwarder = awarder
+    end
+end
+
+local function applyXP(player, amount)
+    if type(amount) ~= "number" or amount <= 0 or amount > 1000000 then
+        return false
+    end
+
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false
+    end
+
+    data.XP = (data.XP or 0) + math.floor(amount)
+
+    -- Check for level up
+    local currentLevel = data.Level or 1
+    local xpRequired = ProgressionService.CalculateXPRequired(currentLevel)
+
+    while data.XP >= xpRequired do
+        data.XP -= xpRequired
+        data.Level = currentLevel + 1
+        currentLevel += 1
+        xpRequired = ProgressionService.CalculateXPRequired(currentLevel)
+
+        -- Award level up rewards
+        ProgressionService.OnLevelUp(player, currentLevel)
+    end
+
+    return true
+end
 
 function ProgressionService.Initialize()
     print("[ProgressionService] Initializing...")
@@ -33,32 +71,17 @@ function ProgressionService.Initialize()
 end
 
 function ProgressionService.AddXP(player, amount)
-    if type(amount) ~= "number" or amount <= 0 or amount > 1000000 then
-        return false
+    local success = applyXP(player, amount)
+    if success then
+        battlePassAwarder(player, math.floor(amount))
     end
+    return success
+end
 
-    local data = PlayerDataService.GetData(player)
-    if not data then
-        return false
-    end
-
-    data.XP = (data.XP or 0) + math.floor(amount)
-
-    -- Check for level up
-    local currentLevel = data.Level or 1
-    local xpRequired = ProgressionService.CalculateXPRequired(currentLevel)
-
-    while data.XP >= xpRequired do
-        data.XP -= xpRequired
-        data.Level = currentLevel + 1
-        currentLevel += 1
-        xpRequired = ProgressionService.CalculateXPRequired(currentLevel)
-
-        -- Award level up rewards
-        ProgressionService.OnLevelUp(player, currentLevel)
-    end
-
-    return true
+-- Used for battle-pass XP rewards so the reward does not recursively award
+-- more battle-pass XP while still applying normal player progression.
+function ProgressionService.AddXPWithoutBattlePass(player, amount)
+    return applyXP(player, amount)
 end
 
 function ProgressionService.CalculateXPRequired(level)

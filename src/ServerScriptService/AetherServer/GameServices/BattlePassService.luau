@@ -1,6 +1,18 @@
 local BattlePassService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 
+-- Injected by ServerMain after every service has loaded. The fallback keeps
+-- the module safe in isolated tests without importing ProgressionService.
+local progressionGrant = function(player, amount)
+    return PlayerDataService.AddXP(player, amount)
+end
+
+function BattlePassService.SetProgressionGrant(grant)
+    if type(grant) == "function" then
+        progressionGrant = grant
+    end
+end
+
 BattlePassService.Seasons = {
     ["season_1"] = {
         Id = "season_1",
@@ -104,8 +116,7 @@ function BattlePassService:AwardLevelRewards(player, level)
             PlayerDataService.AddCurrency(player, "AetherShards", freeReward.AetherShards)
         end
         if freeReward.XP then
-            local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
-            ProgressionService.AddXP(player, freeReward.XP)
+            progressionGrant(player, freeReward.XP)
         end
         if freeReward.Items then
             for _, itemId in ipairs(freeReward.Items) do
@@ -122,9 +133,7 @@ function BattlePassService:AwardLevelRewards(player, level)
                 PlayerDataService.AddCurrency(player, "AetherShards", premiumReward.AetherShards)
             end
             if premiumReward.XP then
-                local ProgressionService =
-                    require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
-                ProgressionService.AddXP(player, premiumReward.XP)
+                progressionGrant(player, premiumReward.XP)
             end
             if premiumReward.Items then
                 for _, itemId in ipairs(premiumReward.Items) do

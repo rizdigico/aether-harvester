@@ -1,5 +1,6 @@
 local RewardService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
 local RewardsData = require(game.ReplicatedStorage.AetherShared.Data.Rewards)
 local DailyRewardsService = require(game.ServerScriptService.AetherServer.GameServices.DailyRewardsService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
@@ -55,7 +56,7 @@ function RewardService.ClaimExtraReward(player, rewardId)
     -- Grant the reward components
     local rewards = reward.Rewards or {}
     if rewards.XP then
-        PlayerDataService.AddXP(player, rewards.XP)
+        ProgressionService.AddXP(player, rewards.XP)
     end
     if rewards.Currency then
         for currencyType, amount in pairs(rewards.Currency) do
