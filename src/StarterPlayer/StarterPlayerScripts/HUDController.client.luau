@@ -89,7 +89,11 @@ function HUDController:UpdateHUD()
 
     -- Update tool + creature displays
     if Elements.ToolDisplay then
-        Elements.ToolDisplay.Text = "Tool: " .. (data.CurrentTool or "None")
+        local toolText = data.CurrentTool or "None"
+        if data.CurrentTool and type(data.ToolDurability) == "number" and type(data.MaxToolDurability) == "number" then
+            toolText = toolText .. " " .. tostring(data.ToolDurability) .. "/" .. tostring(data.MaxToolDurability)
+        end
+        Elements.ToolDisplay.Text = "Tool: " .. toolText
     end
     if Elements.ActiveCreature then
         Elements.ActiveCreature.Text = "Pet: " .. (data.ActivePet and data.ActivePet.Name or "None")

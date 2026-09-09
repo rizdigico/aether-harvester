@@ -6,6 +6,9 @@ GameClient.State = {
     CurrentIsland = "CloudGardens",
     CurrentNode = nil,
     IsHarvesting = false,
+    CurrentTool = "basic_pickaxe",
+    ToolDurability = 100,
+    MaxToolDurability = 100,
     ActivePet = nil,
     Level = 1,
     XP = 0,
@@ -125,6 +128,13 @@ function GameClient:ConnectRemotes()
             self:OnItemUsed(itemId, remainingCount, vitals)
         end)
     end
+
+    local ToolUpdated = self.Remotes:FindFirstChild("ToolUpdated")
+    if ToolUpdated then
+        ToolUpdated.OnClientEvent:Connect(function(snapshot)
+            self:OnToolUpdated(snapshot)
+        end)
+    end
 end
 
 function GameClient:SetupInput()
@@ -201,6 +211,11 @@ function GameClient:OnPlayerDataLoaded(data)
     GameClient.State.Settings = data.Settings or GameClient.State.Settings
     GameClient.State.Energy = data.Energy or GameClient.State.Energy
     GameClient.State.MaxEnergy = data.MaxEnergy or GameClient.State.MaxEnergy
+    GameClient.State.CurrentTool = data.EquippedTool or GameClient.State.CurrentTool
+    if type(data.ToolDurability) == "table" and GameClient.State.CurrentTool then
+        GameClient.State.ToolDurability = data.ToolDurability[GameClient.State.CurrentTool]
+            or GameClient.State.ToolDurability
+    end
 
     -- Notify HUD to refresh immediately
     if self.OnDataUpdated then
@@ -221,6 +236,15 @@ function GameClient:OnItemUsed(itemId, remainingCount, vitals)
         self.State.Energy = vitals.Energy or self.State.Energy
         self.State.MaxEnergy = vitals.MaxEnergy or self.State.MaxEnergy
     end
+end
+
+function GameClient:OnToolUpdated(snapshot)
+    if type(snapshot) ~= "table" then
+        return
+    end
+    self.State.CurrentTool = snapshot.EquippedTool or self.State.CurrentTool
+    self.State.ToolDurability = snapshot.Durability or self.State.ToolDurability
+    self.State.MaxToolDurability = snapshot.MaxDurability or self.State.MaxToolDurability
 end
 
 function GameClient:OnQuestUpdated(questData)
@@ -348,6 +372,17 @@ function GameClient:UseItem(itemId)
     local UseItem = Remotes and Remotes:FindFirstChild("UseItem")
     if UseItem then
         UseItem:FireServer(itemId)
+    end
+end
+
+function GameClient:EquipTool(toolId)
+    if type(toolId) ~= "string" then
+        return
+    end
+    local Remotes = self.Remotes
+    local EquipTool = Remotes and Remotes:FindFirstChild("EquipTool")
+    if EquipTool then
+        EquipTool:FireServer(toolId)
     end
 end
 

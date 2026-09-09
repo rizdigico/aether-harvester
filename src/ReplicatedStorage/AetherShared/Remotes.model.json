@@ -318,6 +318,14 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "EquipTool",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "ToolUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "EventStarted",
                          "className":  "RemoteEvent"
                      },

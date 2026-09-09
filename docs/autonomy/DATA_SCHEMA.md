@@ -1,7 +1,7 @@
 # DATA SCHEMA
 
 > **Current-status note (2026-09-10):** The original schema below is a v1
-> recovery snapshot. The live implementation now uses schema version 3,
+> recovery snapshot. The live implementation now uses schema version 4,
 > sanitizes loaded profiles, keeps Studio data in `PlayerData_Studio_v1`, and
 > uses per-player save locking plus cloned save snapshots. See
 > `GameServices/PlayerDataService.luau` and [`CURRENT_STATUS.md`](CURRENT_STATUS.md)
@@ -23,6 +23,8 @@
     },
     MaxEnergy: number,
     Energy: number,
+    EquippedTool: string | nil,
+    ToolDurability: { [toolId: string]: number },
     Inventory: {
         [itemId: string]: number
     },

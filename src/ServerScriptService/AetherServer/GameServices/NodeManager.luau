@@ -15,6 +15,7 @@ local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateL
 local MonetizationService = require(game.ServerScriptService.AetherServer.GameServices.MonetizationService)
 local UpgradeService = require(game.ServerScriptService.AetherServer.GameServices.UpgradeService)
 local PlayerVitalsService = require(game.ServerScriptService.AetherServer.GameServices.PlayerVitalsService)
+local ToolService = require(game.ServerScriptService.AetherServer.GameServices.ToolService)
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30
@@ -42,6 +43,10 @@ local function notifyError(player, message)
     if errorRemote then
         errorRemote:FireClient(player, message)
     end
+end
+
+local function getHarvestCooldown(player)
+    return UpgradeService.GetHarvestCooldown(player) * ToolService.GetHarvestCooldownMultiplier(player)
 end
 
 local function getPromptParent(node)
@@ -152,6 +157,11 @@ function NodeManager.ProcessHarvest(player, node)
         return false, "No player data"
     end
 
+    local toolReady, toolError = ToolService.CanHarvest(player)
+    if not toolReady then
+        return false, toolError
+    end
+
     local spentEnergy, energyError = PlayerVitalsService.ConsumeEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
     if not spentEnergy then
         return false, energyError
@@ -181,6 +191,7 @@ function NodeManager.ProcessHarvest(player, node)
             * EventService.GetActiveYieldMultiplier()
             * petMultiplier
             * upgradeMultiplier
+            * ToolService.GetHarvestYieldMultiplier(player)
     )
 
     -- Grant resources. Do not put a node reward into the currency wallet:
@@ -188,6 +199,12 @@ function NodeManager.ProcessHarvest(player, node)
     if not PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount) then
         PlayerVitalsService.RestoreEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
         return false, "Unable to grant resource"
+    end
+
+    if not ToolService.ConsumeDurability(player) then
+        PlayerDataService.RemoveItem(player, nodeType.ResourceId, yieldAmount)
+        PlayerVitalsService.RestoreEnergy(player, PlayerVitalsService.HARVEST_ENERGY_COST)
+        return false, "Unable to use equipped tool"
     end
 
     -- Grant XP
@@ -268,7 +285,7 @@ function NodeManager.Initialize()
             end
 
             -- Rate limit: max one harvest per second per player
-            if not RateLimiter.Check(player, "HarvestResource", UpgradeService.GetHarvestCooldown(player)) then
+            if not RateLimiter.Check(player, "HarvestResource", getHarvestCooldown(player)) then
                 return
             end
 
@@ -304,7 +321,7 @@ function NodeManager.Initialize()
                 prompt.RequiresLineOfSight = false
                 prompt.Parent = promptParent
                 prompt.Triggered:Connect(function(player)
-                    if not RateLimiter.Check(player, "HarvestResource", UpgradeService.GetHarvestCooldown(player)) then
+                    if not RateLimiter.Check(player, "HarvestResource", getHarvestCooldown(player)) then
                         return
                     end
                     local success, result = NodeManager.ProcessHarvest(player, node)

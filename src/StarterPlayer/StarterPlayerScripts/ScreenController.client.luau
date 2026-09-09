@@ -137,6 +137,25 @@ function ScreenController:PopulateInventory(activeTab)
                 end
             end)
             useButton.Parent = item
+        elseif entry.Def and entry.Def.Type == "Tool" then
+            local equipButton = Instance.new("TextButton")
+            equipButton.Name = "EquipButton"
+            equipButton.AnchorPoint = Vector2.new(1, 1)
+            equipButton.Position = UDim2.new(0.97, 0, 0.92, 0)
+            equipButton.Size = UDim2.new(0.32, 0, 0.22, 0)
+            equipButton.BackgroundColor3 = Color3.fromRGB(31, 77, 91)
+            equipButton.BorderSizePixel = 0
+            equipButton.TextColor3 = Color3.fromRGB(230, 245, 255)
+            equipButton.Font = Enum.Font.GothamBold
+            equipButton.TextSize = 11
+            equipButton.Text = "EQUIP"
+            equipButton.Activated:Connect(function()
+                local equipTool = Remotes:FindFirstChild("EquipTool")
+                if equipTool then
+                    equipTool:FireServer(entry.Id)
+                end
+            end)
+            equipButton.Parent = item
         end
 
         item.Parent = content

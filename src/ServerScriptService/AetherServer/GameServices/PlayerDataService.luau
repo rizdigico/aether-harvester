@@ -17,7 +17,8 @@ local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
 local AUTOSAVE_SPACING = 0.1 -- Avoid bursting every active player into the DataStore budget at once.
 local DEFAULT_MAX_ENERGY = 100
-local SCHEMA_VERSION = 3
+local DEFAULT_TOOL_ID = "basic_pickaxe"
+local SCHEMA_VERSION = 4
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
 
@@ -58,6 +59,21 @@ local function sanitizeInventory(value)
         end
     end
     return inventory
+end
+
+local function sanitizeToolDurability(value, inventory)
+    local durability = {}
+    local rawDurability = type(value) == "table" and value or {}
+    for itemId, amount in pairs(inventory or {}) do
+        local definition = ItemsData.GetItem(itemId)
+        if definition and definition.Type == "Tool" and isPositiveInteger(amount) then
+            local maximum = isFiniteNumber(definition.Durability) and math.max(1, math.floor(definition.Durability))
+                or 1
+            local current = rawDurability[itemId]
+            durability[itemId] = isFiniteNumber(current) and math.clamp(math.floor(current), 0, maximum) or maximum
+        end
+    end
+    return durability
 end
 
 local function sanitizeMailbox(value)
@@ -317,7 +333,9 @@ local function CreateDefaultProfile(userId)
         },
         MaxEnergy = DEFAULT_MAX_ENERGY,
         Energy = DEFAULT_MAX_ENERGY,
-        Inventory = {},
+        Inventory = { [DEFAULT_TOOL_ID] = 1 },
+        ToolDurability = { [DEFAULT_TOOL_ID] = 100 },
+        EquippedTool = DEFAULT_TOOL_ID,
         PetInventory = {},
         EquippedPets = {},
         Skills = {},
@@ -398,6 +416,34 @@ local function SanitizeProfile(userId, raw)
         or base.MaxEnergy
     merged.Energy = isFiniteNumber(merged.Energy) and math.clamp(merged.Energy, 0, merged.MaxEnergy) or merged.MaxEnergy
     merged.Inventory = sanitizeInventory(merged.Inventory)
+    local hasTool = false
+    for itemId, amount in pairs(merged.Inventory) do
+        local definition = ItemsData.GetItem(itemId)
+        if definition and definition.Type == "Tool" and isPositiveInteger(amount) then
+            hasTool = true
+            break
+        end
+    end
+    if not hasTool then
+        merged.Inventory[DEFAULT_TOOL_ID] = 1
+    end
+    merged.ToolDurability = sanitizeToolDurability(merged.ToolDurability, merged.Inventory)
+    local equippedDefinition = type(merged.EquippedTool) == "string" and ItemsData.GetItem(merged.EquippedTool) or nil
+    if
+        type(merged.EquippedTool) ~= "string"
+        or not equippedDefinition
+        or equippedDefinition.Type ~= "Tool"
+        or not isPositiveInteger(merged.Inventory[merged.EquippedTool])
+    then
+        merged.EquippedTool = nil
+        for itemId, amount in pairs(merged.Inventory) do
+            local definition = ItemsData.GetItem(itemId)
+            if definition and definition.Type == "Tool" and isPositiveInteger(amount) then
+                merged.EquippedTool = itemId
+                break
+            end
+        end
+    end
     merged.Mailbox = sanitizeMailbox(merged.Mailbox)
     merged.PetInventory = sanitizePetInventory(merged.PetInventory)
     merged.EquippedPets = sanitizeStringBooleanMap(merged.EquippedPets)

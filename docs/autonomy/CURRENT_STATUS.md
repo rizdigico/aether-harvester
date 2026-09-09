@@ -15,13 +15,15 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 72 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 75 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, and bounded autosave |
+| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |
 
 ## Implemented source surfaces
 
-The branch now includes server-authoritative harvesting, progression, quests,
+The branch now includes server-authoritative harvesting with persistent energy
+spend/regeneration, energy-potion use, and equipped tools with durability and
+tool-driven yield/cooldown effects; progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped global/island/guild/party chat, achievements, cosmetics, leaderboards,
 daily rewards and active event effects,

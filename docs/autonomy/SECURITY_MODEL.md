@@ -32,10 +32,10 @@
 1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager validates player proximity to the target node.
    - **Remaining work**: add adversarial multi-client coverage for spoofed instances and teleport edge cases.
 
-2. **Mitigated in current checkout**: `PurchaseUpgrade` is protected by the shared one-second remote rate limit and server-side cost/level validation.
+2. **Mitigated in current checkout**: `PurchaseUpgrade` and `EquipTool` are protected by shared remote rate limits and server-side ownership/definition validation.
    - **Remaining work**: add adversarial multi-client coverage for retry and race behavior.
 
-3. **Partially mitigated in current checkout**: production and Studio use isolated `PlayerData_v1` namespaces, and schema version 3 applies load-time sanitation and additive repair.
+3. **Partially mitigated in current checkout**: production and Studio use isolated `PlayerData_v1` namespaces, and schema version 4 applies load-time sanitation and additive repair for energy and tool durability.
    - **Remaining work**: add a formal numbered migration registry before any incompatible schema change.
 
 ### P2 (Medium)
@@ -66,7 +66,7 @@
 ## Persistence Audit
 
 ### PlayerDataService
-- **Schema**: Uses the versioned `PlayerData_v1` production namespace and isolated `PlayerData_Studio_v1` namespace with schema version 3, including sanitized marketplace transaction markers.
+- **Schema**: Uses the versioned `PlayerData_v1` production namespace and isolated `PlayerData_Studio_v1` namespace with schema version 4, including sanitized energy, tool durability, and marketplace transaction markers.
 - **Versioning**: Additive schema repair and load-time sanitation are active; a formal numbered migration registry remains future work.
 - **Concurrency**: Per-player save locks, cloned snapshots, retries, and synchronous settlement guards are active.
 - **Error Handling**: Saves use `pcall` with bounded retry/backoff; callers receive failure instead of acknowledging an unsafe transaction.
