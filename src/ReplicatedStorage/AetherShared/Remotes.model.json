@@ -238,6 +238,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "GetAchievements",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "ClaimReward",
                          "className":  "RemoteEvent"
                      },

@@ -22,18 +22,18 @@ function AchievementService.Initialize()
             if not AchievementUnlocked then
                 return
             end
-            local all = AchievementService.GetAllAchievements()
-            local list = {}
-            for _, a in pairs(all) do
-                table.insert(list, {
-                    Id = a.Id,
-                    Title = a.Title,
-                    Description = a.Description,
-                    Progress = AchievementService.GetAchievementProgress(player, a.Id),
-                })
-            end
-            AchievementUnlocked:FireClient(player, list)
+            AchievementUnlocked:FireClient(player, AchievementService.GetSnapshot(player))
         end)
+    end
+
+    local GetAchievements = Remotes:FindFirstChild("GetAchievements")
+    if GetAchievements then
+        GetAchievements.OnServerInvoke = function(player)
+            if not RateLimiter.Check(player, "GetAchievements", 0.5) then
+                return {}
+            end
+            return AchievementService.GetSnapshot(player)
+        end
     end
 
     print("[AchievementService] Initialized")
@@ -80,6 +80,33 @@ end
 
 function AchievementService.GetAllAchievements()
     return AchievementsData.GetAllAchievements()
+end
+
+function AchievementService.GetSnapshot(player)
+    local list = {}
+    for _, achievement in pairs(AchievementService.GetAllAchievements()) do
+        local reward = achievement.Reward or {}
+        table.insert(list, {
+            Id = achievement.Id,
+            Title = achievement.Title,
+            Description = achievement.Description,
+            Category = achievement.Category,
+            Tier = achievement.Tier,
+            Progress = AchievementService.GetAchievementProgress(player, achievement.Id),
+            Reward = {
+                Currency = type(reward.Currency) == "number" and reward.Currency or 0,
+                XP = type(reward.XP) == "number" and reward.XP or 0,
+                Item = type(reward.Item) == "string" and reward.Item or nil,
+            },
+        })
+    end
+    table.sort(list, function(a, b)
+        if a.Progress == b.Progress then
+            return a.Title < b.Title
+        end
+        return a.Progress > b.Progress
+    end)
+    return list
 end
 
 return AchievementService
