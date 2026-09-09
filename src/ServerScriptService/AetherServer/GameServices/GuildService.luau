@@ -7,6 +7,17 @@ local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServi
 
 GuildService.Guilds = {}
 GuildService.GuildIdCounter = 1
+GuildService.PendingInvites = {}
+GuildService.InviteLifetimeSeconds = 600
+
+function GuildService.PruneExpiredInvites()
+    local now = os.time()
+    for userId, invite in pairs(GuildService.PendingInvites) do
+        if type(invite) ~= "table" or type(invite.ExpiresAt) ~= "number" or invite.ExpiresAt <= now then
+            GuildService.PendingInvites[userId] = nil
+        end
+    end
+end
 
 function GuildService.LoadGuilds()
     local success, guilds = pcall(function()
@@ -101,7 +112,12 @@ function GuildService.Initialize()
     local InviteToGuild = Remotes:FindFirstChild("InviteToGuild")
     if InviteToGuild then
         InviteToGuild.OnServerEvent:Connect(function(player, targetUserId)
-            if type(targetUserId) ~= "number" then
+            if
+                type(targetUserId) ~= "number"
+                or targetUserId ~= targetUserId
+                or targetUserId < 1
+                or targetUserId ~= math.floor(targetUserId)
+            then
                 return
             end
             if not RateLimiter.Check(player, "InviteToGuild", 2) then
@@ -199,6 +215,10 @@ function GuildService.CreateGuild(player, guildName, description)
 end
 
 function GuildService.InvitePlayer(player, targetPlayer)
+    GuildService.PruneExpiredInvites()
+    if player == targetPlayer then
+        return false, "You cannot invite yourself"
+    end
     local data = PlayerDataService.GetData(player)
     if not data or not data.GuildId then
         return false, "Not in a guild"
@@ -215,9 +235,20 @@ function GuildService.InvitePlayer(player, targetPlayer)
 
     -- Check if target is already in a guild
     local targetData = PlayerDataService.GetData(targetPlayer)
+    if not targetData then
+        return false, "Player data not found"
+    end
     if targetData and targetData.GuildId then
         return false, "Player already in a guild"
     end
+
+    -- Store the invite server-side. The client notification is only a view of
+    -- this record; a forged JoinGuild event cannot bypass the invite check.
+    GuildService.PendingInvites[targetPlayer.UserId] = {
+        GuildId = data.GuildId,
+        InvitedBy = player.UserId,
+        ExpiresAt = os.time() + GuildService.InviteLifetimeSeconds,
+    }
 
     -- Send invite
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
@@ -233,12 +264,24 @@ function GuildService.InvitePlayer(player, targetPlayer)
 end
 
 function GuildService.JoinGuild(player, guildId)
+    GuildService.PruneExpiredInvites()
     local data = PlayerDataService.GetData(player)
     if not data then
         return false, "Player data not found"
     end
     if data and data.GuildId then
         return false, "Already in a guild"
+    end
+
+    local invite = GuildService.PendingInvites[player.UserId]
+    if
+        type(invite) ~= "table"
+        or invite.GuildId ~= guildId
+        or type(invite.ExpiresAt) ~= "number"
+        or invite.ExpiresAt <= os.time()
+    then
+        GuildService.PendingInvites[player.UserId] = nil
+        return false, "You need a current guild invite"
     end
 
     local guild = GuildService.Guilds[guildId]
@@ -260,6 +303,7 @@ function GuildService.JoinGuild(player, guildId)
         data.GuildId = guildId
         data.GuildRank = "Member"
     end
+    GuildService.PendingInvites[player.UserId] = nil
 
     -- Notify guild members
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
@@ -276,6 +320,8 @@ function GuildService.JoinGuild(player, guildId)
 end
 
 function GuildService.LeaveGuild(player)
+    GuildService.PruneExpiredInvites()
+    GuildService.PendingInvites[player.UserId] = nil
     local data = PlayerDataService.GetData(player)
     if not data or not data.GuildId then
         return false, "Not in a guild"

@@ -116,7 +116,7 @@ local function ensureControls(): Frame
 
     makeTextBox(controls, "GuildNameInput", UDim2.new(0, 0, 0, 0), UDim2.new(0.24, -4, 0.46, 0), "Guild name")
     makeButton(controls, "CreateGuildButton", UDim2.new(0.25, 0, 0, 0), UDim2.new(0.2, -4, 0.46, 0), "CREATE")
-    makeTextBox(controls, "GuildIdInput", UDim2.new(0.46, 0, 0, 0), UDim2.new(0.24, -4, 0.46, 0), "Guild ID")
+    makeTextBox(controls, "GuildIdInput", UDim2.new(0.46, 0, 0, 0), UDim2.new(0.24, -4, 0.46, 0), "Guild invite ID")
     makeButton(controls, "JoinGuildButton", UDim2.new(0.71, 0, 0, 0), UDim2.new(0.2, 0, 0.46, 0), "JOIN")
     makeTextBox(
         controls,
