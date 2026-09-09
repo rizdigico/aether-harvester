@@ -242,6 +242,10 @@
                          "className":  "RemoteFunction"
                      },
                      {
+                         "name":  "GetBattlePass",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "ClaimReward",
                          "className":  "RemoteEvent"
                      },

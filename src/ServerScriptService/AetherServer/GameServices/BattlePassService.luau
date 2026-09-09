@@ -73,13 +73,30 @@ function BattlePassService.Initialize()
         end)
     end
 
+    local GetBattlePass = Remotes:FindFirstChild("GetBattlePass")
+    if GetBattlePass then
+        GetBattlePass.OnServerInvoke = function(player)
+            if not RateLimiter.Check(player, "GetBattlePass", 0.5) then
+                return {}
+            end
+            return BattlePassService.GetSnapshot(player)
+        end
+    end
+
     print("[BattlePassService] Initialized")
 end
 
 function BattlePassService.AddXP(player, amount)
     local data = PlayerDataService.GetData(player)
     local currentSeason = BattlePassService:GetCurrentSeason()
-    if not data or not currentSeason or type(amount) ~= "number" or amount <= 0 then
+    if
+        not data
+        or not currentSeason
+        or type(amount) ~= "number"
+        or amount ~= amount
+        or amount <= 0
+        or amount > 1000000
+    then
         return false
     end
 
@@ -206,6 +223,58 @@ function BattlePassService.GetXP(player)
         return 0
     end
     return data.BattlePassXP or 0
+end
+
+function BattlePassService.GetSnapshot(player)
+    local data = PlayerDataService.GetData(player)
+    local season = BattlePassService:GetCurrentSeason()
+    if not data or not season then
+        return {}
+    end
+
+    local function safeReward(reward)
+        if type(reward) ~= "table" then
+            return {}
+        end
+        local items = {}
+        if type(reward.Items) == "table" then
+            for _, itemId in ipairs(reward.Items) do
+                if type(itemId) == "string" then
+                    table.insert(items, itemId)
+                end
+            end
+        end
+        return {
+            AetherShards = type(reward.AetherShards) == "number" and reward.AetherShards or 0,
+            XP = type(reward.XP) == "number" and reward.XP or 0,
+            Items = items,
+            Special = type(reward.Special) == "string" and reward.Special or nil,
+        }
+    end
+
+    local rewards = {}
+    for level = 1, season.Levels do
+        if season.FreeRewards[level] or season.PremiumRewards[level] then
+            table.insert(rewards, {
+                Level = level,
+                Free = safeReward(season.FreeRewards[level]),
+                Premium = safeReward(season.PremiumRewards[level]),
+            })
+        end
+    end
+
+    return {
+        Id = season.Id,
+        Name = season.Name,
+        Level = math.clamp(math.floor(tonumber(data.BattlePassLevel) or 1), 1, season.Levels),
+        XP = math.max(0, tonumber(data.BattlePassXP) or 0),
+        XPRequired = BattlePassService.CalculateXPRequired(
+            math.clamp(math.floor(tonumber(data.BattlePassLevel) or 1), 1, season.Levels)
+        ),
+        Levels = season.Levels,
+        Premium = data.BattlePassPremium == true,
+        Rewards = rewards,
+    }
 end
 
 function BattlePassService.PurchasePremium(player)
