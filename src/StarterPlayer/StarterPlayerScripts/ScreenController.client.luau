@@ -71,6 +71,9 @@ function ScreenController:PopulateInventory(activeTab)
     end)
 
     local empty = content:FindFirstChild("EmptyState")
+    if empty and empty:IsA("TextLabel") then
+        empty.Text = "Your inventory is empty"
+    end
     if #entries == 0 then
         if empty then
             empty.Visible = true
@@ -84,11 +87,11 @@ function ScreenController:PopulateInventory(activeTab)
         return
     end
 
-    for _, entry in ipairs(entries) do
+    for index, entry in ipairs(entries) do
         local item = template:Clone()
         item.Name = "Item_" .. entry.Id
         item.Visible = true
-        item.LayoutOrder = _
+        item.LayoutOrder = index
 
         local name = item:FindFirstChild("ItemName")
         local count = item:FindFirstChild("ItemCount")
