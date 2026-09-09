@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "generated_art_is_reference_until_verified": true,
+    "roblox_import_required_before_release": true,
+    "overwrite_existing_assets": false,
+    "allowed_generation_source": "imagegen",
+    "godot_engine": "4.7.2"
+  },
+  "assets": [
+    {
+      "id": "aether_node_concept_v1",
+      "kind": "concept_reference",
+      "path": "assets/concepts/aether_node_concept_v1.png",
+      "source_tool": "imagegen",
+      "source_prompt_summary": "Original faceted cyan/violet floating aether crystal harvest node on a dark stone plinth; clean orthographic three-quarter view; no text, logo, watermark, character, or UI.",
+      "dimensions_px": [2048, 2048],
+      "license": "project_owned_generated_reference",
+      "status": "reference_selected",
+      "roblox_import_status": "not_applicable_reference_only",
+      "approved_for_release": false
+    },
+    {
+      "id": "aether_node_godot_v1",
+      "kind": "intermediate_model",
+      "path": "assets/godot-content-lab/exports/AetherNode_Godot_v1.glb",
+      "derived_from": ["aether_node_concept_v1"],
+      "source_tool": "godot_local",
+      "source_scene": "assets/godot-content-lab/ContentLab.tscn",
+      "source_script": "assets/godot-content-lab/export_aether_node.gd",
+      "format": "glb",
+      "file_bytes": 25992,
+      "scene_nodes": 8,
+      "meshes": 7,
+      "primitives": 7,
+      "triangles": 576,
+      "materials": 4,
+      "status": "godot_export_verified",
+      "roblox_import_status": "not_run",
+      "required_next_checks": ["studs_scale", "pivot", "collision", "materials", "streaming", "runtime_placement"],
+      "approved_for_release": false
+    }
+  ]
+}
