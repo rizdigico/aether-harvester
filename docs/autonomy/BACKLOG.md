@@ -1,5 +1,10 @@
 # BACKLOG — Aether Harvester Full Reforge (master prompt §35)
 
+> **Status note (2026-09-10):** This is the original generated recovery backlog.
+> It is not an authoritative live status list; many rows remain `TODO` because
+> the list was not rewritten after the reforge. See [`CURRENT_STATUS.md`](CURRENT_STATUS.md)
+> for verified current source/build state and genuine remaining release gates.
+
 Generated from the master prompt. Initiative -> Epic -> Task. Every task has: ID, title, description, priority (P0-P4), dependencies, owner, files, acceptance, status.
 
 | ID | Priority | Initiative / Epic | Task | Status |

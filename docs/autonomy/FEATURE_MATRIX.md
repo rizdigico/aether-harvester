@@ -1,5 +1,11 @@
 # FEATURE MATRIX
 
+> **Current-status note (2026-09-10):** This matrix is the original recovery
+> baseline. Its historical “MISSING/NOT BUILT” and “repo has only…” statements
+> describe the repository before the reforge and are retained for audit traceability.
+> For the actual current implementation and verification evidence, use
+> [`CURRENT_STATUS.md`](CURRENT_STATUS.md) and the repository README.
+
 ## 1. Product Intent Summary
 
 **Fantasy:** The player is an aether harvester in **Aethros**, a stratified sky-world of floating islands suspended in an endless cerulean void. Height is biome — ascending reveals starlit observatories and astral phenomena; descending plunges into ocean trenches and abyssal depths. The tone is exploration-forward, with a soft neon-aether visual identity (teal, amber, deep indigo).

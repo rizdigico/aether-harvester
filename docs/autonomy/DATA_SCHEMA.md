@@ -1,5 +1,12 @@
 # DATA SCHEMA
 
+> **Current-status note (2026-09-10):** The original schema below is a v1
+> recovery snapshot. The live implementation now uses schema version 2,
+> sanitizes loaded profiles, keeps Studio data in `PlayerData_Studio_v1`, and
+> uses per-player save locking plus cloned save snapshots. See
+> `GameServices/PlayerDataService.luau` and [`CURRENT_STATUS.md`](CURRENT_STATUS.md)
+> for the current evidence.
+
 ## PlayerDataService Schema
 
 ### Player Data Structure
@@ -18,7 +25,7 @@
         [itemId: string]: number
     },
     PetInventory: {
-        [petId: string]: {
+        [index: number]: {
             InstanceId: number,
             PetId: string,
             Level: number,
@@ -37,15 +44,10 @@
     },
     Quests: {
         [questId: string]: {
-            Title: string,
-            Description: string,
-            Progress: number,
-            Rewards: {
-                Currency: number,
-                Items: {
-                    [itemId: string]: number
-                }
-            }
+            Status: "Active" | "Completed" | "Abandoned",
+            Progress: { [objectiveIndex: number]: number } | nil,
+            AcceptedAt: number | nil,
+            CompletedAt: number | nil
         }
     },
     Achievements: {
@@ -64,17 +66,45 @@
         GraphicsQuality: number
     },
     PrestigeLevel: number,
-    GuildId: string | nil
+    GuildId: string | nil,
+    GuildRank: string | nil,
+    Cosmetics: { [index: number]: string },
+    EquippedCosmetic: string | nil,
+    Entitlements: { [key: string]: boolean },
+    ProcessedReceipts: { [purchaseId: string]: number },
+    Boosts: {
+        [boostId: string]: { ExpiresAt: number, Multiplier: number }
+    },
+    Mailbox: {
+        [index: number]: {
+            Id: string,
+            From: string,
+            FromId: number,
+            Subject: string,
+            Message: string,
+            SentAt: number,
+            Read: boolean,
+            Attachments: { [index: number]: any }
+        }
+    },
+    BattlePassLevel: number,
+    BattlePassXP: number,
+    BattlePassPremium: boolean,
+    SchemaVersion: number
 }
 ```
 
-### Migration Gaps
-- **No Versioning**: Uses `PlayerData_v1` without versioning or migration support.
-- **No Schema Evolution**: Direct overwrites on save can corrupt data during schema changes.
-- **No Data Validation**: No checks for invalid or corrupted data during load.
-- **No Concurrency Control**: Race conditions possible during player disconnection.
+### Historical migration gaps
 
-### Recommended Fixes
+The following bullets describe the pre-reforge implementation and are retained
+to explain why this document is versioned as a recovery snapshot:
+
+- No versioning or migration support.
+- Direct overwrites during schema changes.
+- No load-time validation.
+- No concurrency control during player disconnection.
+
+### Historical recommended fixes
 1. **Add Versioning**: Implement versioning with migration support for future schema changes.
 2. **Add Data Validation**: Validate data structure during load and save.
 3. **Implement Transactional Saves**: Use transactional saves to prevent race conditions.
