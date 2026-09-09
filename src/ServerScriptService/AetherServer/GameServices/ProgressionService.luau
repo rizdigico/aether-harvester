@@ -1,5 +1,6 @@
 local ProgressionService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local PrestigeMath = require(game.ReplicatedStorage.AetherShared.Modules.PrestigeMath)
 
 -- Cross-cutting progression systems are wired by ServerMain after all modules
 -- load. This keeps the data layer independent and avoids require cycles.
@@ -21,7 +22,8 @@ local function applyXP(player, amount)
         return false
     end
 
-    data.XP = (data.XP or 0) + math.floor(amount)
+    local prestigeMultiplier = PrestigeMath.GetXPMultiplier(data.PrestigeLevel)
+    data.XP = (data.XP or 0) + math.floor(amount * prestigeMultiplier)
 
     -- Check for level up
     local currentLevel = data.Level or 1

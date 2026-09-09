@@ -368,6 +368,18 @@
                      {
                          "name":  "GetEntitlements",
                          "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "RequestPrestige",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PrestigeCompleted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GetPrestige",
+                         "className":  "RemoteFunction"
                      }
                  ]
 }

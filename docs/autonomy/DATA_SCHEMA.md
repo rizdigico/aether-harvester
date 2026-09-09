@@ -42,6 +42,7 @@
     Skills: {
         [skillId: string]: number
     },
+    SkillPoints: number,
     Quests: {
         [questId: string]: {
             Status: "Active" | "Completed" | "Abandoned",

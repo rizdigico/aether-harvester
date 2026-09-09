@@ -9,7 +9,7 @@
 
 Aether Harvester should ship as a polished, exploration-first resource and creature-collection experience, not as a generic clicker and not as a gambling loop. Its durable engagement should come from meaningful choices, readable progression, social cooperation, discovery, seasonal goals, and player expression. Monetization should sell identity, convenience, optional social/private-server value, and content support without selling victory or making core play unpleasant.
 
-The project has a substantial server-authoritative foundation: harvesting, player data, quests, pets, upgrades, travel, crafting, rewards, trading, guild, events, mail, analytics, anti-cheat, cosmetics, battle-pass, marketplace, and leaderboard modules are present. Presence of a module is not proof that its runtime path is complete. The next work therefore prioritizes wiring, adversarial verification, player-facing feedback, and a playable vertical slice before breadth expansion.
+The project has a substantial server-authoritative foundation: harvesting, player data, quests, pets, upgrades, travel, crafting, rewards, trading, guild, events, mail, analytics, anti-cheat, cosmetics, battle-pass, prestige/ascension, marketplace, and leaderboard modules are present. Presence of a module is not proof that its runtime path is complete. The next work therefore prioritizes wiring, adversarial verification, player-facing feedback, and a playable vertical slice before breadth expansion.
 
 There is no honest basis for promising revenue or a specific Robux result. Roblox itself recommends improving retention, engagement, and monetization metrics before scaling acquisition, and those metrics must be measured from real players after staging. The roadmap treats monetization as an experiment with safety and compliance gates, not as a guaranteed business outcome.
 
@@ -22,7 +22,7 @@ The following observations were made from the current checkout and local toolcha
 | Repository | Git checkout on `reforge/full-autonomous-rebuild` | Correct source of truth located and preserved |
 | Main build | `rojo build` passed | Main place serializes successfully |
 | Test build | `rojo build test.project.json` passed | Test place serializes successfully |
-| Pure logic | 40 passed, 0 failed via Lune | PureMath, QuestProgress, and DailyRewardProgress coverage exists |
+| Pure logic | 49 passed, 0 failed via Lune | PureMath, QuestProgress, DailyRewardProgress, and PrestigeMath coverage exists |
 | Formatting | `stylua --check src tests` passed | Formatting is currently clean |
 | Lint | `selene src tests` passed: 0 errors, 0 warnings, 0 parse errors | Static-analysis gate is green for the current checkout |
 | Studio | A local Studio place and the Roblox bridge are available | Studio verification is possible, but must be rerun against this checkout |
@@ -242,3 +242,4 @@ The next executable slices are deliberately small and testable:
 7. Roblox Creator Hub, [Performance optimization](https://create.roblox.com/docs/performance-optimization) — frame rate, memory, join time, and server heartbeat considerations.
 8. Roblox Creator Hub, [Developer Exchange Program](https://create.roblox.com/docs/production/monetization/developer-exchange) — Earned Robux definitions and eligibility caveats.
 9. Roblox Creator Hub, [Creator Rewards](https://create.roblox.com/docs/creator-rewards) — current engagement/audience expansion program requirements.
+10. Godot Engine, [Complying with licenses](https://docs.godotengine.org/en/stable/about/complying_with_licenses.html) — MIT and third-party attribution requirements for shipped Godot-generated content.

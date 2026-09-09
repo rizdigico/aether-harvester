@@ -35,6 +35,7 @@ function ServerMain.Initialize()
     Services.LeaderboardService = require(game.ServerScriptService.AetherServer.GameServices.LeaderboardService)
     Services.ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
     Services.RewardService = require(game.ServerScriptService.AetherServer.GameServices.RewardService)
+    Services.PrestigeService = require(game.ServerScriptService.AetherServer.GameServices.PrestigeService)
 
     -- Wire cross-cutting XP listeners only after all modules have loaded.
     -- This preserves one-way module dependencies while keeping progression

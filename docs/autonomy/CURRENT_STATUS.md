@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 46 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 49 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include persistence hardening and the pet-care flow |
 
@@ -24,13 +24,21 @@ tree.
 The branch now includes server-authoritative harvesting, progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped chat, achievements, cosmetics, leaderboards, daily rewards, events,
-analytics, monetization boundaries, battle-pass progression, persistence
+analytics, monetization boundaries, battle-pass progression, prestige/ascension,
+persistence
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
 and the rebuilt screen/controller layer.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and
 exposes working Equip/Unequip/Feed controls.
+
+The prestige flow is server-authoritative and save-rollback-safe: level 100 is
+required, prestige is capped at 50, each completed prestige adds a permanent
+10% XP multiplier, pets/cosmetics/achievements/gems/guild state are retained,
+and level/skills/upgrades/inventory/soft currency/temporary boosts reset. The
+client surface reads the snapshot through `GetPrestige` and can request the
+transition through `RequestPrestige`.
 
 ## Local MCP evidence
 
@@ -50,7 +58,7 @@ exposes working Equip/Unequip/Feed controls.
 - Roblox Studio, Rojo 7.7.0, and Wally 0.3.2 are detected.
 - The Aesther Harvest Studio window is visible locally.
 - Project inspection passes for `default.project.json` and `src`.
-- Current MCP build output: `artifacts/mcp-final-pushed.rbxlx`.
+- Current MCP build output: `artifacts/prestige-slice.rbxlx`.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline
@@ -73,4 +81,20 @@ These are genuine external or human gates, not silently marked complete:
    approval.
 
 No claim of live production publishing, live player revenue, or guaranteed
-   monetization is made by this repository.
+monetization is made by this repository.
+
+## Refreshed external policy evidence
+
+- Roblox developer products must be created on a published, accessible
+  experience and granted through server-side `ProcessReceipt`; the client
+  purchase-finished event is not proof of payment. See the [official Developer
+  Products documentation](https://create.roblox.com/docs/production/monetization/developer-products).
+- Roblox treats paid eggs/chests/wheels and paid luck or pity modifiers as paid
+  random items. Such features require outcome/odds disclosure and per-user
+  `PolicyService` handling, so they remain excluded from the first release. See
+  the [official paid random items policy](https://create.roblox.com/docs/production/monetization/paid-random-items).
+- DevEx and Creator Rewards describe eligibility and payout programs, not a
+  revenue guarantee. See [DevEx](https://create.roblox.com/docs/production/monetization/developer-exchange)
+  and [Creator Rewards](https://create.roblox.com/docs/creator-rewards).
+- Godot content shipped with the project must retain appropriate MIT/third-party
+  attribution. See Godot’s [license compliance guidance](https://docs.godotengine.org/en/stable/about/complying_with_licenses.html).
