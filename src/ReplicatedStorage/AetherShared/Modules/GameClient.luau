@@ -150,17 +150,14 @@ end
 function GameClient:OnNodeHarvested(nodeId, rewards)
     print("[GameClient] Node harvested: " .. nodeId)
 
-    -- Apply rewards to local state so HUD refreshes
-    if rewards then
+    -- The server is authoritative. The event itself is server-originated, so
+    -- mirroring the item stack locally is safe for immediate inventory UX, but
+    -- never convert a resource into wallet currency or mutate a wallet that
+    -- the server did not grant.
+    self.State.Inventory = self.State.Inventory or {}
+    if type(rewards) == "table" then
         for itemId, amount in pairs(rewards) do
-            if itemId == "aether_shard" then
-                self.State.Currency = self.State.Currency or {}
-                self.State.Currency.AetherShards = (self.State.Currency.AetherShards or 0) + amount
-            elseif itemId == "crystal_fragment" then
-                self.State.Currency = self.State.Currency or {}
-                self.State.Currency.CrystalFragments = (self.State.Currency.CrystalFragments or 0) + amount
-            else
-                self.State.Inventory = self.State.Inventory or {}
+            if type(itemId) == "string" and type(amount) == "number" and amount > 0 then
                 self.State.Inventory[itemId] = (self.State.Inventory[itemId] or 0) + amount
             end
         end
@@ -169,8 +166,8 @@ function GameClient:OnNodeHarvested(nodeId, rewards)
     -- Show rewards popup
     local rewardText = "Harvested: "
     local items = {}
-    for itemId, amount in pairs(rewards) do
-        table.insert(items, itemId .. " x" .. amount)
+    for itemId, amount in pairs(rewards or {}) do
+        table.insert(items, tostring(itemId) .. " x" .. tostring(amount))
     end
     rewardText = rewardText .. table.concat(items, ", ")
 

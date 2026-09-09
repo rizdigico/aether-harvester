@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-
 local player = Players.LocalPlayer
 local playerGui = player.PlayerGui
 
@@ -25,7 +24,7 @@ for _, name in ipairs({
 end
 
 -- Animation tweens
-local TweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+local BAR_TWEEN_INFO = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
 local HUDController = {}
 
@@ -62,6 +61,13 @@ function HUDController:ConnectEvents()
                 self:OnHUDUpdate(data)
             end)
         end
+
+        local ErrorRemote = Remotes:FindFirstChild("Error")
+        if ErrorRemote then
+            ErrorRemote.OnClientEvent:Connect(function(message)
+                self:ShowNotification(tostring(message), Color3.fromRGB(255, 120, 120))
+            end)
+        end
     end
 end
 
@@ -95,24 +101,44 @@ function HUDController:UpdateHUD()
 end
 
 function HUDController:OnHUDUpdate(data)
-    if data.Energy then
+    if type(data) ~= "table" then
+        return
+    end
+
+    if type(data.XP) == "number" then
+        GameClient.State.XP = data.XP
+    end
+
+    if type(data.Energy) == "number" then
+        GameClient.State.Energy = data.Energy
+        GameClient.State.MaxEnergy = data.MaxEnergy or GameClient.State.MaxEnergy
         self:UpdateBar(Elements.EnergyBar, data.Energy, data.MaxEnergy or 100)
     end
 
-    if data.Health then
+    if type(data.Health) == "number" then
+        GameClient.State.Health = data.Health
+        GameClient.State.MaxHealth = data.MaxHealth or GameClient.State.MaxHealth
         self:UpdateBar(Elements.HealthBar, data.Health, data.MaxHealth or 100)
     end
 
-    if data.Level then
-        Elements.LevelDisplay.Text = "Lv. " .. data.Level
+    if type(data.Level) == "number" then
+        GameClient.State.Level = data.Level
+        if Elements.LevelDisplay then
+            Elements.LevelDisplay.Text = "Lv. " .. data.Level
+        end
     end
 
     if data.Currency then
-        Elements.CurrencyDisplay.Text = "Shards: " .. (data.Currency.AetherShards or 0)
+        GameClient.State.Currency = data.Currency
+        if Elements.CurrencyDisplay then
+            Elements.CurrencyDisplay.Text = "Shards: " .. (data.Currency.AetherShards or 0)
+        end
     end
 
     if data.Quest then
-        Elements.QuestTracker.Text = data.Quest.Title or "No active quest"
+        if Elements.QuestTracker then
+            Elements.QuestTracker.Text = data.Quest.Title or "No active quest"
+        end
     end
 end
 
@@ -121,10 +147,18 @@ function HUDController:UpdateBar(bar, current, max)
         return
     end
 
+    if type(current) ~= "number" or type(max) ~= "number" or max <= 0 then
+        return
+    end
+
     local fill = bar:FindFirstChild("Fill")
     if fill then
         local percentage = math.clamp(current / max, 0, 1)
-        fill.Size = UDim2.new(percentage, 0, 1, 0)
+        local previousPercentage = fill:GetAttribute("TargetPercentage")
+        if type(previousPercentage) ~= "number" or math.abs(previousPercentage - percentage) > 0.001 then
+            fill:SetAttribute("TargetPercentage", percentage)
+            TweenService:Create(fill, BAR_TWEEN_INFO, { Size = UDim2.new(percentage, 0, 1, 0) }):Play()
+        end
 
         -- Color based on percentage
         if percentage > 0.5 then
@@ -139,7 +173,7 @@ end
 
 function HUDController:ShowNotification(text, color)
     if Elements.NotificationArea then
-        local Notification = Elements.NotificationArea.Notification
+        local Notification = Elements.NotificationArea:FindFirstChild("Notification")
         if Notification then
             Notification.Text = text
             if color then
