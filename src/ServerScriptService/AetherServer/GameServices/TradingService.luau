@@ -1,6 +1,7 @@
 local TradingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 TradingService.ActiveTrades = {}
 TradingService.TradeIdCounter = 0
@@ -56,6 +57,7 @@ function TradingService.Initialize()
             if not RateLimiter.Check(player, "CreateTrade", 2) then
                 return
             end
+            AntiCheatService:CheckPlayer(player)
             TradingService.CreateTrade(player, offerItems, requestItems)
         end)
     end
@@ -67,6 +69,10 @@ function TradingService.Initialize()
             if type(tradeId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "AcceptTrade", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = TradingService.AcceptTrade(player, tradeId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -84,6 +90,10 @@ function TradingService.Initialize()
             if type(tradeId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "CancelTrade", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             TradingService.CancelTrade(player, tradeId)
         end)
     end

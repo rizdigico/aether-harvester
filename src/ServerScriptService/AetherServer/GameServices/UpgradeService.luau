@@ -1,6 +1,7 @@
 local UpgradeService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local UpgradeMath = require(game.ReplicatedStorage.AetherShared.Modules.UpgradeMath)
 
 UpgradeService.Database = {
@@ -85,6 +86,7 @@ function UpgradeService.Initialize()
             if not RateLimiter.Check(player, "PurchaseUpgrade", 1) then
                 return
             end
+            AntiCheatService:CheckPlayer(player)
             local success, message = UpgradeService.PurchaseUpgrade(player, upgradeId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")

@@ -1,6 +1,7 @@
 local MarketplaceService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 MarketplaceService.Listings = {}
 MarketplaceService.ListingIdCounter = 1
@@ -32,6 +33,7 @@ function MarketplaceService.Initialize()
             if not RateLimiter.Check(player, "CreateListing", 2) then
                 return
             end
+            AntiCheatService:CheckPlayer(player)
             MarketplaceService.CreateListing(player, itemId, math.floor(amount), math.floor(price))
         end)
     end
@@ -43,6 +45,10 @@ function MarketplaceService.Initialize()
             if type(listingId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "CancelListing", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = MarketplaceService.CancelListing(player, listingId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -60,6 +66,10 @@ function MarketplaceService.Initialize()
             if type(listingId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "PurchaseListing", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = MarketplaceService.PurchaseListing(player, listingId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
