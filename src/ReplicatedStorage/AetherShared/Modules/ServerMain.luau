@@ -2,6 +2,7 @@
 -- Initializes all game services
 
 local ServerMain = {}
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 local Services = {}
 
@@ -45,18 +46,22 @@ function ServerMain.Initialize()
     game.Players.PlayerAdded:Connect(function(player)
         Services.PlayerDataService.OnPlayerAdded(player)
         Services.AchievementService.CheckAllAchievements(player)
+        Services.LeaderboardService.UpdateAll(player)
     end)
 
     -- Process players already in the game (Studio play mode, script reloads)
     for _, player in ipairs(game.Players:GetPlayers()) do
         Services.PlayerDataService.OnPlayerAdded(player)
         Services.AchievementService.CheckAllAchievements(player)
+        Services.LeaderboardService.UpdateAll(player)
     end
 
     -- Setup player leaving
     game.Players.PlayerRemoving:Connect(function(player)
         Services.MarketplaceService.OnPlayerRemoving(player)
         Services.PlayerDataService.OnPlayerRemoving(player)
+        Services.AntiCheatService.ClearViolations(player.UserId)
+        RateLimiter.Cleanup(player)
     end)
 
     print("[ServerMain] Server initialized successfully!")

@@ -8,6 +8,8 @@ LeaderboardService.Leaderboards = {
     ["Quests"] = {},
 }
 
+local CATEGORIES = { "Level", "Wealth", "Pets", "Quests" }
+
 function LeaderboardService.Initialize()
     print("[LeaderboardService] Initializing...")
 
@@ -19,7 +21,7 @@ function LeaderboardService.Initialize()
     -- GetLeaderboard: fetch top players for a category
     local GetLeaderboard = Remotes:FindFirstChild("GetLeaderboard")
     if GetLeaderboard then
-        GetLeaderboard.OnServerInvoke = function(player, category, count)
+        GetLeaderboard.OnServerInvoke = function(_player, category, count)
             if type(category) ~= "string" then
                 return {}
             end
@@ -41,6 +43,17 @@ function LeaderboardService.Initialize()
         end)
     end
 
+    -- Keep the in-server view current without refreshing on every mutation.
+    -- A later global OrderedDataStore adapter can consume the same snapshots.
+    task.spawn(function()
+        while true do
+            task.wait(30)
+            for _, player in ipairs(game.Players:GetPlayers()) do
+                LeaderboardService.UpdateAll(player)
+            end
+        end
+    end)
+
     print("[LeaderboardService] Initialized")
 end
 
@@ -56,9 +69,13 @@ function LeaderboardService.UpdateLeaderboard(player, category)
     elseif category == "Wealth" then
         value = data.Currency and (data.Currency.AetherShards or 0) or 0
     elseif category == "Pets" then
-        value = data.Pets and #data.Pets or 0
+        value = data.PetInventory and #data.PetInventory or 0
     elseif category == "Quests" then
-        value = data.Quests and #data.Quests or 0
+        if data.Quests then
+            for _ in pairs(data.Quests) do
+                value += 1
+            end
+        end
     end
 
     local leaderboard = LeaderboardService.Leaderboards[category]
@@ -92,13 +109,19 @@ function LeaderboardService.UpdateLeaderboard(player, category)
     end
 end
 
+function LeaderboardService.UpdateAll(player)
+    for _, category in ipairs(CATEGORIES) do
+        LeaderboardService.UpdateLeaderboard(player, category)
+    end
+end
+
 function LeaderboardService.GetTopPlayers(category, count)
     local leaderboard = LeaderboardService.Leaderboards[category]
     if not leaderboard then
         return {}
     end
 
-    count = count or 10
+    count = math.clamp(math.floor(count or 10), 1, 100)
     local topPlayers = {}
     for i = 1, math.min(count, #leaderboard) do
         table.insert(topPlayers, leaderboard[i])
