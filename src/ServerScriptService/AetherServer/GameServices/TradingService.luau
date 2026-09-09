@@ -290,6 +290,16 @@ function TradingService.AcceptTrade(player, tradeId)
         end
     end
 
+    -- Do not report success until both durable profiles contain the transfer.
+    -- If either write fails, reverse every item mutation before releasing the
+    -- trade so a retry cannot create or destroy inventory.
+    if not PlayerDataService.SaveNow(offerer) or not PlayerDataService.SaveNow(player) then
+        rollback()
+        PlayerDataService.SaveNow(offerer)
+        PlayerDataService.SaveNow(player)
+        return false, "Trade could not be saved"
+    end
+
     trade.Status = "Accepted"
     trade.AcceptedBy = player.UserId
 
@@ -315,6 +325,10 @@ function TradingService.CancelTrade(player, tradeId)
         return false, "Not your trade"
     end
 
+    if trade.Status ~= "Pending" then
+        return false, "Trade already processed"
+    end
+
     trade.Status = "Cancelled"
     TradingService.ActiveTrades[tradeId] = nil
 
@@ -326,7 +340,7 @@ end
 function TradingService.CancelTradesForPlayer(player)
     local toCancel = {}
     for tradeId, trade in pairs(TradingService.ActiveTrades) do
-        if trade.PlayerId == player.UserId or trade.TargetPlayerId == player.UserId then
+        if trade.Status == "Pending" and (trade.PlayerId == player.UserId or trade.TargetPlayerId == player.UserId) then
             table.insert(toCancel, tradeId)
         end
     end

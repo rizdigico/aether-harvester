@@ -44,9 +44,9 @@
 ## Security Defects
 
 ### P0 (Critical)
-1. **Trade creation payload is still too broad** (TradingService.luau): `CreateTrade` rate-limits the request but should reject oversized maps and unknown item definitions before storing the offer.
+1. **Mitigated in current checkout**: `CreateTrade` rejects empty/oversized maps, unknown item definitions, malformed quantities, and offerings the player does not own; `AcceptTrade` revalidates both sides and saves both profiles before success. Cross-server trade journaling remains future work.
 2. **No central save queue** (PlayerDataService.luau): retries/backoff exist, but the periodic auto-save fan-out is not yet centrally rate-limited.
-3. **Marketplace listings are not durable** (MarketplaceService.luau): self-purchases and offline-seller payout loss are blocked, but listings/escrow are still server-memory only.
+3. **Mitigated in current checkout**: marketplace listings and escrow state are durable with bounded records, UpdateAsync claims, expiry recovery, and per-profile settlement markers. Cross-server settlement remains intentionally disabled.
 
 ### P1 (High)
 1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager rejects harvests beyond its server-side distance threshold.

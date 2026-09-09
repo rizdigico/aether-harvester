@@ -17,17 +17,17 @@
 ## Found Defects
 
 ### P0 (Critical)
-1. **Missing Validation in TradingService** (TradingService.luau:17): No validation for item ownership or quantity in `CreateTrade`. Clients can send arbitrary item IDs and amounts.
-   - **Impact**: Arbitrary item creation and trading.
-   - **Fix**: Validate item ownership and quantity before processing trades.
+1. **Mitigated in current checkout**: TradingService bounds item maps, validates item definitions and ownership on both sides, rolls back partial moves, and saves both profiles before success. Durable cross-server trade journaling remains future work.
+   - **Impact**: Session-only trades cannot be resumed after a server crash.
+   - **Fix**: Add a durable trade journal and idempotent retry path before cross-server trading.
 
 2. **Save scheduling still needs a bounded queue** (PlayerDataService.luau): retries/backoff exist, but the periodic auto-save fan-out is not yet centrally rate-limited.
    - **Impact**: DataStore throttling or service disruption.
    - **Fix**: Implement rate limiting with exponential backoff.
 
-3. **Marketplace durability remains incomplete** (MarketplaceService.luau): self-purchases are rejected and seller disconnects are handled, but listings are still server-memory only until persistent escrow is implemented.
-   - **Impact**: Self-trading and potential currency exploits.
-   - **Fix**: Add ownership check to prevent buying own listings.
+3. **Mitigated in current checkout**: Marketplace listings and escrow state use a dedicated DataStore, UpdateAsync claims, processing expiry, and per-profile settlement markers. Cross-server settlement is intentionally not enabled.
+   - **Impact**: A listing cannot be purchased while its seller profile is not loaded in the same server.
+   - **Fix**: Add a cross-server settlement bus only after its profile-lock and idempotency design is verified.
 
 ### P1 (High)
 1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager validates player proximity to the target node.
@@ -70,11 +70,11 @@
 ## Persistence Audit
 
 ### PlayerDataService
-- **Schema**: Uses `PlayerData_v1` DataStore with nested tables for currency, inventory, pets, and stats.
-- **Versioning**: **No versioning** or migration support. Direct overwrites on save.
-- **Concurrency**: **No transactional saves**; race conditions possible during player disconnection.
-- **Error Handling**: Uses `pcall` for saves but lacks retry logic or fallback.
-- **Verdict**: **No versioning, no migrations, no concurrency control**
+- **Schema**: Uses the versioned `PlayerData_v1` production namespace and isolated `PlayerData_Studio_v1` namespace with schema version 3, including sanitized marketplace transaction markers.
+- **Versioning**: Additive schema repair and load-time sanitation are active; a formal numbered migration registry remains future work.
+- **Concurrency**: Per-player save locks, cloned snapshots, retries, and synchronous settlement guards are active.
+- **Error Handling**: Saves use `pcall` with bounded retry/backoff; callers receive failure instead of acknowledging an unsafe transaction.
+- **Verdict**: Hardened for the current same-server model; cross-profile and cross-server transactions still require a dedicated journal/bus.
 
 ## Recommended Hardening Priorities
 

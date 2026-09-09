@@ -17,7 +17,7 @@ tree.
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
 | Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 66 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, and upgrade effects |
+| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, and durable marketplace settlement |
 
 ## Implemented source surfaces
 
@@ -40,6 +40,9 @@ feed the server harvest yield and cooldown calculations. Marketplace listings
 now use a dedicated durable DataStore with bounded records, UpdateAsync-backed
 claims, expiring processing locks, saved escrow, same-server settlement, and a
 per-profile transaction journal for crash-safe retry of each side of a sale.
+Trade acceptance likewise validates both inventories, rolls back failed item
+moves, persists both profiles before reporting success, and only cancels
+pending offers on disconnect.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and
