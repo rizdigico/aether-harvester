@@ -21,9 +21,8 @@
    - **Impact**: Session-only trades cannot be resumed after a server crash.
    - **Fix**: Add a durable trade journal and idempotent retry path before cross-server trading.
 
-2. **Save scheduling still needs a bounded queue** (PlayerDataService.luau): retries/backoff exist, but the periodic auto-save fan-out is not yet centrally rate-limited.
-   - **Impact**: DataStore throttling or service disruption.
-   - **Fix**: Implement rate limiting with exponential backoff.
+2. **Mitigated in current checkout**: PlayerDataService snapshots active user IDs and saves sequentially with small spacing; per-user locks, retry/backoff, and removal-time stale-reference checks remain active.
+   - **Remaining work**: verify the policy under real DataStore throttling in a published staging experience.
 
 3. **Mitigated in current checkout**: Marketplace listings and escrow state use a dedicated DataStore, UpdateAsync claims, processing expiry, and per-profile settlement markers. Cross-server settlement is intentionally not enabled.
    - **Impact**: A listing cannot be purchased while its seller profile is not loaded in the same server.
@@ -33,18 +32,15 @@
 1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager validates player proximity to the target node.
    - **Remaining work**: add adversarial multi-client coverage for spoofed instances and teleport edge cases.
 
-2. **No Cooldown in UpgradeService** (UpgradeService.luau:65): `PurchaseUpgrade` lacks cooldown to prevent spam.
-   - **Impact**: Spam attacks on upgrade purchases.
-   - **Fix**: Implement cooldown logic for upgrade purchases.
+2. **Mitigated in current checkout**: `PurchaseUpgrade` is protected by the shared one-second remote rate limit and server-side cost/level validation.
+   - **Remaining work**: add adversarial multi-client coverage for retry and race behavior.
 
-3. **No Versioning in DataStore** (PlayerDataService.luau:3): Uses `PlayerData_v1` without versioning or migration support.
-   - **Impact**: Data corruption during schema changes.
-   - **Fix**: Implement versioning and migration support.
+3. **Partially mitigated in current checkout**: production and Studio use isolated `PlayerData_v1` namespaces, and schema version 3 applies load-time sanitation and additive repair.
+   - **Remaining work**: add a formal numbered migration registry before any incompatible schema change.
 
 ### P2 (Medium)
-1. **No Session Race Protection** (PlayerDataService.luau:113): `OnPlayerRemoving` lacks transactional save logic.
-   - **Impact**: Race conditions during player disconnection.
-   - **Fix**: Use transactional saves or optimistic concurrency.
+1. **Mitigated in current checkout**: `OnPlayerRemoving`, critical transactions, and autosave share per-player save locks and clone snapshots only after lock acquisition.
+   - **Remaining work**: exercise disconnect timing under real staging load.
 
 2. **Mitigated in current checkout**: currency and inventory mutations reject non-positive/non-integer/out-of-range amounts, and deductions require sufficient balance.
    - **Impact**: Negative currency balances and potential exploits.
@@ -78,15 +74,15 @@
 
 ## Recommended Hardening Priorities
 
-1. **Add Rate Limiting** to all DataStore operations and critical remotes (P0).
-2. **Implement Ownership Checks** for trades, guilds, and marketplace listings (P0).
+1. **Verify DataStore budget behavior** for all durable paths under published staging load (P0).
+2. **Extend adversarial ownership/race tests** for trades, guilds, and marketplace listings (P0).
 3. **Add Distance Validation** for node harvesting and island changes (P1).
 4. **Introduce DataStore Versioning** with migration support (P1).
 5. **Add Cooldowns** to critical actions like upgrades and trades (P1).
 6. **Enforce Positive Currency Balances** in all currency operations (P2).
 7. **Add Logging** for critical events and errors (P3).
 8. **Sanitize Inputs** for all remote events and functions (P3).
-9. **Implement Transactional Saves** for player data (P2).
+9. **Keep transactional save guards** on player data and economy operations (P2).
 10. **Add Input Validation** for all remote events and functions (P3).
 
 ---
