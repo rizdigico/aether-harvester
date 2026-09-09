@@ -14,6 +14,7 @@ local EventService = require(game.ServerScriptService.AetherServer.GameServices.
 local PetService = require(game.ServerScriptService.AetherServer.GameServices.PetService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
+local MonetizationService = require(game.ServerScriptService.AetherServer.GameServices.MonetizationService)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
@@ -102,13 +103,16 @@ function NodeManager.ProcessHarvest(player, node)
     local harvestPower = petBonuses and petBonuses.HarvestPower or 0
     local petMultiplier = 1 + harvestPower / 100
 
-    yieldAmount = math.floor(yieldAmount * boost * EventService.GetActiveYieldMultiplier() * petMultiplier)
+    local harvestComfortMultiplier = MonetizationService.GetHarvestMultiplier(player)
+    yieldAmount = math.floor(
+        yieldAmount * boost * harvestComfortMultiplier * EventService.GetActiveYieldMultiplier() * petMultiplier
+    )
 
     -- Grant resources
     PlayerDataService.AddItem(player, nodeType.ResourceId, yieldAmount)
 
     -- Grant XP
-    local xpGain = math.floor(nodeType.XP * boost)
+    local xpGain = math.floor(nodeType.XP * boost * harvestComfortMultiplier)
     ProgressionService.AddXP(player, xpGain)
 
     -- Track stats

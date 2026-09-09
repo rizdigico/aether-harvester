@@ -274,6 +274,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "MonetizationUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "PetSummon",
                          "className":  "RemoteEvent"
                      },
@@ -323,6 +327,14 @@
                      },
                      {
                          "name":  "GetLeaderboard",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetMonetizationCatalog",
+                         "className":  "RemoteFunction"
+                     },
+                     {
+                         "name":  "GetEntitlements",
                          "className":  "RemoteFunction"
                      }
                  ]

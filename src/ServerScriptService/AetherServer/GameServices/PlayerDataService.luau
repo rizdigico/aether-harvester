@@ -260,6 +260,16 @@ function PlayerDataService.GetItemCount(player, itemId)
     return (data.Inventory and data.Inventory[itemId]) or 0
 end
 
+-- Synchronous save hook for durable receipt grants and other critical writes.
+-- Callers must only acknowledge an external transaction after this returns true.
+function PlayerDataService.SaveNow(player)
+    local data = playerData[player.UserId]
+    if not data then
+        return false
+    end
+    return SaveProfile(player.UserId, data, 1)
+end
+
 local petIdCounter = 0
 
 function PlayerDataService.AddPet(player, petId)
