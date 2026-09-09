@@ -22,10 +22,6 @@
                          "className":  "RemoteEvent"
                      },
                      {
-                         "name":  "AddXP",
-                         "className":  "RemoteEvent"
-                     },
-                     {
                          "name":  "LevelUp",
                          "className":  "RemoteEvent"
                      },
@@ -287,6 +283,10 @@
                      },
                      {
                          "name":  "TameCreature",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "DamageCreature",
                          "className":  "RemoteEvent"
                      },
                      {

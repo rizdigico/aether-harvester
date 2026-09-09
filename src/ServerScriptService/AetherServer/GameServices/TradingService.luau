@@ -3,6 +3,36 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 TradingService.ActiveTrades = {}
+TradingService.TradeIdCounter = 0
+
+local MAX_TRADE_ENTRIES = 20
+local MAX_ITEM_AMOUNT = 9999
+
+function TradingService.ValidateItemMap(items)
+    if type(items) ~= "table" then
+        return false
+    end
+
+    local entries = 0
+    for itemId, amount in pairs(items) do
+        if type(itemId) ~= "string" or itemId == "" or type(amount) ~= "number" then
+            return false
+        end
+        if amount < 1 or amount > MAX_ITEM_AMOUNT or amount ~= math.floor(amount) then
+            return false
+        end
+        entries += 1
+        if entries > MAX_TRADE_ENTRIES then
+            return false
+        end
+    end
+
+    return true
+end
+
+local function cloneItemMap(items)
+    return table.clone(items)
+end
 
 function TradingService.Initialize()
     print("[TradingService] Initializing...")
@@ -16,7 +46,10 @@ function TradingService.Initialize()
     local CreateTrade = Remotes:FindFirstChild("CreateTrade")
     if CreateTrade then
         CreateTrade.OnServerEvent:Connect(function(player, offerItems, requestItems)
-            if type(offerItems) ~= "table" or type(requestItems) ~= "table" then
+            if not TradingService.ValidateItemMap(offerItems) or not TradingService.ValidateItemMap(requestItems) then
+                return
+            end
+            if next(offerItems) == nil and next(requestItems) == nil then
                 return
             end
             -- Rate limit: max one trade creation per 2 seconds per player
@@ -59,12 +92,20 @@ function TradingService.Initialize()
 end
 
 function TradingService.CreateTrade(player, offerItems, requestItems)
-    local tradeId = "TRADE_" .. player.UserId .. "_" .. os.time()
+    if not TradingService.ValidateItemMap(offerItems) or not TradingService.ValidateItemMap(requestItems) then
+        return nil, "Invalid trade payload"
+    end
+    if next(offerItems) == nil and next(requestItems) == nil then
+        return nil, "Trade must contain an item"
+    end
+
+    TradingService.TradeIdCounter += 1
+    local tradeId = "TRADE_" .. player.UserId .. "_" .. TradingService.TradeIdCounter
     local trade = {
         Id = tradeId,
         PlayerId = player.UserId,
-        OfferItems = offerItems,
-        RequestItems = requestItems,
+        OfferItems = cloneItemMap(offerItems),
+        RequestItems = cloneItemMap(requestItems),
         Status = "Pending",
         CreatedAt = os.time(),
     }
@@ -97,20 +138,9 @@ function TradingService.AcceptTrade(player, tradeId)
         return false, "Cannot accept your own trade"
     end
 
-    -- Validate item maps: { [itemId] = amount }
-    local function isValidMap(t)
-        if type(t) ~= "table" then
-            return false
-        end
-        for k, v in pairs(t) do
-            if type(k) ~= "string" or type(v) ~= "number" or v < 1 or v ~= math.floor(v) then
-                return false
-            end
-        end
-        return true
-    end
-
-    if not isValidMap(trade.OfferItems) or not isValidMap(trade.RequestItems) then
+    if
+        not TradingService.ValidateItemMap(trade.OfferItems) or not TradingService.ValidateItemMap(trade.RequestItems)
+    then
         return false, "Invalid trade payload"
     end
 

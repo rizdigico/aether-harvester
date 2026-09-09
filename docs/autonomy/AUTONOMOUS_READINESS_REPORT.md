@@ -9,7 +9,7 @@
 
 The development harness is operational. The local Roblox and Godot MCP plugins validate, the Roblox Studio MCP bridge is now resolving the installed Studio version dynamically, and a real Aesther Harvest Studio play session was started, inspected, screenshot-captured, and stopped through MCP.
 
-The game itself is not yet “100% ready for unattended production development.” The current branch has failing lint and typecheck gates, Studio DataStore access is disabled, and final visual/gameplay acceptance and production publishing remain separate gates. The correct readiness label is:
+The game itself is not yet “100% ready for unattended production development.” The current checkout has a passing lint gate but still has typecheck and runtime-acceptance work outstanding; Studio DataStore access is disabled, and final visual/gameplay acceptance and production publishing remain separate gates. The correct readiness label is:
 
 > **READY FOR AUTONOMOUS DEVELOPMENT IN A CONTROLLED STAGING LOOP — NOT READY FOR AUTOMATIC PRODUCTION PUBLISH.**
 
@@ -47,7 +47,7 @@ Aesther Harvest is a Rojo-managed, server-authoritative sky resource-management 
 The current build has a strong foundation: dynamic world generation, core harvesting, quest/progression flows, pets, upgrades, portals, UI screens, and server/client boot orchestration. The repository’s own recovery documents also identify incomplete or weak areas that must not be hidden by a passing boot:
 
 - trading item transfer is incomplete;
-- marketplace handling has offline-seller/economy risks;
+- marketplace persistence remains an economy-risk area even though offline-seller payout loss is now blocked;
 - anti-cheat is not fully integrated;
 - leaderboard updates are incomplete;
 - analytics are in-memory only;
@@ -63,7 +63,7 @@ These are development priorities, not reasons to discard the project.
 | Gate | Result | Meaning |
 |---|---:|---|
 | StyLua format check | PASS | Formatting is clean under the current CI exclusion. |
-| Selene lint | FAIL | Exit 1; 55 warnings, including unused imports/variables and generated UI warnings. |
+| Selene lint | PASS | Exit 0; 0 errors, 0 warnings, 0 parse errors on the current checkout. |
 | Lune unit tests | PASS | 33 passed, 0 failed. |
 | Rojo production build | PASS | Place file generated. |
 | Rojo test build | PASS | Test place generated. |
@@ -121,7 +121,7 @@ Roblox’s monetization documentation also requires correct receipt processing f
 3. Split or gate DataStore integration so local Edit-mode tests use deterministic mocks while a published staging experience tests real persistence.
 4. Add deterministic MCP smoke tests for harvesting, quest progression, pet equip/summon, travel, UI screens, and save/load in staging.
 5. Add multi-client/device-simulator coverage and a screenshot baseline workflow.
-6. Finish economy-critical systems before monetization: trading transfer, marketplace escrow/offline seller handling, anti-cheat integration, durable guild/leaderboard state, and receipt processing.
+6. Finish economy-critical systems before monetization: trade payload hardening, durable marketplace/guild/leaderboard state, anti-cheat integration, and receipt processing. Marketplace now blocks offline-seller purchases and returns escrow on disconnect, but listings remain in-memory until persistence is implemented.
 7. Only after those gates pass, prepare—not automatically execute—the production release checklist.
 
 ## Sources

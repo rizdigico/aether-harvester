@@ -55,6 +55,7 @@ function ServerMain.Initialize()
 
     -- Setup player leaving
     game.Players.PlayerRemoving:Connect(function(player)
+        Services.MarketplaceService.OnPlayerRemoving(player)
         Services.PlayerDataService.OnPlayerRemoving(player)
     end)
 

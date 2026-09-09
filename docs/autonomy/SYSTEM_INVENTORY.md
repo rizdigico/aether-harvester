@@ -12,36 +12,36 @@
 | # | Service | Purpose | Key Remotes Bound | Owns / Manages | Status | Notes |
 |---|---------|---------|-------------------|----------------|--------|-------|
 | 1 | PlayerDataService | DataStore persistence, player CRUD, inventory/currency/pet ops | GetPlayerData(F), GetInventory(F), RequestPlayerData, PlayerDataLoaded | `playerData{}` in-memory map, DataStore "PlayerData_v1" | **REAL** | 236 lines. Auto-save every 5min. Full AddItem/RemoveItem/AddPet/AddXP/IncrementStat API. petIdCounter not persisted. |
-| 2 | CreatureService | Creature state, combat damage, taming, aggro AI (Heartbeat) | TameCreature, DamageCreature (runtime-created), Error, NodeHarvested, PetSummon | `creatureState{}` — health/aggro per creature instance | **REAL** | 259 lines. DamageCreature remote created at runtime if missing (P2). Heartbeat aggro loop runs per-creature. |
+| 2 | CreatureService | Creature state, combat damage, taming, aggro AI (Heartbeat) | TameCreature, DamageCreature, Error, NodeHarvested, PetSummon | `creatureState{}` — health/aggro per creature instance | **REAL** | DamageCreature is declared in the remotes model, rate-limited, range-checked, and refuses unknown instances. Heartbeat aggro loop runs per-creature. |
 | 3 | CraftingService | Recipe database (5), craft validation, ingredient removal, XP grant | CraftItem, RequestRecipes, ItemCrafted, Error | `CraftingService.Recipes` (hardcoded table) | **REAL** | 192 lines. 5 recipes. Duplicates Recipes.luau data module (P2). |
 | 4 | EconomyService | Currency definitions (4), exchange rates, transaction log | (none — API only) | `Currencies{}`, `transactionLog[]`, `ExchangeRates` | **REAL** | 113 lines. No remotes — consumed only by other services. Duplicate of PlayerDataService currency methods (P1). |
 | 5 | NodeManager | Harvest node management, cooldowns, yield calc, boost items | HarvestResource, NodeHarvested, UpdateHUD, Error | `activeNodes{}` cooldown map, `NodeTypes{}` (6 types) | **REAL** | 173 lines. 6 node types (AetherNode, CrystalNode, OreNode, HerbNode, Tree, Rock). 1.5x harvest_boost multiplier. |
 | 6 | WorldManager | Island definitions (11), teleport, character spawn, player tracking | ChangeIsland, UpdateHUD | `IslandDefs{}` (11 islands), `playerIslands{}` | **REAL** | 160 lines. Default island "SkySanctum" hardcoded in 4+ places (P2). Handles PlayerAdded + CharacterAdded. |
 | 7 | QuestService | Quest accept/progress/complete/abandon, objective matching, rewards | AcceptQuest, CompleteQuest, AbandonQuest, GetQuests(F), QuestUpdated, Error | `activeQuests{userId->questId->state}` | **REAL** | 272 lines. 6 objective types (Harvest, Collect, Tame, Defeat, DefeatRarity, Visit). Line 269 has suspicious `and` in string concat. |
 | 8 | PetService | Pet equip/unequip, summon/despawn follower, visual Model spawning | GetPets(F), EquipPet, UnequipPet, SummonPet, ReleasePet, PetSummon, PetReleased, Error | `activePets{}`, `petFollowers{}`, summoned Model instances in Workspace | **REAL** | 306 lines. Spawns neon ball followers via RunService loop. Follower task never cleaned on player leave (P1). |
-| 9 | ProgressionService | XP accumulation, level-up, skill points (5 per level), XP formula | AddXP, LevelUp, PlayerLeveledUp | XP formula: `floor(100 * 1.5^(level-1))` | **REAL** | 138 lines. Exploit cap: math.clamp(amount, 1, 10000) on AddXP remote. |
+| 9 | ProgressionService | XP accumulation, level-up, skill points (5 per level), XP formula | LevelUp, PlayerLeveledUp | XP formula: `floor(100 * 1.5^(level-1))` | **REAL** | Internal server grants are bounded; the legacy client-callable AddXP listener has been removed. |
 | 10 | UpgradeService | 5 upgrade definitions, cost scaling, purchase flow | GetUpgrades(F), PurchaseUpgrade, UpgradePurchased, Error | `UpgradeService.Database` (5 upgrades) | **REAL** | 187 lines. Pickaxe power/speed, inventory, pet capacity, energy regen. Cost multiplier per level. |
 | 11 | GuildService | Guild CRUD, invite, join, leave, guild XP/leveling | CreateGuild, JoinGuild, LeaveGuild, InviteToGuild, GetGuildInfo(F), GuildCreated, GuildInvite, GuildMemberJoined, GuildMemberLeft, Error | `Guilds{}`, `GuildIdCounter` (in-memory only) | **REAL** | 275 lines. All data lost on server restart (P0). Max members not enforced. |
 | 12 | EventService | Random event spawning (5 types), 1h duration, 30% chance/5min | EventStarted, EventEnded | `ActiveEvents{}`, `EventIdCounter` | **REAL** | 102 lines. GetEventBonus() defined but never consumed by any service (P1). Events are cosmetic-only. |
-| 13 | TradingService | Player-to-player trade create/accept/cancel | CreateTrade, AcceptTrade, CancelTrade, TradeCreated, TradeCompleted, TradeCancelled, Error | `ActiveTrades{}` | **WEAK** | 154 lines. AcceptTrade has TODO comments at lines 96-98 — item transfer never executes (P0). |
+| 13 | TradingService | Player-to-player trade create/accept/cancel | CreateTrade, AcceptTrade, CancelTrade, TradeCreated, TradeCompleted, TradeCancelled, Error | `ActiveTrades{}` | **WEAK** | CreateTrade now bounds/clones offer maps; AcceptTrade validates both inventories before an atomic transfer. Item-definition validation and durable trades remain. |
 | 14 | CosmeticService | 5 cosmetic definitions, purchase/equip | PurchaseCosmetic, EquipCosmetic, CosmeticPurchased, CosmeticEquipped, Error | `Cosmetics{}` (5 items), player `data.Cosmetics[]` | **REAL** | 181 lines. No visual application to character model (cosmetic equip is data-only). |
 | 15 | ChatService | 5 channels (global/island/guild/party/trade), message history, broadcast | SendChatMessage, ChatMessageReceived | `MessageHistory[]` (1000 cap), `Channels{}` | **REAL** | 115 lines. Broadcasts to ALL clients regardless of channel (P3). 200 char message limit. |
-| 16 | MarketplaceService | Auction listings, buy/sell/cancel flow | GetMarketplaceListings(F), CreateListing, CancelListing, PurchaseListing, ListingCreated, ListingPurchased, ListingCancelled, Error | `Listings{}`, `ListingIdCounter` | **REAL** | 200 lines. If seller offline at purchase, currency created from nothing (P0). |
+| 16 | MarketplaceService | Auction listings, buy/sell/cancel flow | GetMarketplaceListings(F), CreateListing, CancelListing, PurchaseListing, ListingCreated, ListingPurchased, ListingCancelled, Error | `Listings{}`, `ListingIdCounter` | **REAL** | Seller must be online for purchase; escrowed items are returned on seller disconnect. Listings remain in-memory and are not yet durable. |
 | 17 | BattlePassService | Season 1 (50 levels), free+premium reward tracks, XP calculation | PurchaseBattlePassPremium, BattlePassLevelUp, BattlePassPremiumPurchased, Error | `Seasons{season_1}` with FreeRewards + PremiumRewards | **REAL** | 203 lines. BattlePassService.AddXP() never called from any service (P1). Premium costs 2000 Shards. |
 | 18 | MailService | In-game mail with attachments, read/delete | SendMail, ReadMail, DeleteMail, MailReceived, MailUpdated, MailDeleted, Error | `Mailboxes{}` per player (in data) | **REAL** | 184 lines. Recipient must be online or mail is lost (P2). |
 | 19 | AntiCheatService | Violation tracking, auto-kick at 5 flags | (none — never integrated) | `Violations{userId->[]}` | **STUB** | 73 lines. CheckPlayer() defined but never called from any service (P0). Only checks level>1000 and currency>10M. |
 | 20 | LeaderboardService | 4 categories (Level/Wealth/Pets/Quests), top 100 sorting | GetLeaderboard(F), RequestLeaderboard, LeaderboardUpdated | `Leaderboards{4 categories}` | **WEAK** | 123 lines. UpdateLeaderboard() defined but never called (P1). Leaderboards always empty. |
 | 21 | AnalyticsService | Event tracking, player action stats | (none) | `Events[]` (10K cap), `PlayerStats{}` | **STUB** | 84 lines. In-memory only, no persistence, no remotes, no external integration. |
 | 22 | AchievementService | 6 achievements, check/unlock/notify | RequestAchievements, AchievementUnlocked | Delegates to Achievements.luau data module | **REAL** | 81 lines. Requires PlayerDataService at module scope (server-only, P2). |
-| 23 | RewardService | Daily reward claim, streak calculation | ClaimReward, RewardClaimed | — | **STUB** | 98 lines. Overlaps DailyRewardsService. ClaimReward remote handler does nothing except fire client (P1). |
-| 24 | DailyRewardsService | 7-day streak rewards, date-based validation | ClaimDailyReward, DailyRewardClaimed, Error | `Rewards{1-7}`, streak in player data | **REAL** | 127 lines. Canonical daily claim handler. Uses year-month-day string for date comparison. |
+| 23 | RewardService | Extra weekly/seasonal reward claims plus compatibility wrappers | ClaimReward, RewardClaimed | `data.ClaimedRewards` for idempotency | **REAL** | ClaimReward validates a known reward and grants it once; daily wrappers delegate to DailyRewardsService. |
+| 24 | DailyRewardsService | 30-day streak rewards, UTC day validation | ClaimDailyReward, DailyRewardClaimed, Error | `Rewards.DailyCalendar`, day index/streak in player data | **REAL** | Canonical daily claim handler. Uses a pure UTC day-index state machine and cycles the 30-day calendar. |
 
 ### Service Status Summary
 
 | Status | Count | Services |
 |--------|-------|----------|
-| **REAL** (functional, integrated) | 18 | PlayerData, Creature, Crafting, Economy, NodeManager, WorldManager, Quest, Pet, Progression, Upgrade, Guild, Event, Cosmetic, Chat, Marketplace, BattlePass, Mail, DailyRewards |
-| **WEAK** (exists but broken/incomplete) | 4 | Trading (TODO item transfer), Leaderboard (never updated), Reward (overlaps DailyRewards), Achievement (server-only require) |
+| **REAL** (functional, integrated) | 19 | PlayerData, Creature, Crafting, Economy, NodeManager, WorldManager, Quest, Pet, Progression, Upgrade, Guild, Event, Cosmetic, Chat, Marketplace, BattlePass, Mail, DailyRewards, Reward |
+| **WEAK** (exists but broken/incomplete) | 3 | Trading (payload breadth/durability), Leaderboard (never updated), Achievement (server-only require) |
 | **STUB** (minimal/unused) | 2 | AntiCheat (never integrated), Analytics (in-memory only) |
 
 ---
@@ -198,10 +198,10 @@ The design system specifies **18 components** (Button, Panel, Card, Tooltip, Mod
 
 | # | File:Line | Description |
 |---|-----------|-------------|
-| P0-1 | `TradingService.luau:96-98` | **AcceptTrade does NOT transfer items.** Lines 96-98 are TODO comments: `-- Remove offer items from trader / -- Add request items to trader / -- Add offer items to accepter / -- Remove request items from accepter`. Trade "completes" without exchanging anything. |
+| P0-1 | `TradingService.luau` | **Mitigated in current checkout.** AcceptTrade now validates both sides and transfers each item only after phase-one ownership checks. Remaining risk is payload breadth/definition validation and in-memory trade durability. |
 | P0-2 | `AntiCheatService.luau` (entire service) | **Never integrated.** `CheckPlayer()` is defined but never called by any service. Zero exploit protection active. |
 | P0-3 | `GuildService.luau:4` | **Guilds not persisted.** `GuildService.Guilds = {}` is in-memory only. Server restart wipes all guild data. |
-| P0-4 | `MarketplaceService.luau:137-139` | **Currency created from nothing.** If seller is offline when listing is purchased, `AddCurrency(seller, "AetherShards", price)` writes to an empty data table. Seller loses the item AND the money disappears. |
+| P0-4 | `MarketplaceService.luau` | **Mitigated in current checkout.** Purchases are rejected when the seller/data is unavailable; seller listings are cancelled and escrow is returned before profile save on disconnect. Persistence is still incomplete. |
 | P0-5 | `EconomyService.luau` + `PlayerDataService.luau` | **Dual currency management.** Both services independently modify `data.Currency`. EconomyService.AddCurrency and PlayerDataService.AddCurrency do the same thing. Currency operations through one service are invisible to the other's transaction log. |
 
 ### P1 — High (gameplay broken / major feature gap)
@@ -210,7 +210,7 @@ The design system specifies **18 components** (Button, Panel, Card, Tooltip, Mod
 |---|-----------|-------------|
 | P1-1 | `LeaderboardService.luau:47` | **Leaderboards never updated.** `UpdateLeaderboard(player, category)` is defined but never called. Leaderboards are permanently empty. |
 | P1-2 | `BattlePassService.luau:63` | **Battle pass never advances.** `BattlePassService.AddXP()` is defined but never called from ProgressionService or any other service. |
-| P1-3 | `RewardService.luau:16-24` | **Dead code — reward claim does nothing.** The ClaimReward remote handler fires RewardClaimed to client but never calls ClaimDailyReward or grants any reward. |
+| P1-3 | `RewardService.luau` | **Mitigated in current checkout.** ClaimReward now calls the idempotent extra-reward grant path; daily claims are delegated to DailyRewardsService. |
 | P1-4 | `EventService.luau:91` | **Events don't affect gameplay.** `GetEventBonus()` returns multipliers but no service (NodeManager, ProgressionService) checks for active events. |
 | P1-5 | `PetService.luau:66-77` | **Follower task never cleaned.** `task.spawn` loop runs forever per summon. If player leaves while pet is summoned, the loop continues until it errors on nil character. No `player.CharacterAdded` or `PlayerRemoving` cleanup. |
 | P1-6 | `QuestService.luau:269` | **Suspicious string concat.** `tostring(next(QuestsData.GetAll())) and " quests available"` — the `and` makes this a Lua truthy expression, not a string concatenation. Should use `..` instead of `and`. |
@@ -221,7 +221,7 @@ The design system specifies **18 components** (Button, Panel, Card, Tooltip, Mod
 | # | File:Line | Description |
 |---|-----------|-------------|
 | P2-1 | `CraftingService.luau:4-61` | **Duplicate recipe data.** CraftingService.Recipes is a hardcoded table identical to Recipes.luau. Two sources of truth that will drift. |
-| P2-2 | `CreatureService.luau:212-215` | **Runtime remote creation.** DamageCreature remote is created via `Instance.new("RemoteEvent")` if missing. Should be declared in Remotes.model.json. |
+| P2-2 | `CreatureService.luau` | **Mitigated in current checkout.** DamageCreature is declared in Remotes.model.json and the service warns instead of creating an undeclared runtime remote. |
 | P2-3 | `Pets.luau:297-305` | **Shared data mutation.** `Pets.AddXP()` and `Pets.FeedPet()` modify `Pets.Database[petId]` — the shared module table. This means ALL players share the same pet level/hunger. Per-player instances needed. |
 | P2-4 | `Utils.luau:14-16` | **FormatNumber is buggy.** `string.format("%03d", num % 1000)` produces wrong results. E.g., 1234 → `string.format("%03d", 234)` → "234", then concatenated with "1234" → "1234234". |
 | P2-5 | `Achievements.luau:3` | **Server-only module.** `require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)` at top level. Any client requiring Achievements will error. |
@@ -264,7 +264,7 @@ ServerMain.luau lines 12–35 require: WorldManager, NodeManager, PlayerDataServ
 - 73 RemoteEvents
 - 8 RemoteFunctions
 
-**All remotes referenced by services exist in the model.** One exception: `DamageCreature` is NOT in the model but is created at runtime by CreatureService (P2-2).
+**All remotes referenced by services exist in the model.** DamageCreature is declared in the model; the current model contains 81 remotes (73 events and 8 functions).
 
 ### Data modules — syntax/load check
 
@@ -289,7 +289,7 @@ ServerMain.luau lines 12–35 require: WorldManager, NodeManager, PlayerDataServ
 | AchievementService | Achievements.luau | ✓ |
 | CraftingService | Items.luau (inline require) | ✓ |
 | RewardService | Rewards.luau | ✓ |
-| DailyRewardsService | (none — hardcoded rewards) | ✓ |
+| DailyRewardsService | Rewards.luau | ✓ |
 
 ---
 
@@ -304,6 +304,6 @@ ServerMain.luau lines 12–35 require: WorldManager, NodeManager, PlayerDataServ
 4. No harvesting combo system — simple random yield, no skill-based mechanics
 5. No energy consumption — HUD bar exists but harvests are free
 
-**(c) P0/P1 defects found:** 5 P0 (trading doesn't transfer items, anti-cheat not integrated, guilds not persisted, marketplace creates money from nothing, dual currency management) + 7 P1 (leaderboards always empty, battle pass never advances, reward claim does nothing, events don't affect gameplay, pet follower task leak, suspicious QuestService line, hardcoded default island).
+**(c) P0/P1 defects found:** the former trade-transfer, marketplace offline-payout, and dead reward-claim findings are mitigated in the current checkout; remaining release blockers include anti-cheat integration, durable guild/marketplace state, dual currency management, leaderboards, battle-pass progression, event gameplay effects, pet-task cleanup, and the remaining world/content gaps.
 
 **(d) Deliverable path:** `C:\Users\aariz\kilo_HQ\roblox-dev\aether-harvester\docs\autonomy\SYSTEM_INVENTORY.md` — overwritten with recovered reality (411 lines of prior scaffold replaced).

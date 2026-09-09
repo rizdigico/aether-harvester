@@ -70,7 +70,17 @@ Rewards.ExtraRewards = {
 }
 
 function Rewards.GetDailyReward(day)
-    return Rewards.DailyCalendar[day] or nil
+    if type(day) == "string" then
+        return Rewards.DailyCalendar[day]
+    end
+    if type(day) ~= "number" then
+        return nil
+    end
+    local dayNumber = math.floor(day)
+    if dayNumber < 1 or dayNumber > 30 then
+        return nil
+    end
+    return Rewards.DailyCalendar["Day" .. tostring(dayNumber)]
 end
 
 function Rewards.GetMonthlyReward()

@@ -150,20 +150,31 @@ function MarketplaceService.PurchaseListing(player, listingId)
         return false, "Player data not found"
     end
 
+    -- Listings are held in server memory. Require the seller to be present so
+    -- a sale can never deduct a buyer and silently lose the seller payout.
+    local seller = game.Players:GetPlayerByUserId(listing.SellerId)
+    if not seller or not PlayerDataService.GetData(seller) then
+        return false, "Seller is unavailable"
+    end
+
     if buyerData.Currency.AetherShards < listing.Price then
         return false, "Not enough currency"
     end
 
     -- Deduct price from buyer
-    PlayerDataService.RemoveCurrency(player, "AetherShards", listing.Price)
+    if not PlayerDataService.RemoveCurrency(player, "AetherShards", listing.Price) then
+        return false, "Not enough currency"
+    end
 
     -- Add item to buyer
     PlayerDataService.AddItem(player, listing.ItemId, listing.Amount)
 
     -- Give money to seller
-    local seller = game.Players:GetPlayerByUserId(listing.SellerId)
-    if seller then
-        PlayerDataService.AddCurrency(seller, "AetherShards", listing.Price)
+    if not PlayerDataService.AddCurrency(seller, "AetherShards", listing.Price) then
+        -- This should be unreachable after the seller data check. Keep the
+        -- sale active if the payout cannot be recorded.
+        PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
+        return false, "Seller payout failed"
     end
 
     -- Mark listing as sold
@@ -181,6 +192,33 @@ function MarketplaceService.PurchaseListing(player, listingId)
 
     print("[MarketplaceService] Listing purchased: " .. listingId)
     return true, "Purchase successful"
+end
+
+function MarketplaceService.OnPlayerRemoving(player)
+    -- Return all escrowed items before PlayerDataService saves and clears the
+    -- player's profile. This prevents disconnects from destroying listings.
+    local cancelled = {}
+    for listingId, listing in pairs(MarketplaceService.Listings) do
+        if listing.SellerId == player.UserId and listing.Status == "Active" then
+            if PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
+                listing.Status = "Cancelled"
+                MarketplaceService.Listings[listingId] = nil
+                table.insert(cancelled, listingId)
+            end
+        end
+    end
+
+    if #cancelled == 0 then
+        return
+    end
+
+    local Remotes = game.ReplicatedStorage.AetherShared.Remotes
+    local ListingCancelled = Remotes and Remotes:FindFirstChild("ListingCancelled")
+    if ListingCancelled then
+        for _, listingId in ipairs(cancelled) do
+            ListingCancelled:FireAllClients(listingId)
+        end
+    end
 end
 
 function MarketplaceService.CancelListing(player, listingId)

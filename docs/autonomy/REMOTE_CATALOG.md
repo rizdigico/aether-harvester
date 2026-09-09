@@ -9,7 +9,7 @@
 | **ChangeIsland**          | Server    | Island ID                  | Island existence, ownership | None       | None              | `WorldManager.luau:201`
 | **PlayerDataLoaded**      | Server    | Player data                | Player existence          | None       | None              | `PlayerDataService.luau:36`
 | **RequestPlayerData**     | Client    | None                      | Player existence          | None       | None              | `PlayerDataService.luau:34`
-| **AddXP**                 | Server    | XP amount                  | Positive number           | None       | None              | `ProgressionService.luau:89`
+| **AddXP**                 | Removed from current model; no server handler | None | Not accepted from clients; XP is granted by server-owned services only | N/A | N/A | `ProgressionService.luau`
 | **LevelUp**               | Server    | New level, skill points    | Valid level progression   | None       | None              | `ProgressionService.luau:112`
 | **UpgradePurchased**      | Server    | Upgrade ID, level          | Valid upgrade, currency   | None       | None              | `UpgradeService.luau:78`
 | **PurchaseUpgrade**       | Client    | Upgrade ID, level          | Valid upgrade, currency   | None       | None              | `UpgradeService.luau:65`
@@ -44,19 +44,19 @@
 ## Security Defects
 
 ### P0 (Critical)
-1. **Missing Validation in TradingService** (TradingService.luau:17): No validation for item ownership or quantity in `CreateTrade`. Clients can send arbitrary item IDs and amounts.
-2. **No Rate Limiting on DataStore** (PlayerDataService.luau:44): Auto-save loop lacks rate limiting, risking DataStore throttling or abuse.
-3. **No Ownership Check in MarketplaceService** (MarketplaceService.luau:107): `PurchaseListing` allows buying own listings without validation.
+1. **Trade creation payload is still too broad** (TradingService.luau): `CreateTrade` rate-limits the request but should reject oversized maps and unknown item definitions before storing the offer.
+2. **No central save queue** (PlayerDataService.luau): retries/backoff exist, but the periodic auto-save fan-out is not yet centrally rate-limited.
+3. **Marketplace listings are not durable** (MarketplaceService.luau): self-purchases and offline-seller payout loss are blocked, but listings/escrow are still server-memory only.
 
 ### P1 (High)
-1. **No Distance Check in HarvestResource** (WorldManager.luau:123): No validation that the player is near the node.
+1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager rejects harvests beyond its server-side distance threshold.
 2. **No Cooldown in UpgradeService** (UpgradeService.luau:65): `PurchaseUpgrade` lacks cooldown to prevent spam.
 3. **No Versioning in DataStore** (PlayerDataService.luau:3): Uses `PlayerData_v1` without versioning or migration support.
 
 ### P2 (Medium)
 1. **No Session Race Protection** (PlayerDataService.luau:113): `OnPlayerRemoving` lacks transactional save logic.
-2. **No Negative Currency Check** (PlayerDataService.luau:145): `RemoveCurrency` allows negative balances.
-3. **No Guild XP Validation** (GuildService.luau:254): `AddXP` lacks validation for valid guilds.
+2. **Mitigated in current checkout**: currency and inventory mutations reject non-positive/non-integer/out-of-range amounts, and deductions require sufficient balance.
+3. **Legacy catalog entry**: the former client-callable `AddXP` path has been removed. XP grants now go through server-owned services and the shared progression guard.
 
 ### P3 (Low)
 1. **No Error Handling in RemoteEvents** (TradingService.luau:34): Error responses are not consistently sent to clients.

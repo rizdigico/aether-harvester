@@ -21,18 +21,17 @@
    - **Impact**: Arbitrary item creation and trading.
    - **Fix**: Validate item ownership and quantity before processing trades.
 
-2. **No Rate Limiting on DataStore** (PlayerDataService.luau:44): Auto-save loop lacks rate limiting, risking DataStore throttling or abuse.
+2. **Save scheduling still needs a bounded queue** (PlayerDataService.luau): retries/backoff exist, but the periodic auto-save fan-out is not yet centrally rate-limited.
    - **Impact**: DataStore throttling or service disruption.
    - **Fix**: Implement rate limiting with exponential backoff.
 
-3. **No Ownership Check in MarketplaceService** (MarketplaceService.luau:107): `PurchaseListing` allows buying own listings without validation.
+3. **Marketplace durability remains incomplete** (MarketplaceService.luau): self-purchases are rejected and seller disconnects are handled, but listings are still server-memory only until persistent escrow is implemented.
    - **Impact**: Self-trading and potential currency exploits.
    - **Fix**: Add ownership check to prevent buying own listings.
 
 ### P1 (High)
-1. **No Distance Check in HarvestResource** (WorldManager.luau:123): No validation that the player is near the node.
-   - **Impact**: Players can harvest nodes from arbitrary distances.
-   - **Fix**: Validate player proximity to nodes.
+1. **Mitigated in current checkout**: HarvestResource is rate-limited and NodeManager validates player proximity to the target node.
+   - **Remaining work**: add adversarial multi-client coverage for spoofed instances and teleport edge cases.
 
 2. **No Cooldown in UpgradeService** (UpgradeService.luau:65): `PurchaseUpgrade` lacks cooldown to prevent spam.
    - **Impact**: Spam attacks on upgrade purchases.
@@ -47,7 +46,7 @@
    - **Impact**: Race conditions during player disconnection.
    - **Fix**: Use transactional saves or optimistic concurrency.
 
-2. **No Negative Currency Check** (PlayerDataService.luau:145): `RemoveCurrency` allows negative balances.
+2. **Mitigated in current checkout**: currency and inventory mutations reject non-positive/non-integer/out-of-range amounts, and deductions require sufficient balance.
    - **Impact**: Negative currency balances and potential exploits.
    - **Fix**: Validate currency balances before deduction.
 
