@@ -2,7 +2,6 @@
 -- Teleports players back to the spawn island if they fall off
 
 local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local WorldManager = require(game.ServerScriptService.AetherServer.GameServices.WorldManager)
 

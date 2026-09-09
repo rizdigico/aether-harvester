@@ -1,6 +1,4 @@
 local AnalyticsService = {}
-local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
-
 AnalyticsService.Events = {}
 AnalyticsService.PlayerStats = {}
 

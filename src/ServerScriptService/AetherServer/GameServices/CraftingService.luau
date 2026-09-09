@@ -116,7 +116,6 @@ function CraftingService.CraftItem(player, recipeId)
         return false, reason
     end
 
-    local data = PlayerDataService.GetData(player)
     local recipe = CraftingService.Recipes[recipeId]
 
     -- Remove ingredients transactionally. CanCraft performs the first

@@ -7,7 +7,6 @@ local ProgressionService = require(game.ServerScriptService.AetherServer.GameSer
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local QuestsData = require(game.ReplicatedStorage.AetherShared.Data.Quests)
-local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local QuestProgress = require(game.ReplicatedStorage.AetherShared.Modules.QuestProgress)
 
 -- Active quests per player: userId -> { questId -> {Progress = {...}, Completed = bool} }
@@ -90,7 +89,7 @@ function QuestService.AcceptQuest(player, questId)
 
     -- Initialize progress
     local progress = {}
-    for i, objective in ipairs(quest.Objectives or {}) do
+    for i, _objective in ipairs(quest.Objectives or {}) do
         progress[i] = 0
     end
 
@@ -129,18 +128,12 @@ function QuestService.UpdateProgress(player, objectiveType, target, amount)
             for i, objective in ipairs(quest.Objectives or {}) do
                 local matches = false
                 if objective.Type == objectiveType then
-                    if objectiveType == "Harvest" then
+                    if objectiveType == "Harvest" or objectiveType == "Collect" then
                         matches = (objective.ItemId == nil) or (objective.ItemId == target)
-                    elseif objectiveType == "Collect" then
-                        matches = (objective.ItemId == nil) or (objective.ItemId == target)
-                    elseif objectiveType == "Tame" then
-                        matches = (objective.CreatureId == nil) or (objective.CreatureId == target)
-                    elseif objectiveType == "Defeat" then
+                    elseif objectiveType == "Tame" or objectiveType == "Defeat" then
                         matches = (objective.CreatureId == nil) or (objective.CreatureId == target)
                     elseif objectiveType == "DefeatRarity" then
                         matches = (objective.CreatureRarity ~= nil) and (objective.CreatureRarity == target)
-                    elseif objectiveType == "Visit" then
-                        matches = true
                     else
                         matches = true
                     end

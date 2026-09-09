@@ -1,23 +1,8 @@
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
-local RunService = game:GetService("RunService")
-
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
-
--- Input state
-local InputState = {
-    MoveVector = Vector2.new(0, 0),
-    IsJumping = false,
-    IsSprinting = false,
-    HarvestPressed = false,
-    PetPressed = false,
-    InventoryPressed = false,
-    QuestPressed = false,
-    MapPressed = false,
-    SettingsPressed = false,
-}
 
 -- Key bindings (customizable)
 local KeyBindings = {
@@ -64,54 +49,38 @@ end
 function InputHandler:OnInputBegan(input)
     -- Movement
     if input.KeyCode == KeyBindings.Sprint then
-        InputState.IsSprinting = true
         humanoid.WalkSpeed = 32
-    end
-
-    if input.KeyCode == KeyBindings.Jump then
-        InputState.IsJumping = true
     end
 
     -- Actions
     if input.KeyCode == KeyBindings.Harvest then
-        InputState.HarvestPressed = true
         self:HandleHarvest()
     end
 
     if input.KeyCode == KeyBindings.Pet then
-        InputState.PetPressed = true
         self:HandlePet()
     end
 
     if input.KeyCode == KeyBindings.Inventory then
-        InputState.InventoryPressed = true
         self:HandleInventory()
     end
 
     if input.KeyCode == KeyBindings.Quest then
-        InputState.QuestPressed = true
         self:HandleQuest()
     end
 
     if input.KeyCode == KeyBindings.Map then
-        InputState.MapPressed = true
         self:HandleMap()
     end
 
     if input.KeyCode == KeyBindings.Settings then
-        InputState.SettingsPressed = true
         self:HandleSettings()
     end
 end
 
 function InputHandler:OnInputEnded(input)
     if input.KeyCode == KeyBindings.Sprint then
-        InputState.IsSprinting = false
         humanoid.WalkSpeed = 16
-    end
-
-    if input.KeyCode == KeyBindings.Jump then
-        InputState.IsJumping = false
     end
 end
 

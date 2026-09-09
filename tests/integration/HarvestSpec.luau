@@ -6,9 +6,7 @@
 -- in Studio play mode.
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local Workspace = game:GetService("Workspace")
 
 local function waitFor(fn: () -> any, timeout: number)
     local deadline = os.clock() + timeout
@@ -77,7 +75,7 @@ return function()
             -- Read resource count before, then harvest.
             local resourceId = nodeType.ResourceId
             local before = PlayerDataService.GetItemCount(player, resourceId)
-            local success, result = NodeManager.ProcessHarvest(player, node)
+            local success, _result = NodeManager.ProcessHarvest(player, node)
 
             expect(success).to.equal(true)
 

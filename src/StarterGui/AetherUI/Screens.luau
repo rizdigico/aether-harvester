@@ -483,7 +483,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -816,7 +816,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -1133,7 +1133,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -1956,7 +1956,7 @@ do
         inst8.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
         inst8.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
         inst8.LayoutOrder = 0
-        inst8.Text = "\u2715"
+        inst8.Text = "X"
         inst8.AutomaticSize = Enum.AutomaticSize.None
         inst8.TextSize = 8
         inst8.Rotation = 0
@@ -2090,7 +2090,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -2437,7 +2437,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -3018,7 +3018,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -3199,7 +3199,7 @@ do
                     inst20.Size = UDim2.new(0.0799999982, 0, 0.400000006, 0)
                     inst20.TextColor3 = Color3.new(0.298039, 0.686275, 0.313726)
                     inst20.LayoutOrder = 0
-                    inst20.Text = "\u2713"
+                    inst20.Text = "OK"
                     inst20.AutomaticSize = Enum.AutomaticSize.None
                     inst20.TextSize = 12
                     inst20.Rotation = 0
@@ -3326,7 +3326,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -3507,7 +3507,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -4006,7 +4006,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0
@@ -4528,7 +4528,7 @@ do
                 inst16.Size = UDim2.new(0.0799999982, 0, 0.5, 0)
                 inst16.TextColor3 = Color3.new(0.901961, 0.921569, 0.960784)
                 inst16.LayoutOrder = 0
-                inst16.Text = "\u2715"
+                inst16.Text = "X"
                 inst16.AutomaticSize = Enum.AutomaticSize.None
                 inst16.TextSize = 16
                 inst16.Rotation = 0

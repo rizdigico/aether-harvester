@@ -287,10 +287,7 @@ local function SanitizeProfile(userId, raw)
     end
     local base = CreateDefaultProfile(userId)
     -- Merge: raw values win, missing fields fall back to defaults
-    local merged = {}
-    for k, v in pairs(base) do
-        merged[k] = v
-    end
+    local merged = table.clone(base)
     for k, v in pairs(raw) do
         if type(v) == "table" and type(base[k]) == "table" then
             merged[k] = {}

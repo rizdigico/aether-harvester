@@ -64,6 +64,16 @@ local function initClient()
     -- Mark as loaded
     player:SetAttribute("GameLoaded", true)
 
+    -- UI support LocalScripts (SafeAreaLayer, AccessibilitySettings) are cloned into
+    -- PlayerGui with AetherUI and self-start (same as UIBootstrap). We can't `require`
+    -- a LocalScript, so just confirm they were replicated; they boot on their own.
+    local supportScripts = { "SafeAreaLayer", "AccessibilitySettings" }
+    for _, name in ipairs(supportScripts) do
+        if AetherUI:FindFirstChild(name) then
+            print("[ClientBootstrap] UI support script present: " .. name)
+        end
+    end
+
     print("[ClientBootstrap] Client initialization complete")
 end
 

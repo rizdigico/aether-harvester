@@ -12,7 +12,7 @@
       "bounding_box_studs": [2.0, 2.0, 1.549],
       "materials": ["Aether_Base", "Aether_Emissive"],
       "license": "project_owned",
-      "status": "draft_awaiting_vision"
+      "status": "vision_changes_requested"
     },
     {
       "id": "harvest_node_crystal",
@@ -26,7 +26,7 @@
       "bounding_box_studs": [1.098, 1.268, 2.0],
       "materials": ["Crystal_Base", "Crystal_Emissive"],
       "license": "project_owned",
-      "status": "draft_awaiting_vision"
+      "status": "vision_changes_requested"
     },
     {
       "id": "harvest_node_ore",
@@ -40,7 +40,7 @@
       "bounding_box_studs": [1.765, 2.0, 1.785],
       "materials": ["Ore_Rock", "Ore_Vein"],
       "license": "project_owned",
-      "status": "draft_awaiting_vision"
+      "status": "vision_changes_requested"
     },
     {
       "id": "harvest_node_herb",
@@ -54,7 +54,7 @@
       "bounding_box_studs": [2.0, 1.873, 1.882],
       "materials": ["Herb_Base", "Herb_Petal"],
       "license": "project_owned",
-      "status": "draft_awaiting_vision"
+      "status": "vision_changes_requested"
     }
   ]
 }

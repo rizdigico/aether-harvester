@@ -1,8 +1,6 @@
 -- WorldAnimation: living world effects - halo rotation, beacon pulse, whale flight, rock bob, island drift
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
-local TweenService = game:GetService("TweenService")
-
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 if not AetherWorld then
     return
@@ -23,7 +21,7 @@ if sanctum then
 end
 local beacon = sanctum and sanctum:FindFirstChild("Beacon")
 
-RunService.Heartbeat:Connect(function(dt)
+RunService.Heartbeat:Connect(function()
     local t = os.clock()
     -- rotate runes around the center
     for i, r in ipairs(haloParts) do
@@ -59,7 +57,7 @@ if Creatures then
         end
     end
 end
-RunService.Heartbeat:Connect(function(dt)
+RunService.Heartbeat:Connect(function()
     local t = os.clock()
     for _, w in ipairs(whales) do
         if w.model and w.model.Parent then
@@ -81,7 +79,7 @@ if Props then
         end
     end
 end
-RunService.Heartbeat:Connect(function(dt)
+RunService.Heartbeat:Connect(function()
     local t = os.clock()
     for _, r in ipairs(rocks) do
         if r.part and r.part.Parent then

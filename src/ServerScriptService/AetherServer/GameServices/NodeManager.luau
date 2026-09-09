@@ -1,7 +1,6 @@
 -- NodeManager
 local NodeManager = {}
 
-local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -13,9 +12,7 @@ local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServi
 local EventService = require(game.ServerScriptService.AetherServer.GameServices.EventService)
 local PetService = require(game.ServerScriptService.AetherServer.GameServices.PetService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
-local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local MonetizationService = require(game.ServerScriptService.AetherServer.GameServices.MonetizationService)
-
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30

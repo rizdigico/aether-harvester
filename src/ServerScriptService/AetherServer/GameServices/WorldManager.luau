@@ -104,7 +104,7 @@ function WorldManager.Initialize()
     print("[WorldManager] Registered " .. count .. " playable islands")
 
     -- Handle character spawning
-    local function onCharacterAdded(player, character)
+    local function onCharacterAdded(player, _character)
         task.wait(0.5)
         local islandId = playerIslands[player.UserId] or "SkySanctum"
         print("[WorldManager] onCharacterAdded -> " .. islandId)

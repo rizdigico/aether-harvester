@@ -1,8 +1,5 @@
 local Utils = {}
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-
 -- Utility: Generate unique ID
 function Utils.GenerateId()
     return math.random(100000, 999999) .. tostring(os.time()):sub(-4)

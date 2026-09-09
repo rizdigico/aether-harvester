@@ -1,7 +1,5 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
-
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
@@ -92,8 +90,6 @@ function MinimapController:UpdateMinimap()
     end
 
     local position = humanoidRootPart.Position
-    local minimapCenter = UDim2.new(0.5, 0, 0.5, 0)
-
     -- Convert world position to minimap position
     local worldOffset = Vector2.new(position.X, position.Z) * MINIMAP_CONFIG.Scale
     local minimapPos = UDim2.new(0.5, worldOffset.X, 0.5, worldOffset.Y)
@@ -105,7 +101,6 @@ function MinimapController:UpdateMinimap()
     end
 
     -- Update rotation indicator
-    local rotation = humanoidRootPart.Orientation.Y
     -- Could add rotation indicator here
 end
 

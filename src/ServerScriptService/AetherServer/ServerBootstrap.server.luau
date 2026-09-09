@@ -5,7 +5,7 @@ local Workspace = game:GetService("Workspace")
 
 -- 1. Build the world (idempotent: skip if AetherWorld already exists, e.g. live place)
 if not Workspace:FindFirstChild("AetherWorld") then
-    local WorldBuilder = require(script.Parent.WorldBuilder)
+    require(script.Parent.WorldBuilder)
 end
 
 -- 2. Boot server services

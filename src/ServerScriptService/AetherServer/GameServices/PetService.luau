@@ -7,7 +7,6 @@ local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServi
 local activePets = {}
 local petFollowers = {}
 
-local RunService = game:GetService("RunService")
 local PetFolder = Instance.new("Folder")
 PetFolder.Name = "SummonedPets"
 PetFolder.Parent = game.Workspace
@@ -118,10 +117,10 @@ end
 -- Connect character change events
 local Players = game:GetService("Players")
 Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
+    player.CharacterAdded:Connect(function(_character)
         onPlayerCharacterChanged(player)
     end)
-    player.CharacterRemoving:Connect(function(character)
+    player.CharacterRemoving:Connect(function(_character)
         onPlayerCharacterChanged(player)
     end)
 end)

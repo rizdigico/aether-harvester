@@ -1,7 +1,6 @@
 -- EconomyService
 local EconomyService = {}
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 
 -- Currency definitions

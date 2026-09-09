@@ -1,8 +1,6 @@
 local GameClient = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
-
 -- Client state
 GameClient.State = {
     CurrentIsland = "CloudGardens",
@@ -210,7 +208,7 @@ function GameClient:OnQuestUpdated(questData)
     end
 end
 
-function GameClient:OnPlayerLeveledUp(newLevel, skillPoints)
+function GameClient:OnPlayerLeveledUp(newLevel, _skillPoints)
     print("[GameClient] Level up! New level: " .. newLevel)
 
     -- Show level up notification
