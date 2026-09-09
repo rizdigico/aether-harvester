@@ -196,6 +196,7 @@ function NodeManager.ProcessHarvest(player, node)
     -- Update quests
     if QuestService.UpdateProgress then
         QuestService.UpdateProgress(player, "Harvest", nodeType.ResourceId, yieldAmount)
+        QuestService.UpdateProgress(player, "Collect", nodeType.ResourceId, yieldAmount)
     end
 
     -- Set cooldown

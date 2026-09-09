@@ -326,6 +326,16 @@ function GameClient:AcceptQuest(questId)
     end
 end
 
+function GameClient:DeliverQuest(questId)
+    local Remotes = self.Remotes
+    if Remotes then
+        local DeliverQuest = Remotes:FindFirstChild("DeliverQuest")
+        if DeliverQuest then
+            DeliverQuest:FireServer(questId)
+        end
+    end
+end
+
 function GameClient:OpenScreen(screenName)
     local PlayerGui = Players.LocalPlayer and Players.LocalPlayer.PlayerGui
     if not PlayerGui then

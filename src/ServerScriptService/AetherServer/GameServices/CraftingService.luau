@@ -2,6 +2,7 @@ local CraftingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
 local RecipesData = require(game.ReplicatedStorage.AetherShared.Data.Recipes)
 
 -- Keep the server and client on one recipe catalog. The client may display
@@ -143,6 +144,7 @@ function CraftingService.CraftItem(player, recipeId)
     -- Award XP
     local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
     ProgressionService.AddXP(player, 50)
+    QuestService.UpdateProgress(player, "Craft", recipe.ResultItemId, 1)
 
     -- Notify client
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes

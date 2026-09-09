@@ -73,6 +73,7 @@
         PlaytimeMinutes: number,
         ZonesDiscovered: number
     },
+    VisitedIslands: { [islandId: string]: boolean },
     Settings: {
         MusicVolume: number,
         SFXVolume: number,

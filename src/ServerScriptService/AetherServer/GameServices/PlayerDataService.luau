@@ -313,6 +313,7 @@ local function CreateDefaultProfile(userId)
             PlaytimeMinutes = 0,
             ZonesDiscovered = 0,
         },
+        VisitedIslands = {},
         Settings = {
             MusicVolume = 0.5,
             SFXVolume = 0.7,
@@ -392,6 +393,7 @@ local function SanitizeProfile(userId, raw)
         merged.Stats[statName] = isFiniteNumber(value) and math.clamp(math.floor(value), 0, MAX_TRANSACTION_AMOUNT)
             or default
     end
+    merged.VisitedIslands = sanitizeStringBooleanMap(merged.VisitedIslands)
     merged.Level = isFiniteNumber(merged.Level) and math.clamp(math.floor(merged.Level), 1, 1000) or base.Level
     merged.XP = isFiniteNumber(merged.XP) and math.clamp(math.floor(merged.XP), 0, MAX_TRANSACTION_AMOUNT) or base.XP
     merged.PrestigeLevel = isFiniteNumber(merged.PrestigeLevel)

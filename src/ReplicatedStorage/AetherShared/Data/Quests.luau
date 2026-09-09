@@ -137,7 +137,7 @@ Quests.Database = {
         Difficulty = "Easy",
         LevelRequired = 2,
         Objectives = {
-            { Type = "Visit", IslandId = "storm_peaks", Amount = 1 },
+            { Type = "Visit", IslandId = "StormPeaks", Amount = 1 },
         },
         Rewards = {
             XP = 120,
@@ -233,7 +233,7 @@ Quests.Database = {
         Difficulty = "Medium",
         LevelRequired = 8,
         Objectives = {
-            { Type = "Visit", IslandId = "void_rifts", Amount = 1 },
+            { Type = "Visit", IslandId = "VoidRifts", Amount = 1 },
             { Type = "Collect", ItemId = "void_essence", Amount = 3 },
         },
         Rewards = {

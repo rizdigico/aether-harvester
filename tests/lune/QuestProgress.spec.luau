@@ -195,10 +195,18 @@ return {
                 end,
             },
             {
-                name = "Visit matches any target by type",
+                name = "Visit matches the requested island exactly",
                 fn = function()
                     local objective = { Type = "Visit", IslandId = "storm_peaks", Amount = 1 }
                     expectTrue(QuestProgress.MatchesObjective(objective, "Visit", "storm_peaks"), "match")
+                    expectTrue(not QuestProgress.MatchesObjective(objective, "Visit", "void_rifts"), "wrong island")
+                end,
+            },
+            {
+                name = "Visit all matches every island",
+                fn = function()
+                    local objective = { Type = "Visit", IslandId = "all", Amount = 10 }
+                    expectTrue(QuestProgress.MatchesObjective(objective, "Visit", "StormPeaks"), "wildcard")
                 end,
             },
             {

@@ -15,9 +15,9 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 58 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 59 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Git delivery | PASS | Latest pushed commits include persistence hardening and the pet-care flow |
+| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, and the quest progression slice |
 
 ## Implemented source surfaces
 
@@ -29,7 +29,10 @@ analytics, monetization boundaries, battle-pass progression, prestige/ascension,
 persistence, session party lifecycle, deterministic pet fusion, personal base
 placement,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
-and the rebuilt screen/controller layer.
+and the rebuilt screen/controller layer. Quest progression is now persisted,
+collection/crafting hooks advance only after successful grants, island discovery
+is unique and durable, named visit objectives use canonical world IDs, and
+delivery objectives consume inventory through an atomic server action.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and

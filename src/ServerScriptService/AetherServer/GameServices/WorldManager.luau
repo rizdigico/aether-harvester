@@ -1,6 +1,8 @@
 -- WorldManager
 local WorldManager = {}
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -74,6 +76,19 @@ function WorldManager.TeleportPlayerToIsland(player, islandId)
     )
 
     playerIslands[player.UserId] = islandId
+
+    -- Discovery is durable and unique per island. Respawns and repeated
+    -- teleports must not inflate the explorer quest or zone statistic.
+    local data = PlayerDataService.GetData(player)
+    if data then
+        data.VisitedIslands = data.VisitedIslands or {}
+        if data.VisitedIslands[islandId] ~= true then
+            data.VisitedIslands[islandId] = true
+            data.Stats = data.Stats or {}
+            data.Stats.ZonesDiscovered = (data.Stats.ZonesDiscovered or 0) + 1
+            QuestService.UpdateProgress(player, "Visit", islandId, 1)
+        end
+    end
 
     -- Update HUD
     local Remotes = ReplicatedStorage.AetherShared.Remotes

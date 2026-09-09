@@ -34,22 +34,29 @@ export type ProgressResult = {
 }
 
 -- Does an objective match the event being reported?
--- Mirrors QuestService.UpdateProgress's inline matching (Harvest/Collect by
--- ItemId, Tame/Defeat by CreatureId, DefeatRarity by CreatureRarity, and a
--- permissive fallback for Visit/unknown types).
+-- Keep all event matching here so the server and pure tests share one contract.
 function QuestProgress.MatchesObjective(objective: Objective, objectiveType: string, target: string?): boolean
     if objective.Type ~= objectiveType then
         return false
     end
 
-    if objectiveType == "Harvest" or objectiveType == "Collect" then
+    if
+        objectiveType == "Harvest"
+        or objectiveType == "Collect"
+        or objectiveType == "Craft"
+        or objectiveType == "Deliver"
+    then
         return objective.ItemId == nil or objective.ItemId == target
     elseif objectiveType == "Tame" or objectiveType == "Defeat" then
         return objective.CreatureId == nil or objective.CreatureId == target
     elseif objectiveType == "DefeatRarity" then
         return objective.CreatureRarity ~= nil and objective.CreatureRarity == target
+    elseif objectiveType == "Visit" then
+        -- `all` is an explicit wildcard used by the island-explorer quest;
+        -- named visits must match the destination exactly.
+        return objective.IslandId == nil or objective.IslandId == "all" or objective.IslandId == target
     else
-        -- Visit, Guild, Craft, Deliver, and unknown types count by type only.
+        -- Guild and future event types can intentionally count by type only.
         return true
     end
 end

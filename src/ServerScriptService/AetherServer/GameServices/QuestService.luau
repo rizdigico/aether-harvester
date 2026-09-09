@@ -12,6 +12,52 @@ local QuestProgress = require(game.ReplicatedStorage.AetherShared.Modules.QuestP
 -- Active quests per player: userId -> { questId -> {Progress = {...}, Completed = bool} }
 local activeQuests = {}
 
+local function copyProgress(progress)
+    return table.clone(progress or {})
+end
+
+local function syncQuestToProfile(player, quest)
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return
+    end
+    data.Quests = data.Quests or {}
+    local saved = data.Quests[quest.Id] or { Status = "Active", AcceptedAt = quest.AcceptedAt }
+    saved.Status = "Active"
+    saved.Progress = copyProgress(quest.Progress)
+    saved.AcceptedAt = quest.AcceptedAt
+    data.Quests[quest.Id] = saved
+end
+
+local function getVisitedCount(visitedIslands)
+    local count = 0
+    for _, visited in pairs(visitedIslands or {}) do
+        if visited == true then
+            count += 1
+        end
+    end
+    return count
+end
+
+local function getInitialProgress(player, quest)
+    local progress = {}
+    local data = PlayerDataService.GetData(player)
+    local visitedIslands = data and data.VisitedIslands or {}
+    for index, objective in ipairs(quest.Objectives or {}) do
+        local value = 0
+        if objective.Type == "Visit" then
+            if objective.IslandId == "all" then
+                value = getVisitedCount(visitedIslands)
+            elseif objective.IslandId and visitedIslands[objective.IslandId] == true then
+                value = 1
+            end
+        end
+        local amount = type(objective.Amount) == "number" and objective.Amount or 1
+        progress[index] = math.min(value, amount)
+    end
+    return progress
+end
+
 local function buildActiveQuest(questId, questDef, savedQuest)
     if type(savedQuest) ~= "table" or savedQuest.Status ~= "Active" then
         return nil
@@ -87,24 +133,23 @@ function QuestService.AcceptQuest(player, questId)
         return false, "Quest already active"
     end
 
-    -- Initialize progress
-    local progress = {}
-    for i, _objective in ipairs(quest.Objectives or {}) do
-        progress[i] = 0
-    end
+    -- Initialize from durable discovery state so accepting an exploration
+    -- quest after earlier travel does not discard real progress.
+    local progress = getInitialProgress(player, quest)
+    local completion = QuestProgress.ComputeQuestProgress({ Objectives = quest.Objectives }, progress)
 
     activeQuests[player.UserId][questId] = {
         Id = questId,
         Title = quest.Title,
         Progress = progress,
         Objectives = quest.Objectives,
-        Completed = false,
+        Completed = completion.completed,
         AcceptedAt = os.time(),
     }
 
     -- Sync to player data
     data.Quests = data.Quests or {}
-    data.Quests[questId] = { Status = "Active", Progress = progress, AcceptedAt = os.time() }
+    data.Quests[questId] = { Status = "Active", Progress = copyProgress(progress), AcceptedAt = os.time() }
 
     -- Notify client
     QuestService.NotifyQuestUpdated(player, questId)
@@ -126,18 +171,7 @@ function QuestService.UpdateProgress(player, objectiveType, target, amount)
         if not quest.Completed then
             local changed = false
             for i, objective in ipairs(quest.Objectives or {}) do
-                local matches = false
-                if objective.Type == objectiveType then
-                    if objectiveType == "Harvest" or objectiveType == "Collect" then
-                        matches = (objective.ItemId == nil) or (objective.ItemId == target)
-                    elseif objectiveType == "Tame" or objectiveType == "Defeat" then
-                        matches = (objective.CreatureId == nil) or (objective.CreatureId == target)
-                    elseif objectiveType == "DefeatRarity" then
-                        matches = (objective.CreatureRarity ~= nil) and (objective.CreatureRarity == target)
-                    else
-                        matches = true
-                    end
-                end
+                local matches = QuestProgress.MatchesObjective(objective, objectiveType, target)
 
                 if matches then
                     local current = quest.Progress[i] or 0
@@ -154,10 +188,57 @@ function QuestService.UpdateProgress(player, objectiveType, target, amount)
                     quest.Completed = true
                 end
 
+                syncQuestToProfile(player, quest)
+
                 QuestService.NotifyQuestUpdated(player, questId)
             end
         end
     end
+end
+
+-- Deliver objectives are explicit inventory sinks. The server determines the
+-- required amount, removes it atomically, and only then advances progress.
+function QuestService.DeliverQuest(player, questId)
+    local quests = activeQuests[player.UserId]
+    local quest = quests and quests[questId]
+    if not quest then
+        return false, "Quest not active"
+    end
+
+    local requiredByItem = {}
+    for index, objective in ipairs(quest.Objectives or {}) do
+        if objective.Type == "Deliver" and objective.ItemId then
+            local required = math.max(0, (objective.Amount or 1) - (quest.Progress[index] or 0))
+            if required > 0 then
+                requiredByItem[objective.ItemId] = (requiredByItem[objective.ItemId] or 0) + required
+            end
+        end
+    end
+    if not next(requiredByItem) then
+        return false, "Nothing remains to deliver"
+    end
+
+    for itemId, amount in pairs(requiredByItem) do
+        if PlayerDataService.GetItemCount(player, itemId) < amount then
+            return false, "Not enough " .. itemId
+        end
+    end
+
+    local removed = {}
+    for itemId, amount in pairs(requiredByItem) do
+        if not PlayerDataService.RemoveItem(player, itemId, amount) then
+            for rollbackId, rollbackAmount in pairs(removed) do
+                PlayerDataService.AddItem(player, rollbackId, rollbackAmount)
+            end
+            return false, "Could not remove delivery items"
+        end
+        removed[itemId] = amount
+    end
+
+    for itemId, amount in pairs(requiredByItem) do
+        QuestService.UpdateProgress(player, "Deliver", itemId, amount)
+    end
+    return true, "Delivery accepted"
 end
 
 function QuestService.CompleteQuest(player, questId)
@@ -308,6 +389,26 @@ function QuestService.Initialize()
             end
             AntiCheatService:CheckPlayer(player)
             QuestService.AbandonQuest(player, questId)
+        end)
+    end
+
+    local DeliverQuest = Remotes:FindFirstChild("DeliverQuest")
+    if DeliverQuest then
+        DeliverQuest.OnServerEvent:Connect(function(player, questId)
+            if type(questId) ~= "string" then
+                return
+            end
+            if not RateLimiter.Check(player, "DeliverQuest", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
+            local success, result = QuestService.DeliverQuest(player, questId)
+            if not success then
+                local ErrorRemote = Remotes:FindFirstChild("Error")
+                if ErrorRemote then
+                    ErrorRemote:FireClient(player, result)
+                end
+            end
         end)
     end
 

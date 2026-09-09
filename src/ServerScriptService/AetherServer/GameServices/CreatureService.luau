@@ -137,7 +137,9 @@ function CreatureService.OnCreatureDefeated(creature, player)
 
     -- Grant loot
     for _, lootId in ipairs(def.Loot or {}) do
-        PlayerDataService.AddItem(player, lootId, 1)
+        if PlayerDataService.AddItem(player, lootId, 1) and QuestService.UpdateProgress then
+            QuestService.UpdateProgress(player, "Collect", lootId, 1)
+        end
     end
 
     -- Grant XP

@@ -73,10 +73,14 @@
                          "name":  "QuestUpdated",
                          "className":  "RemoteEvent"
                      },
-                     {
-                         "name":  "AbandonQuest",
-                         "className":  "RemoteEvent"
-                     },
+                      {
+                          "name":  "AbandonQuest",
+                          "className":  "RemoteEvent"
+                      },
+                      {
+                          "name":  "DeliverQuest",
+                          "className":  "RemoteEvent"
+                      },
                      {
                          "name":  "CreateTrade",
                          "className":  "RemoteEvent"
