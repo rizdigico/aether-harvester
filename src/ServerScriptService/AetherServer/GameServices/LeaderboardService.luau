@@ -11,6 +11,10 @@ LeaderboardService.Leaderboards = {
 
 local CATEGORIES = { "Level", "Wealth", "Pets", "Quests" }
 
+local function isCategory(category)
+    return type(category) == "string" and LeaderboardService.Leaderboards[category] ~= nil
+end
+
 function LeaderboardService.Initialize()
     print("[LeaderboardService] Initializing...")
 
@@ -26,10 +30,14 @@ function LeaderboardService.Initialize()
             if not RateLimiter.Check(player, "GetLeaderboard", 0.5) then
                 return {}
             end
-            if type(category) ~= "string" then
+            if not isCategory(category) then
                 return {}
             end
-            return LeaderboardService.GetTopPlayers(category, type(count) == "number" and count or 10)
+            local requestedCount = type(count) == "number" and count or 10
+            if requestedCount ~= requestedCount then
+                requestedCount = 10
+            end
+            return LeaderboardService.GetTopPlayers(category, requestedCount)
         end
     end
 
@@ -40,7 +48,7 @@ function LeaderboardService.Initialize()
             if not RateLimiter.Check(player, "RequestLeaderboard", 0.5) then
                 return
             end
-            if type(category) ~= "string" then
+            if not isCategory(category) then
                 return
             end
             local LeaderboardUpdated = Remotes:FindFirstChild("LeaderboardUpdated")
@@ -65,6 +73,9 @@ function LeaderboardService.Initialize()
 end
 
 function LeaderboardService.UpdateLeaderboard(player, category)
+    if not isCategory(category) then
+        return
+    end
     local data = PlayerDataService.GetData(player)
     if not data then
         return
@@ -86,9 +97,6 @@ function LeaderboardService.UpdateLeaderboard(player, category)
     end
 
     local leaderboard = LeaderboardService.Leaderboards[category]
-    if not leaderboard then
-        return
-    end
 
     -- Remove old entry
     for i, entry in ipairs(leaderboard) do
@@ -107,6 +115,9 @@ function LeaderboardService.UpdateLeaderboard(player, category)
 
     -- Sort leaderboard
     table.sort(leaderboard, function(a, b)
+        if a.Value == b.Value then
+            return a.PlayerId < b.PlayerId
+        end
         return a.Value > b.Value
     end)
 
@@ -123,12 +134,16 @@ function LeaderboardService.UpdateAll(player)
 end
 
 function LeaderboardService.GetTopPlayers(category, count)
-    local leaderboard = LeaderboardService.Leaderboards[category]
-    if not leaderboard then
+    if not isCategory(category) then
         return {}
     end
+    local leaderboard = LeaderboardService.Leaderboards[category]
 
-    count = math.clamp(math.floor(count or 10), 1, 100)
+    count = type(count) == "number" and count or 10
+    if count ~= count then
+        count = 10
+    end
+    count = math.clamp(math.floor(count), 1, 100)
     local topPlayers = {}
     for i = 1, math.min(count, #leaderboard) do
         table.insert(topPlayers, leaderboard[i])
@@ -137,10 +152,10 @@ function LeaderboardService.GetTopPlayers(category, count)
 end
 
 function LeaderboardService.GetPlayerRank(player, category)
-    local leaderboard = LeaderboardService.Leaderboards[category]
-    if not leaderboard then
+    if not isCategory(category) then
         return -1
     end
+    local leaderboard = LeaderboardService.Leaderboards[category]
 
     for i, entry in ipairs(leaderboard) do
         if entry.PlayerId == player.UserId then
@@ -148,6 +163,16 @@ function LeaderboardService.GetPlayerRank(player, category)
         end
     end
     return -1
+end
+
+function LeaderboardService.RemovePlayer(player)
+    for _, leaderboard in pairs(LeaderboardService.Leaderboards) do
+        for index = #leaderboard, 1, -1 do
+            if leaderboard[index].PlayerId == player.UserId then
+                table.remove(leaderboard, index)
+            end
+        end
+    end
 end
 
 return LeaderboardService
