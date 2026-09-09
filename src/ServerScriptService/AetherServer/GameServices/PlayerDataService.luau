@@ -9,12 +9,25 @@ local PlayerDataStore = DataStoreService:GetDataStore(DATASTORE_NAME)
 
 local playerData = {}
 local playerSaveEnabled = {}
+local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
 local SCHEMA_VERSION = 1
 local MAX_TRANSACTION_AMOUNT = 1000000000
 
 local function isPositiveInteger(value)
     return type(value) == "number" and value >= 1 and value <= MAX_TRANSACTION_AMOUNT and value == math.floor(value)
+end
+
+local function cloneProfile(value)
+    if type(value) ~= "table" then
+        return value
+    end
+
+    local copy = {}
+    for key, nestedValue in pairs(value) do
+        copy[key] = cloneProfile(nestedValue)
+    end
+    return copy
 end
 
 -- Default profile (v1). New players and migrated old profiles get this shape.
@@ -97,9 +110,17 @@ local function SaveProfile(userId, data, attempt)
         return false
     end
     attempt = attempt or 1
+
+    -- DataStore calls yield. Serialize per-user writes so an autosave, receipt
+    -- grant, and PlayerRemoving save cannot race and overwrite each other.
+    while saveLocks[userId] do
+        task.wait()
+    end
+    saveLocks[userId] = true
     local ok, err = pcall(function()
         PlayerDataStore:SetAsync(tostring(userId), data)
     end)
+    saveLocks[userId] = nil
     if ok then
         return true
     end
@@ -152,7 +173,7 @@ function PlayerDataService.Initialize()
             task.wait(SAVE_INTERVAL)
             local snapshot = {}
             for uid, data in pairs(playerData) do
-                snapshot[uid] = data
+                snapshot[uid] = cloneProfile(data)
             end
             for uid, data in pairs(snapshot) do
                 task.spawn(function()
