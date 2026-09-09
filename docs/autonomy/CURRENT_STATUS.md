@@ -25,7 +25,7 @@ The branch now includes server-authoritative harvesting, progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped chat, achievements, cosmetics, leaderboards, daily rewards, events,
 analytics, monetization boundaries, battle-pass progression, prestige/ascension,
-persistence
+persistence, session party lifecycle,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
 and the rebuilt screen/controller layer.
 
@@ -39,6 +39,12 @@ required, prestige is capped at 50, each completed prestige adds a permanent
 and level/skills/upgrades/inventory/soft currency/temporary boosts reset. The
 client surface reads the snapshot through `GetPrestige` and can request the
 transition through `RequestPrestige`.
+
+The party flow is session-only by design: the server owns a four-player party,
+validates online invites and expiring responses, transfers ownership when the
+owner leaves, supports owner removal, broadcasts member snapshots, and cleans
+up membership on disconnect. It is intentionally not persisted into player
+profiles.
 
 ## Local MCP evidence
 
@@ -58,7 +64,7 @@ transition through `RequestPrestige`.
 - Roblox Studio, Rojo 7.7.0, and Wally 0.3.2 are detected.
 - The Aesther Harvest Studio window is visible locally.
 - Project inspection passes for `default.project.json` and `src`.
-- Current MCP build output: `artifacts/prestige-slice.rbxlx`.
+- Current MCP build output: `artifacts/mcp-party-current.rbxlx`.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline

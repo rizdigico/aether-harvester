@@ -122,6 +122,34 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "CreateParty",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "InviteToParty",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RespondPartyInvite",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "LeaveParty",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "KickPartyMember",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PartyInvite",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PartyUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "CraftItem",
                          "className":  "RemoteEvent"
                      },
