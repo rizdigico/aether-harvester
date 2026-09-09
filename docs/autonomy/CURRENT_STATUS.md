@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 55 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 58 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include persistence hardening and the pet-care flow |
 
@@ -26,7 +26,8 @@ crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
 scoped global/island/guild/party chat, achievements, cosmetics, leaderboards,
 daily rewards, events,
 analytics, monetization boundaries, battle-pass progression, prestige/ascension,
-persistence, session party lifecycle, deterministic pet fusion,
+persistence, session party lifecycle, deterministic pet fusion, personal base
+placement,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
 and the rebuilt screen/controller layer.
 
@@ -55,6 +56,11 @@ pet only after the server has completed the mutation. The client exposes the
 inventory selection and known-result preview; it never decides ownership or
 the result.
 
+The personal base flow persists a bounded 15×15 decoration grid, consumes only
+owned Decoration items, rejects occupied or malformed cells, returns items on
+removal, renders the result on a server-created base platform, and provides a
+server-controlled visit action. Base data is sanitized during profile load.
+
 ## Local MCP evidence
 
 ### Godot Local MCP
@@ -73,7 +79,7 @@ the result.
 - Roblox Studio, Rojo 7.7.0, and Wally 0.3.2 are detected.
 - The Aesther Harvest Studio window is visible locally.
 - Project inspection passes for `default.project.json` and `src`.
-- Current MCP build output: `artifacts/fusion-slice-final.rbxlx`.
+- Current MCP build output: `artifacts/mcp-base-current.rbxlx`.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline

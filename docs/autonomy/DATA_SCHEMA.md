@@ -43,6 +43,18 @@
         [skillId: string]: number
     },
     SkillPoints: number,
+    Base: {
+        Level: number,
+        Decorations: {
+            [index: number]: {
+                Id: number,
+                ItemId: string,
+                X: number,
+                Z: number,
+                Rotation: number
+            }
+        }
+    },
     Quests: {
         [questId: string]: {
             Status: "Active" | "Completed" | "Abandoned",

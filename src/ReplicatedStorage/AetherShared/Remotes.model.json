@@ -378,6 +378,22 @@
                          "className":  "RemoteFunction"
                      },
                      {
+                         "name":  "PlaceDecoration",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "RemoveDecoration",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "VisitBase",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "BaseUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "GetGuildInfo",
                          "className":  "RemoteFunction"
                      },

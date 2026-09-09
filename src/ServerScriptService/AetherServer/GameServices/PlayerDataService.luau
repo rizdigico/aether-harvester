@@ -4,6 +4,7 @@ local RunService = game:GetService("RunService")
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
+local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -229,6 +230,52 @@ local function sanitizeReceiptJournal(value)
     return journal
 end
 
+local function sanitizeBase(value)
+    local base = { Level = 1, Decorations = {} }
+    if type(value) ~= "table" then
+        return base
+    end
+    base.Level = isFiniteNumber(value.Level) and math.clamp(math.floor(value.Level), 1, 10) or base.Level
+    if type(value.Decorations) ~= "table" then
+        return base
+    end
+    local seenIds = {}
+    local seenCells = {}
+    for _, decoration in ipairs(value.Decorations) do
+        if #base.Decorations >= BaseRules.MAX_DECORATIONS then
+            break
+        end
+        local cellKey = type(decoration) == "table" and tostring(decoration.X) .. ":" .. tostring(decoration.Z) or ""
+        if
+            type(decoration) == "table"
+            and isFiniteNumber(decoration.Id)
+            and math.floor(decoration.Id) > 0
+            and not seenIds[math.floor(decoration.Id)]
+            and type(decoration.ItemId) == "string"
+            and ItemsData.GetItem(decoration.ItemId)
+            and ItemsData.GetItem(decoration.ItemId).Type == "Decoration"
+            and isFiniteNumber(decoration.X)
+            and isFiniteNumber(decoration.Z)
+            and isFiniteNumber(decoration.Rotation)
+            and BaseRules.IsValidCoordinate(decoration.X)
+            and BaseRules.IsValidCoordinate(decoration.Z)
+            and BaseRules.IsValidRotation(decoration.Rotation)
+            and not seenCells[cellKey]
+        then
+            seenIds[math.floor(decoration.Id)] = true
+            seenCells[cellKey] = true
+            table.insert(base.Decorations, {
+                Id = math.floor(decoration.Id),
+                ItemId = decoration.ItemId,
+                X = math.floor(decoration.X),
+                Z = math.floor(decoration.Z),
+                Rotation = math.floor(decoration.Rotation),
+            })
+        end
+    end
+    return base
+end
+
 -- Default profile (v1). New players and migrated old profiles get this shape.
 local function CreateDefaultProfile(userId)
     return {
@@ -247,6 +294,7 @@ local function CreateDefaultProfile(userId)
         EquippedPets = {},
         Skills = {},
         SkillPoints = 0,
+        Base = { Level = 1, Decorations = {} },
         Quests = {},
         Achievements = {},
         Cosmetics = {},
@@ -319,6 +367,7 @@ local function SanitizeProfile(userId, raw)
     merged.SkillPoints = isFiniteNumber(merged.SkillPoints)
             and math.clamp(math.floor(merged.SkillPoints), 0, MAX_TRANSACTION_AMOUNT)
         or base.SkillPoints
+    merged.Base = sanitizeBase(merged.Base)
     merged.Cosmetics = type(merged.Cosmetics) == "table" and merged.Cosmetics or {}
     merged.Entitlements = sanitizeStringBooleanMap(merged.Entitlements)
     merged.ProcessedReceipts = sanitizeReceiptJournal(merged.ProcessedReceipts)
