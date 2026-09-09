@@ -2,6 +2,7 @@ local DailyRewardsService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RewardsData = require(game.ReplicatedStorage.AetherShared.Data.Rewards)
 local DailyRewardProgress = require(game.ReplicatedStorage.AetherShared.Modules.DailyRewardProgress)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 DailyRewardsService.Rewards = RewardsData.DailyCalendar
 
@@ -17,6 +18,9 @@ function DailyRewardsService.Initialize()
     local ClaimDailyReward = Remotes:FindFirstChild("ClaimDailyReward")
     if ClaimDailyReward then
         ClaimDailyReward.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "ClaimDailyReward", 2) then
+                return
+            end
             local success, message = DailyRewardsService.ClaimDailyReward(player)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -91,7 +95,7 @@ end
 function DailyRewardsService.CanClaim(player)
     local data = PlayerDataService.GetData(player)
     if not data then
-        return true
+        return false
     end
 
     local lastClaimDay = data.LastDailyRewardDay

@@ -2,6 +2,7 @@ local RewardService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RewardsData = require(game.ReplicatedStorage.AetherShared.Data.Rewards)
 local DailyRewardsService = require(game.ServerScriptService.AetherServer.GameServices.DailyRewardsService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 function RewardService.Initialize()
     print("[RewardService] Initializing...")
@@ -16,6 +17,9 @@ function RewardService.Initialize()
     if ClaimReward then
         ClaimReward.OnServerEvent:Connect(function(player, rewardId)
             if type(rewardId) ~= "string" then
+                return
+            end
+            if not RateLimiter.Check(player, "ClaimReward", 1) then
                 return
             end
             local success, message = RewardService.ClaimExtraReward(player, rewardId)
