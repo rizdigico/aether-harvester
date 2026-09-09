@@ -1,6 +1,7 @@
 local AchievementService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local AchievementsData = require(game.ReplicatedStorage.AetherShared.Data.Achievements)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 function AchievementService.Initialize()
     print("[AchievementService] Initializing...")
@@ -14,6 +15,9 @@ function AchievementService.Initialize()
     local RequestAchievements = Remotes:FindFirstChild("RequestAchievements")
     if RequestAchievements then
         RequestAchievements.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "RequestAchievements", 1) then
+                return
+            end
             local AchievementUnlocked = Remotes:FindFirstChild("AchievementUnlocked")
             if not AchievementUnlocked then
                 return

@@ -1,6 +1,6 @@
 local ChatService = {}
-local Players = game:GetService("Players")
-
+local TextService = game:GetService("TextService")
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 ChatService.Channels = {
     { Id = "global", Name = "Global", Description = "Global chat for all players" },
     { Id = "island", Name = "Island", Description = "Chat with players on your island" },
@@ -29,6 +29,9 @@ function ChatService:SetupChannels()
     local SendMessage = Remotes:FindFirstChild("SendChatMessage")
     if SendMessage then
         SendMessage.OnServerEvent:Connect(function(player, channelId, message)
+            if not RateLimiter.Check(player, "SendChatMessage", 0.75) then
+                return
+            end
             if type(channelId) ~= "string" or type(message) ~= "string" then
                 return
             end
@@ -45,6 +48,15 @@ function ChatService:HandleMessage(player, channelId, message)
     if #message > 200 then
         message = message:sub(1, 200)
     end
+
+    local ok, filteredMessage = pcall(function()
+        local filterResult = TextService:FilterStringAsync(message, player.UserId, Enum.TextFilterContext.PublicChat)
+        return filterResult:GetNonChatStringForBroadcastAsync()
+    end)
+    if not ok or type(filteredMessage) ~= "string" or filteredMessage == "" then
+        return
+    end
+    message = filteredMessage
 
     -- Check channel access
     local channel = ChatService:GetChannel(channelId)

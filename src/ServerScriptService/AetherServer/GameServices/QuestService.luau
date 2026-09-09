@@ -13,12 +13,57 @@ local QuestProgress = require(game.ReplicatedStorage.AetherShared.Modules.QuestP
 -- Active quests per player: userId -> { questId -> {Progress = {...}, Completed = bool} }
 local activeQuests = {}
 
+local function buildActiveQuest(questId, questDef, savedQuest)
+    if type(savedQuest) ~= "table" or savedQuest.Status ~= "Active" then
+        return nil
+    end
+
+    local progress = {}
+    for index, objective in ipairs(questDef.Objectives or {}) do
+        local savedProgress = savedQuest.Progress and savedQuest.Progress[index]
+        local value = type(savedProgress) == "number" and math.max(0, math.floor(savedProgress)) or 0
+        local targetAmount = type(objective.Amount) == "number" and objective.Amount or value
+        progress[index] = math.min(value, targetAmount)
+    end
+
+    local restored = {
+        Id = questId,
+        Title = questDef.Title,
+        Progress = progress,
+        Objectives = questDef.Objectives,
+        Completed = false,
+        AcceptedAt = type(savedQuest.AcceptedAt) == "number" and savedQuest.AcceptedAt or os.time(),
+    }
+    local result = QuestProgress.ComputeQuestProgress(restored, progress)
+    restored.Completed = result.completed
+    return restored
+end
+
 function QuestService.GetActiveQuests(player)
     return activeQuests[player.UserId] or {}
 end
 
 function QuestService.GetQuestData(questId)
     return QuestsData.Get(questId)
+end
+
+function QuestService.OnPlayerAdded(player)
+    local data = PlayerDataService.GetData(player)
+    local restored = {}
+    if data and type(data.Quests) == "table" then
+        for questId, savedQuest in pairs(data.Quests) do
+            local questDef = QuestsData.Get(questId)
+            local quest = questDef and buildActiveQuest(questId, questDef, savedQuest)
+            if quest then
+                restored[questId] = quest
+            end
+        end
+    end
+    activeQuests[player.UserId] = restored
+end
+
+function QuestService.OnPlayerRemoving(player)
+    activeQuests[player.UserId] = nil
 end
 
 function QuestService.AcceptQuest(player, questId)
@@ -60,7 +105,7 @@ function QuestService.AcceptQuest(player, questId)
 
     -- Sync to player data
     data.Quests = data.Quests or {}
-    data.Quests[questId] = { Status = "Active", Progress = progress }
+    data.Quests[questId] = { Status = "Active", Progress = progress, AcceptedAt = os.time() }
 
     -- Notify client
     QuestService.NotifyQuestUpdated(player, questId)
@@ -69,6 +114,10 @@ function QuestService.AcceptQuest(player, questId)
 end
 
 function QuestService.UpdateProgress(player, objectiveType, target, amount)
+    if type(amount) ~= "number" or amount <= 0 then
+        return
+    end
+    amount = math.floor(amount)
     local quests = activeQuests[player.UserId]
     if not quests then
         return
@@ -98,7 +147,9 @@ function QuestService.UpdateProgress(player, objectiveType, target, amount)
                 end
 
                 if matches then
-                    quest.Progress[i] = (quest.Progress[i] or 0) + amount
+                    local current = quest.Progress[i] or 0
+                    local targetAmount = type(objective.Amount) == "number" and objective.Amount or (current + amount)
+                    quest.Progress[i] = math.min(targetAmount, current + amount)
                     changed = true
                 end
             end

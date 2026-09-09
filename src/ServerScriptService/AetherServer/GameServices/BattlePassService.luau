@@ -1,5 +1,6 @@
 local BattlePassService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 -- Injected by ServerMain after every service has loaded. The fallback keeps
 -- the module safe in isolated tests without importing ProgressionService.
@@ -59,6 +60,9 @@ function BattlePassService.Initialize()
     local PurchaseBattlePassPremium = Remotes:FindFirstChild("PurchaseBattlePassPremium")
     if PurchaseBattlePassPremium then
         PurchaseBattlePassPremium.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "PurchaseBattlePassPremium", 1) then
+                return
+            end
             local success, message = BattlePassService.PurchasePremium(player)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")

@@ -176,13 +176,17 @@ function MarketplaceService.PurchaseListing(player, listingId)
         return false, "Not enough currency"
     end
 
-    -- Add item to buyer
-    PlayerDataService.AddItem(player, listing.ItemId, listing.Amount)
+    -- Add item to buyer. Roll back the debit if the inventory mutation fails.
+    if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
+        PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
+        return false, "Could not deliver purchased item"
+    end
 
     -- Give money to seller
     if not PlayerDataService.AddCurrency(seller, "AetherShards", listing.Price) then
         -- This should be unreachable after the seller data check. Keep the
         -- sale active if the payout cannot be recorded.
+        PlayerDataService.RemoveItem(player, listing.ItemId, listing.Amount)
         PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
         return false, "Seller payout failed"
     end

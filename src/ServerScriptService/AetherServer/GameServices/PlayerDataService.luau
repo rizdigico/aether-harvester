@@ -1,6 +1,7 @@
 local PlayerDataService = {}
 local DataStoreService = game:GetService("DataStoreService")
 local RunService = game:GetService("RunService")
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -159,6 +160,9 @@ function PlayerDataService.Initialize()
         local RequestPlayerData = Remotes:FindFirstChild("RequestPlayerData")
         if RequestPlayerData then
             RequestPlayerData.OnServerEvent:Connect(function(player)
+                if not RateLimiter.Check(player, "RequestPlayerData", 0.5) then
+                    return
+                end
                 local PlayerDataLoaded = Remotes:FindFirstChild("PlayerDataLoaded")
                 if PlayerDataLoaded and playerData[player.UserId] then
                     PlayerDataLoaded:FireClient(player, playerData[player.UserId])
@@ -306,8 +310,6 @@ function PlayerDataService.SaveNow(player)
     return SaveProfile(player.UserId, data, 1)
 end
 
-local petIdCounter = 0
-
 function PlayerDataService.AddPet(player, petId)
     local data = playerData[player.UserId]
     if not data then
@@ -316,9 +318,17 @@ function PlayerDataService.AddPet(player, petId)
     data.PetInventory = data.PetInventory or {}
     -- Normalize: accept a string PetId or an existing pet record
     if type(petId) == "string" then
-        petIdCounter += 1
+        local highestInstanceId = 0
+        for _, existingPet in ipairs(data.PetInventory) do
+            if type(existingPet) == "table" and type(existingPet.InstanceId) == "number" then
+                highestInstanceId = math.max(highestInstanceId, existingPet.InstanceId)
+            end
+        end
         local newPet = {
-            InstanceId = petIdCounter,
+            -- Instance IDs only need to be unique inside this player's profile.
+            -- Deriving from the persisted inventory avoids collisions after a
+            -- server restart or when multiple grant paths add pets.
+            InstanceId = highestInstanceId + 1,
             PetId = petId,
             Level = 1,
             XP = 0,

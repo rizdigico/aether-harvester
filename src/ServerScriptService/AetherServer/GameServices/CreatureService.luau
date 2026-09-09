@@ -10,6 +10,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
 local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local CreaturesData = require(game.ReplicatedStorage.AetherShared.Data.Creatures)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
@@ -182,6 +183,7 @@ function CreatureService.Initialize()
                     maxHealth = def.Health,
                     def = def,
                     aggroTarget = nil,
+                    lastAttackAt = 0,
                 }
                 count += 1
             end
@@ -193,13 +195,37 @@ function CreatureService.Initialize()
     local TameCreatureRemote = Remotes and Remotes:FindFirstChild("TameCreature")
     if TameCreatureRemote then
         TameCreatureRemote.OnServerEvent:Connect(function(player, creature)
-            if not creature or not creature.Parent then
+            if not RateLimiter.Check(player, "TameCreature", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
+            if
+                typeof(creature) ~= "Instance"
+                or not creature.Parent
+                or not CreaturesFolder
+                or not creature:IsA("Model")
+                or not creature:IsDescendantOf(CreaturesFolder)
+                or not creatureState[creature]
+            then
                 local ErrorRemote = Remotes:FindFirstChild("Error")
                 if ErrorRemote then
                     ErrorRemote:FireClient(player, "Creature not found")
                 end
                 return
             end
+
+            local character = player.Character
+            local root = character and character:FindFirstChild("HumanoidRootPart")
+            if not root or not root:IsA("BasePart") then
+                return
+            end
+            local ok, creatureCFrame = pcall(function()
+                return creature:GetPivot()
+            end)
+            if not ok or (root.Position - creatureCFrame.Position).Magnitude > 20 then
+                return
+            end
+
             local success, result = CreatureService.TameCreature(creature, player)
             if not success then
                 local ErrorRemote = Remotes:FindFirstChild("Error")
@@ -263,10 +289,13 @@ function CreatureService.Initialize()
                         if dist > 40 then
                             state.aggroTarget = nil
                         elseif dist < 8 then
-                            -- Attack
+                            -- Attack on a bounded cooldown, not every Heartbeat.
                             local humanoid = target.Character:FindFirstChildOfClass("Humanoid")
-                            if humanoid then
+                            local now = os.clock()
+                            local attackCooldown = math.max(0.5, 2 - ((state.def.Speed or 0) / 40))
+                            if humanoid and (now - state.lastAttackAt) >= attackCooldown then
                                 humanoid:TakeDamage(state.def.Damage)
+                                state.lastAttackAt = now
                             end
                         end
                     end

@@ -1,10 +1,11 @@
 local PetService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 local activePets = {}
 local petFollowers = {}
-local petIdCounter = 0
 
 local RunService = game:GetService("RunService")
 local PetFolder = Instance.new("Folder")
@@ -19,14 +20,36 @@ local PET_VISUALS = {
     Mount = { Color3.fromRGB(220, 160, 255), Color3.fromRGB(240, 210, 255) }, -- purple
 }
 
+local function findOwnedPet(player, petKey)
+    local data = PlayerDataService.GetData(player)
+    if not data or type(data.PetInventory) ~= "table" then
+        return nil
+    end
+
+    for _, pet in ipairs(data.PetInventory) do
+        if type(pet) == "table" then
+            if type(petKey) == "number" and pet.InstanceId == petKey then
+                return pet
+            elseif type(petKey) == "string" and pet.PetId == petKey then
+                return pet
+            end
+        end
+    end
+
+    return nil
+end
+
 function PetService.SpawnFollower(player, petId)
     local data = PlayerDataService.GetData(player)
     if not data then
-        return
+        return false, "Player data not found"
     end
     local petDef = PetsData.GetPet(petId)
     if not petDef then
-        return
+        return false, "Unknown pet"
+    end
+    if not findOwnedPet(player, petId) then
+        return false, "Pet not owned"
     end
 
     -- Remove any existing follower for this player
@@ -75,6 +98,8 @@ function PetService.SpawnFollower(player, petId)
             task.wait(0.05)
         end
     end)
+
+    return true
 end
 
 function PetService.DespawnFollower(player)
@@ -125,6 +150,10 @@ function PetService.Initialize()
     local EquipPet = Remotes:FindFirstChild("EquipPet")
     if EquipPet then
         EquipPet.OnServerEvent:Connect(function(player, petKey)
+            if not RateLimiter.Check(player, "EquipPet", 0.25) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             if type(petKey) ~= "number" and type(petKey) ~= "string" then
                 return
             end
@@ -133,16 +162,6 @@ function PetService.Initialize()
                 return
             end
             local success, message = PetService.EquipPet(player, petKey)
-            if not success and type(petKey) == "string" then
-                -- Fall back to matching by PetId
-                for _, pet in ipairs(data.PetInventory or {}) do
-                    if pet.PetId == petKey then
-                        PetService.EquipPet(player, pet.InstanceId)
-                        success = true
-                        break
-                    end
-                end
-            end
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
                 if Error then
@@ -156,17 +175,16 @@ function PetService.Initialize()
     local UnequipPet = Remotes:FindFirstChild("UnequipPet")
     if UnequipPet then
         UnequipPet.OnServerEvent:Connect(function(player, petInstanceId)
+            if not RateLimiter.Check(player, "UnequipPet", 0.25) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             if type(petInstanceId) ~= "number" then
                 return
             end
-            local data = PlayerDataService.GetData(player)
-            if not data then
-                return
-            end
-            for _, pet in ipairs(data.PetInventory or {}) do
-                if pet.InstanceId == petInstanceId then
-                    pet.IsEquipped = false
-                end
+            local pet = findOwnedPet(player, petInstanceId)
+            if pet then
+                pet.IsEquipped = false
             end
         end)
     end
@@ -175,11 +193,22 @@ function PetService.Initialize()
     local SummonPet = Remotes:FindFirstChild("SummonPet")
     if SummonPet then
         SummonPet.OnServerEvent:Connect(function(player, petId)
+            if not RateLimiter.Check(player, "SummonPet", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             if type(petId) ~= "string" then
                 return
             end
+            local success, message = PetService.SpawnFollower(player, petId)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Failed to summon pet")
+                end
+                return
+            end
             activePets[player.UserId] = petId
-            PetService.SpawnFollower(player, petId)
             local PetSummon = Remotes:FindFirstChild("PetSummon")
             if PetSummon then
                 PetSummon:FireClient(player, petId)
@@ -191,6 +220,10 @@ function PetService.Initialize()
     local ReleasePet = Remotes:FindFirstChild("ReleasePet")
     if ReleasePet then
         ReleasePet.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "ReleasePet", 0.25) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             activePets[player.UserId] = nil
             PetService.DespawnFollower(player)
             local PetReleased = Remotes:FindFirstChild("PetReleased")
@@ -203,33 +236,24 @@ function PetService.Initialize()
     print("[PetService] Initialized")
 end
 
+function PetService.OnPlayerRemoving(player)
+    activePets[player.UserId] = nil
+    PetService.DespawnFollower(player)
+end
+
 function PetService.GivePet(player, petId)
     local petData = PetsData.GetPet(petId)
     if not petData then
         return false, "Invalid pet ID"
     end
 
-    local data = PlayerDataService.GetData(player)
-    if not data then
+    if not PlayerDataService.GetData(player) then
         return false, "Player data not found"
     end
-
-    petIdCounter += 1
-
-    local newPet = {
-        InstanceId = petIdCounter,
-        PetId = petId,
-        Level = 1,
-        XP = 0,
-        Hunger = 100,
-        Happiness = 100,
-        Energy = 100,
-        IsEquipped = false,
-    }
-
-    table.insert(data.PetInventory, newPet)
-
-    return true, "Pet added to inventory"
+    if PlayerDataService.AddPet(player, petId) then
+        return true, "Pet added to inventory"
+    end
+    return false, "Could not add pet to inventory"
 end
 
 function PetService.EquipPet(player, petInstanceId)
@@ -238,20 +262,18 @@ function PetService.EquipPet(player, petInstanceId)
         return false, "Player data not found"
     end
 
-    -- Unequip all other pets
+    local selectedPet = findOwnedPet(player, petInstanceId)
+    if not selectedPet then
+        return false, "Pet not found in inventory"
+    end
+
+    -- Unequip all other pets only after validating the requested pet.
     for _, pet in ipairs(data.PetInventory) do
         pet.IsEquipped = false
     end
 
-    -- Equip selected pet
-    for _, pet in ipairs(data.PetInventory) do
-        if pet.InstanceId == petInstanceId then
-            pet.IsEquipped = true
-            return true, "Pet equipped"
-        end
-    end
-
-    return false, "Pet not found in inventory"
+    selectedPet.IsEquipped = true
+    return true, "Pet equipped"
 end
 
 function PetService.FeedPet(player, petInstanceId)

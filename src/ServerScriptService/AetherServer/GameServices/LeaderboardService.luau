@@ -1,5 +1,6 @@
 local LeaderboardService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 LeaderboardService.Leaderboards = {
     ["Level"] = {},
@@ -21,7 +22,10 @@ function LeaderboardService.Initialize()
     -- GetLeaderboard: fetch top players for a category
     local GetLeaderboard = Remotes:FindFirstChild("GetLeaderboard")
     if GetLeaderboard then
-        GetLeaderboard.OnServerInvoke = function(_player, category, count)
+        GetLeaderboard.OnServerInvoke = function(player, category, count)
+            if not RateLimiter.Check(player, "GetLeaderboard", 0.5) then
+                return {}
+            end
             if type(category) ~= "string" then
                 return {}
             end
@@ -33,6 +37,9 @@ function LeaderboardService.Initialize()
     local RequestLeaderboard = Remotes:FindFirstChild("RequestLeaderboard")
     if RequestLeaderboard then
         RequestLeaderboard.OnServerEvent:Connect(function(player, category)
+            if not RateLimiter.Check(player, "RequestLeaderboard", 0.5) then
+                return
+            end
             if type(category) ~= "string" then
                 return
             end

@@ -1,5 +1,6 @@
 -- WorldManager
 local WorldManager = {}
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -143,6 +144,9 @@ function WorldManager.Initialize()
         local ChangeIsland = Remotes:FindFirstChild("ChangeIsland")
         if ChangeIsland then
             ChangeIsland.OnServerEvent:Connect(function(player, islandId)
+                if not RateLimiter.Check(player, "ChangeIsland", 1) then
+                    return
+                end
                 if type(islandId) ~= "string" then
                     return
                 end
