@@ -9,6 +9,7 @@ local RunService = game:GetService("RunService")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
 local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local CreaturesData = require(game.ReplicatedStorage.AetherShared.Data.Creatures)
 
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
@@ -47,6 +48,10 @@ function CreatureService.GetCreatureHealth(creature)
 end
 
 function CreatureService.DamageCreature(creature, amount, player)
+    if type(amount) ~= "number" or amount <= 0 or amount > 100 then
+        return false
+    end
+
     local state = creatureState[creature]
     if not state then
         return false
@@ -205,20 +210,37 @@ function CreatureService.Initialize()
         end)
     end
 
-    -- DamageCreature remote: hit a creature (combat)
+    -- DamageCreature remote: hit a creature (combat). The remote is declared
+    -- in Remotes.model.json; runtime creation would hide source/model drift.
     local DamageRemote = Remotes and Remotes:FindFirstChild("DamageCreature")
-    if not DamageRemote then
-        -- create if missing so combat works
-        DamageRemote = Instance.new("RemoteEvent")
-        DamageRemote.Name = "DamageCreature"
-        DamageRemote.Parent = Remotes
+    if DamageRemote then
+        DamageRemote.OnServerEvent:Connect(function(player, creature)
+            if not RateLimiter.Check(player, "DamageCreature", 0.25) then
+                return
+            end
+            if typeof(creature) ~= "Instance" or not creature.Parent or not CreaturesFolder then
+                return
+            end
+            if not creature:IsDescendantOf(CreaturesFolder) or not creatureState[creature] then
+                return
+            end
+
+            local character = player.Character
+            local root = character and character:FindFirstChild("HumanoidRootPart")
+            if not root or not root:IsA("BasePart") or not creature:IsA("Model") then
+                return
+            end
+
+            local distance = (root.Position - creature:GetPivot().Position).Magnitude
+            if distance > 20 then
+                return
+            end
+
+            CreatureService.DamageCreature(creature, 10, player)
+        end)
+    else
+        warn("[CreatureService] DamageCreature remote is missing from the remotes model")
     end
-    DamageRemote.OnServerEvent:Connect(function(player, creature)
-        if not creature or not creature.Parent then
-            return
-        end
-        CreatureService.DamageCreature(creature, 10, player)
-    end)
 
     -- Aggro check loop
     RunService.Heartbeat:Connect(function()

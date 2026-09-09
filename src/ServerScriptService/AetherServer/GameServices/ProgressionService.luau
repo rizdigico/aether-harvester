@@ -10,16 +10,9 @@ function ProgressionService.Initialize()
         return
     end
 
-    -- AddXP: grant XP with an exploit cap
-    local AddXP = Remotes:FindFirstChild("AddXP")
-    if AddXP then
-        AddXP.OnServerEvent:Connect(function(player, amount)
-            if type(amount) ~= "number" then
-                return
-            end
-            ProgressionService.AddXP(player, math.clamp(math.floor(amount), 1, 10000))
-        end)
-    end
+    -- XP is granted only by server-owned gameplay services.  The legacy AddXP
+    -- RemoteEvent may still exist in an older place file, but it must never be
+    -- connected here because any client can fire a RemoteEvent.
 
     -- LevelUp: client asks to sync current level/skill points
     local LevelUp = Remotes:FindFirstChild("LevelUp")
@@ -40,12 +33,16 @@ function ProgressionService.Initialize()
 end
 
 function ProgressionService.AddXP(player, amount)
+    if type(amount) ~= "number" or amount <= 0 or amount > 1000000 then
+        return false
+    end
+
     local data = PlayerDataService.GetData(player)
     if not data then
         return false
     end
 
-    data.XP = (data.XP or 0) + amount
+    data.XP = (data.XP or 0) + math.floor(amount)
 
     -- Check for level up
     local currentLevel = data.Level or 1

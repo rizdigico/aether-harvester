@@ -5,6 +5,11 @@ local PlayerDataStore = DataStoreService:GetDataStore("PlayerData_v1")
 local playerData = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
 local SCHEMA_VERSION = 1
+local MAX_TRANSACTION_AMOUNT = 1000000000
+
+local function isPositiveInteger(value)
+    return type(value) == "number" and value >= 1 and value <= MAX_TRANSACTION_AMOUNT and value == math.floor(value)
+end
 
 -- Default profile (v1). New players and migrated old profiles get this shape.
 local function CreateDefaultProfile(userId)
@@ -39,6 +44,10 @@ local function CreateDefaultProfile(userId)
         },
         PrestigeLevel = 0,
         GuildId = nil,
+        DailyStreak = 0,
+        LastDailyReward = nil,
+        LastDailyRewardAt = 0,
+        LastDailyRewardDay = nil,
     }
 end
 
@@ -191,7 +200,10 @@ function PlayerDataService.UpdateData(player, key, value)
 end
 
 function PlayerDataService.AddCurrency(player, currencyType, amount)
-    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] then
+    if type(currencyType) ~= "string" or not isPositiveInteger(amount) then
+        return false
+    end
+    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] ~= nil then
         playerData[player.UserId].Currency[currencyType] += amount
         return true
     end
@@ -199,7 +211,10 @@ function PlayerDataService.AddCurrency(player, currencyType, amount)
 end
 
 function PlayerDataService.RemoveCurrency(player, currencyType, amount)
-    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] then
+    if type(currencyType) ~= "string" or not isPositiveInteger(amount) then
+        return false
+    end
+    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] ~= nil then
         if playerData[player.UserId].Currency[currencyType] >= amount then
             playerData[player.UserId].Currency[currencyType] -= amount
             return true
@@ -211,7 +226,7 @@ end
 function PlayerDataService.AddItem(player, itemId, amount)
     local data = playerData[player.UserId]
     amount = amount or 1
-    if not data then
+    if not data or type(itemId) ~= "string" or itemId == "" or not isPositiveInteger(amount) then
         return false
     end
     data.Inventory = data.Inventory or {}
@@ -222,7 +237,7 @@ end
 function PlayerDataService.RemoveItem(player, itemId, amount)
     local data = playerData[player.UserId]
     amount = amount or 1
-    if not data then
+    if not data or type(itemId) ~= "string" or itemId == "" or not isPositiveInteger(amount) then
         return false
     end
     data.Inventory = data.Inventory or {}
@@ -275,10 +290,10 @@ end
 
 function PlayerDataService.AddXP(player, amount)
     local data = playerData[player.UserId]
-    if not data then
+    if not data or not isPositiveInteger(amount) or amount > 10000 then
         return
     end
-    data.XP = (data.XP or 0) + amount
+    data.XP = (data.XP or 0) + math.floor(amount)
 
     -- Update battle pass XP
     local BattlePassService = require(game.ServerScriptService.AetherServer.GameServices.BattlePassService)
