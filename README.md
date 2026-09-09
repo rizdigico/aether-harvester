@@ -162,19 +162,19 @@ Inflation controls: currency sinks (repairs, upgrades, travel), dynamic pricing,
 
 ## What Is Built & Verified
 
-Status: **VERIFIED** — boot clean, all core loops proven end-to-end in Studio play mode (see `docs/` and the hardening/revamp evidence reports).
+Status: **BUILD-VERIFIED / LIVE E2E PENDING** — the source passes formatting, lint, unit tests, and Rojo builds. Live Studio play-mode claims remain pending a connected Studio MCP session; see `docs/autonomy/E2E_LIVE_VERIFICATION.md` for the current evidence.
 
 | System | State |
 |---|---|
-| Boot & spawn | ✅ Player spawns at SkySanctum (0, 147, 0); FallGuard; 24 services init with zero errors |
-| World | ✅ 10 floating islands (multi-tier rock, grass caps, tapered skirts), lighting/fog/atmosphere tuned |
-| Harvesting | ✅ 29 harvest nodes (NodeId attrs); harvest → items/shards/XP → live HUD updates |
-| Questing | ✅ Starter quest *First Harvest*: accept → progress → complete → rewards; quest log UI with live progress |
-| Pets | ✅ Tame (TameCreature) → pet records (InstanceId/PetId/Level) → equip → summon visible server-side follower → HUD "Pet: Cloud Sprite" → release despawns |
-| Upgrades | ✅ Purchase with escalating costs; currency syncs to HUD instantly |
-| Screens | ✅ Inventory / Quest Log / Pet screens populate live from server data (rarity-colored cards, tab filters) |
-| Travel | ✅ 5 portals wired; ChangeIsland remote proven across islands |
-| Data | ✅ Server-authoritative; AddPet normalized to structured records; Pets database extended with all tameable creature IDs |
+| Boot & spawn | 🧪 Source/build checked; live spawn and service boot still require connected Studio E2E evidence |
+| World | 🧪 World definitions and Rojo assembly present; live island rendering not currently claimed |
+| Harvesting | 🧪 Server/client paths present; live harvest → HUD flow awaits Studio E2E |
+| Questing | 🧪 Quest definitions and handlers present; live accept/progress/reward flow awaits Studio E2E |
+| Pets | 🧪 Taming/equip data paths present; live follower behavior awaits Studio E2E |
+| Upgrades | 🧪 Server purchase path present; live HUD synchronization awaits Studio E2E |
+| Screens | 🧪 UI source present; live population/rendering awaits Studio E2E |
+| Travel | 🧪 Portal/travel source present; live teleport behavior awaits Studio E2E |
+| Data | ✅ Server-authority hardening is covered by lint, unit tests, and Rojo builds |
 
 ---
 
@@ -237,6 +237,8 @@ Pinned via **Rokit** (`rokit.toml`) — run commands from this directory so the 
 | TestEZ | vendored (`vendor/testez/`) | BDD unit tests inside Studio |
 | rbxcloud | 0.17.0 | Open Cloud publish CLI |
 | pixelmatch | ^7 | Screenshot visual regression |
+
+The repository also contains a controlled Godot content lab under `assets/`. It records original imagegen concept references, deterministic Godot assembly, GLB exports, hashes, and a Roblox-import verification gate. A Godot export is not treated as Roblox release-ready until Studio import, scale, pivot, collision, material, budget, streaming, and runtime-placement checks are recorded.
 
 **Common commands:**
 
