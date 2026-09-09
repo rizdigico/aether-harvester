@@ -2,9 +2,11 @@ local MarketplaceService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 MarketplaceService.Listings = {}
 MarketplaceService.ListingIdCounter = 1
+local processingListings = {}
 
 function MarketplaceService.Initialize()
     print("[MarketplaceService] Initializing...")
@@ -17,7 +19,10 @@ function MarketplaceService.Initialize()
     -- GetMarketplaceListings: return all active listings
     local GetMarketplaceListings = Remotes:FindFirstChild("GetMarketplaceListings")
     if GetMarketplaceListings then
-        GetMarketplaceListings.OnServerInvoke = function()
+        GetMarketplaceListings.OnServerInvoke = function(player)
+            if not RateLimiter.Check(player, "GetMarketplaceListings", 0.5) then
+                return {}
+            end
             return MarketplaceService.GetActiveListings()
         end
     end
@@ -34,7 +39,13 @@ function MarketplaceService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            MarketplaceService.CreateListing(player, itemId, math.floor(amount), math.floor(price))
+            local success, message = MarketplaceService.CreateListing(player, itemId, amount, price)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Failed to create listing")
+                end
+            end
         end)
     end
 
@@ -88,10 +99,13 @@ function MarketplaceService.CreateListing(player, itemId, amount, price)
     if type(itemId) ~= "string" or itemId == "" then
         return false, "Invalid item"
     end
-    if type(amount) ~= "number" or amount < 1 or amount > 9999 or amount ~= math.floor(amount) then
+    if not ItemsData.GetItem(itemId) then
+        return false, "Unknown item"
+    end
+    if type(amount) ~= "number" or amount ~= amount or amount < 1 or amount > 9999 or amount ~= math.floor(amount) then
         return false, "Invalid amount"
     end
-    if type(price) ~= "number" or price < 1 or price > 1000000 or price ~= math.floor(price) then
+    if type(price) ~= "number" or price ~= price or price < 1 or price > 1000000 or price ~= math.floor(price) then
         return false, "Invalid price"
     end
 
@@ -151,35 +165,44 @@ function MarketplaceService.PurchaseListing(player, listingId)
         return false, "Listing not available"
     end
 
+    if processingListings[listingId] then
+        return false, "Listing is being processed"
+    end
+    processingListings[listingId] = true
+    local function fail(message)
+        processingListings[listingId] = nil
+        return false, message
+    end
+
     if listing.SellerId == player.UserId then
-        return false, "Cannot buy your own listing"
+        return fail("Cannot buy your own listing")
     end
 
     local buyerData = PlayerDataService.GetData(player)
     if not buyerData then
-        return false, "Player data not found"
+        return fail("Player data not found")
     end
 
     -- Listings are held in server memory. Require the seller to be present so
     -- a sale can never deduct a buyer and silently lose the seller payout.
     local seller = game.Players:GetPlayerByUserId(listing.SellerId)
     if not seller or not PlayerDataService.GetData(seller) then
-        return false, "Seller is unavailable"
+        return fail("Seller is unavailable")
     end
 
     if buyerData.Currency.AetherShards < listing.Price then
-        return false, "Not enough currency"
+        return fail("Not enough currency")
     end
 
     -- Deduct price from buyer
     if not PlayerDataService.RemoveCurrency(player, "AetherShards", listing.Price) then
-        return false, "Not enough currency"
+        return fail("Not enough currency")
     end
 
     -- Add item to buyer. Roll back the debit if the inventory mutation fails.
     if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
         PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
-        return false, "Could not deliver purchased item"
+        return fail("Could not deliver purchased item")
     end
 
     -- Give money to seller
@@ -188,7 +211,7 @@ function MarketplaceService.PurchaseListing(player, listingId)
         -- sale active if the payout cannot be recorded.
         PlayerDataService.RemoveItem(player, listing.ItemId, listing.Amount)
         PlayerDataService.AddCurrency(player, "AetherShards", listing.Price)
-        return false, "Seller payout failed"
+        return fail("Seller payout failed")
     end
 
     -- Mark listing as sold
@@ -205,6 +228,7 @@ function MarketplaceService.PurchaseListing(player, listingId)
     end
 
     print("[MarketplaceService] Listing purchased: " .. listingId)
+    processingListings[listingId] = nil
     return true, "Purchase successful"
 end
 
@@ -245,10 +269,14 @@ function MarketplaceService.CancelListing(player, listingId)
         return false, "Not your listing"
     end
 
-    -- Return item to seller
+    -- Return item to seller before deleting the listing. If the profile is
+    -- unavailable or the escrow return fails, keep the listing intact.
     local data = PlayerDataService.GetData(player)
-    if data then
-        PlayerDataService.AddItem(player, listing.ItemId, listing.Amount)
+    if not data then
+        return false, "Player data not found"
+    end
+    if not PlayerDataService.AddItem(player, listing.ItemId, listing.Amount) then
+        return false, "Could not return escrowed item"
     end
 
     -- Remove listing
