@@ -167,6 +167,11 @@ function PetService.Initialize()
                 if Error then
                     Error:FireClient(player, message or "Failed to equip pet")
                 end
+            else
+                local PetUpdated = Remotes:FindFirstChild("PetUpdated")
+                if PetUpdated then
+                    PetUpdated:FireClient(player)
+                end
             end
         end)
     end
@@ -318,7 +323,8 @@ function PetService.FeedPet(player, petInstanceId)
         return false, "Pet not found"
     end
 
-    if pet.Hunger >= 100 then
+    local hunger = type(pet.Hunger) == "number" and math.clamp(pet.Hunger, 0, 100) or 0
+    if hunger >= 100 then
         return false, "Pet is not hungry"
     end
     if PlayerDataService.GetItemCount(player, "pet_food") < 1 then
@@ -328,8 +334,9 @@ function PetService.FeedPet(player, petInstanceId)
         return false, "Could not consume pet food"
     end
 
-    pet.Hunger = math.min(100, (pet.Hunger or 0) + 30)
-    pet.Happiness = math.min(100, (pet.Happiness or 0) + 10)
+    local happiness = type(pet.Happiness) == "number" and math.clamp(pet.Happiness, 0, 100) or 0
+    pet.Hunger = math.min(100, hunger + 30)
+    pet.Happiness = math.min(100, happiness + 10)
     return true, "Pet fed"
 end
 

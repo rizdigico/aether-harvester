@@ -304,6 +304,16 @@ onScreenEnabled("PetScreen", function()
     ScreenController:PopulatePets()
 end)
 
+local petUpdated = Remotes:FindFirstChild("PetUpdated")
+if petUpdated and petUpdated:IsA("RemoteEvent") then
+    petUpdated.OnClientEvent:Connect(function()
+        local petScreen = Screens:FindFirstChild("PetScreen")
+        if petScreen and petScreen.Enabled then
+            ScreenController:PopulatePets()
+        end
+    end)
+end
+
 local invScreen = Screens:FindFirstChild("InventoryScreen")
 if invScreen then
     local tabBar = invScreen:FindFirstChild("TabBar", true)
