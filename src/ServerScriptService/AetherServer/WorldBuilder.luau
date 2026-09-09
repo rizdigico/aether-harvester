@@ -19,7 +19,7 @@ local function createPart(props)
     return part
 end
 
-local function createModel(name, attrs, parent)
+local function createModel(name: string, attrs: { [string]: any }?, parent: Instance): Model
     local model = Instance.new("Model")
     model.Name = name
     for k, v in pairs(attrs or {}) do
@@ -2780,9 +2780,9 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_1,
 })
-local Creatures_SkyWhale_1_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_1_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_1_WeldConstraint.Parent = Creatures_SkyWhale_1
+local Creatures_SkyWhale_1_WeldConstraint2 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_1_WeldConstraint2.Name = "WeldConstraint"
+Creatures_SkyWhale_1_WeldConstraint2.Parent = Creatures_SkyWhale_1
 createPart({
     Name = "Tail",
     Size = Vector3.new(1.5, 1.5, 3),
@@ -2793,9 +2793,9 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_1,
 })
-local Creatures_SkyWhale_1_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_1_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_1_WeldConstraint.Parent = Creatures_SkyWhale_1
+local Creatures_SkyWhale_1_WeldConstraint3 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_1_WeldConstraint3.Name = "WeldConstraint"
+Creatures_SkyWhale_1_WeldConstraint3.Parent = Creatures_SkyWhale_1
 createPart({
     Name = "Eye",
     Size = Vector3.new(0.7, 0.7, 0.7),
@@ -2816,9 +2816,9 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_1,
 })
-local Creatures_SkyWhale_1_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_1_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_1_WeldConstraint.Parent = Creatures_SkyWhale_1
+local Creatures_SkyWhale_1_WeldConstraint4 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_1_WeldConstraint4.Name = "WeldConstraint"
+Creatures_SkyWhale_1_WeldConstraint4.Parent = Creatures_SkyWhale_1
 createPart({
     Name = "Fin2",
     Size = Vector3.new(1, 0.8, 4),
@@ -2894,9 +2894,9 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_3,
 })
-local Creatures_SkyWhale_3_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_3_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_3_WeldConstraint.Parent = Creatures_SkyWhale_3
+local Creatures_SkyWhale_3_WeldConstraint2 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_3_WeldConstraint2.Name = "WeldConstraint"
+Creatures_SkyWhale_3_WeldConstraint2.Parent = Creatures_SkyWhale_3
 createPart({
     Name = "Tail",
     Size = Vector3.new(1.5, 1.5, 3),
@@ -2920,12 +2920,12 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_3,
 })
-local Creatures_SkyWhale_3_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_3_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_3_WeldConstraint.Parent = Creatures_SkyWhale_3
-local Creatures_SkyWhale_3_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_3_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_3_WeldConstraint.Parent = Creatures_SkyWhale_3
+local Creatures_SkyWhale_3_WeldConstraint3 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_3_WeldConstraint3.Name = "WeldConstraint"
+Creatures_SkyWhale_3_WeldConstraint3.Parent = Creatures_SkyWhale_3
+local Creatures_SkyWhale_3_WeldConstraint4 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_3_WeldConstraint4.Name = "WeldConstraint"
+Creatures_SkyWhale_3_WeldConstraint4.Parent = Creatures_SkyWhale_3
 createPart({
     Name = "Fin2",
     Size = Vector3.new(1, 0.8, 4),
@@ -2986,9 +2986,9 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_2,
 })
-local Creatures_SkyWhale_2_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_2_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_2_WeldConstraint.Parent = Creatures_SkyWhale_2
+local Creatures_SkyWhale_2_WeldConstraint2 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_2_WeldConstraint2.Name = "WeldConstraint"
+Creatures_SkyWhale_2_WeldConstraint2.Parent = Creatures_SkyWhale_2
 local Creatures_SkyWhale_2_HeadWeld = Instance.new("WeldConstraint")
 Creatures_SkyWhale_2_HeadWeld.Name = "HeadWeld"
 Creatures_SkyWhale_2_HeadWeld.Parent = Creatures_SkyWhale_2
@@ -3012,12 +3012,12 @@ createPart({
     CanCollide = true,
     Parent = Creatures_SkyWhale_2,
 })
-local Creatures_SkyWhale_2_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_2_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_2_WeldConstraint.Parent = Creatures_SkyWhale_2
-local Creatures_SkyWhale_2_WeldConstraint = Instance.new("WeldConstraint")
-Creatures_SkyWhale_2_WeldConstraint.Name = "WeldConstraint"
-Creatures_SkyWhale_2_WeldConstraint.Parent = Creatures_SkyWhale_2
+local Creatures_SkyWhale_2_WeldConstraint3 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_2_WeldConstraint3.Name = "WeldConstraint"
+Creatures_SkyWhale_2_WeldConstraint3.Parent = Creatures_SkyWhale_2
+local Creatures_SkyWhale_2_WeldConstraint4 = Instance.new("WeldConstraint")
+Creatures_SkyWhale_2_WeldConstraint4.Name = "WeldConstraint"
+Creatures_SkyWhale_2_WeldConstraint4.Parent = Creatures_SkyWhale_2
 createPart({
     Name = "Tail",
     Size = Vector3.new(1.5, 1.5, 3),
