@@ -38,6 +38,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "FeedPet",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "UnequipPet",
                          "className":  "RemoteEvent"
                      },
@@ -295,6 +299,10 @@
                      },
                      {
                          "name":  "PetSummon",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PetUpdated",
                          "className":  "RemoteEvent"
                      },
                      {

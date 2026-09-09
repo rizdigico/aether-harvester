@@ -214,15 +214,10 @@ function ScreenController:PopulatePets()
         return
     end
 
-    local seen = {}
     for _, pet in ipairs(pets) do
-        if seen[pet.PetId] then
-            continue
-        end
-        seen[pet.PetId] = true
         local p = template and template:Clone()
         if p then
-            p.Name = "Pet_" .. tostring(pet.PetId)
+            p.Name = "Pet_" .. tostring(pet.PetId) .. "_" .. tostring(pet.InstanceId or "legacy")
             p.Visible = true
             local def = PetsData.GetPet(pet.PetId)
             local pname = p:FindFirstChild("PetName")
@@ -240,6 +235,47 @@ function ScreenController:PopulatePets()
             end
             if active then
                 active.Visible = pet.IsEquipped == true
+            end
+
+            local petKey = pet.InstanceId or pet.PetId
+            local equipButton = p:FindFirstChild("PetEquipBtn")
+            if equipButton and equipButton:IsA("TextButton") then
+                equipButton.Text = pet.IsEquipped and "Unequip" or "Equip"
+                equipButton.Activated:Connect(function()
+                    local remoteName = pet.IsEquipped and "UnequipPet" or "EquipPet"
+                    local remote = Remotes:FindFirstChild(remoteName)
+                    if remote then
+                        remote:FireServer(petKey)
+                        task.delay(0.15, function()
+                            if screen.Enabled then
+                                ScreenController:PopulatePets()
+                            end
+                        end)
+                    end
+                end)
+
+                local feedButton = p:FindFirstChild("PetFeedBtn")
+                if not feedButton then
+                    feedButton = equipButton:Clone()
+                    feedButton.Name = "PetFeedBtn"
+                    feedButton.Text = "Feed"
+                    feedButton.Position = UDim2.new(0.58, 0, 0.27, 0)
+                    feedButton.Size = UDim2.new(0.4, 0, 0.25, 0)
+                    feedButton.Parent = p
+                end
+                if feedButton:IsA("TextButton") then
+                    feedButton.Activated:Connect(function()
+                        local feedRemote = Remotes:FindFirstChild("FeedPet")
+                        if feedRemote then
+                            feedRemote:FireServer(petKey)
+                            task.delay(0.15, function()
+                                if screen.Enabled then
+                                    ScreenController:PopulatePets()
+                                end
+                            end)
+                        end
+                    end)
+                end
             end
             p.Parent = scroll
         end

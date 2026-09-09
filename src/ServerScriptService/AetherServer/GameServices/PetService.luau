@@ -171,7 +171,34 @@ function PetService.Initialize()
         end)
     end
 
-    -- UnequipPet: unequip a specific pet by InstanceId
+    -- FeedPet: consume one owned pet-food item and update only the selected
+    -- player's pet record. Never mutate the shared pet definition table.
+    local FeedPet = Remotes:FindFirstChild("FeedPet")
+    if FeedPet then
+        FeedPet.OnServerEvent:Connect(function(player, petKey)
+            if not RateLimiter.Check(player, "FeedPet", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
+            if type(petKey) ~= "number" and type(petKey) ~= "string" then
+                return
+            end
+            local success, message = PetService.FeedPet(player, petKey)
+            local Error = Remotes:FindFirstChild("Error")
+            if not success then
+                if Error then
+                    Error:FireClient(player, message or "Failed to feed pet")
+                end
+                return
+            end
+            local PetUpdated = Remotes:FindFirstChild("PetUpdated")
+            if PetUpdated then
+                PetUpdated:FireClient(player)
+            end
+        end)
+    end
+
+    -- UnequipPet: unequip a specific owned pet by instance ID or legacy key
     local UnequipPet = Remotes:FindFirstChild("UnequipPet")
     if UnequipPet then
         UnequipPet.OnServerEvent:Connect(function(player, petInstanceId)
@@ -179,12 +206,16 @@ function PetService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            if type(petInstanceId) ~= "number" then
+            if type(petInstanceId) ~= "number" and type(petInstanceId) ~= "string" then
                 return
             end
             local pet = findOwnedPet(player, petInstanceId)
             if pet then
                 pet.IsEquipped = false
+                local PetUpdated = Remotes:FindFirstChild("PetUpdated")
+                if PetUpdated then
+                    PetUpdated:FireClient(player)
+                end
             end
         end)
     end
@@ -282,18 +313,24 @@ function PetService.FeedPet(player, petInstanceId)
         return false, "Player data not found"
     end
 
-    for _, pet in ipairs(data.PetInventory) do
-        if pet.InstanceId == petInstanceId then
-            local success, message = PetsData.FeedPet(pet.PetId)
-            if success then
-                pet.Hunger = PetsData.GetPet(pet.PetId).Hunger
-                pet.Happiness = PetsData.GetPet(pet.PetId).Happiness
-            end
-            return success, message
-        end
+    local pet = findOwnedPet(player, petInstanceId)
+    if not pet then
+        return false, "Pet not found"
     end
 
-    return false, "Pet not found"
+    if pet.Hunger >= 100 then
+        return false, "Pet is not hungry"
+    end
+    if PlayerDataService.GetItemCount(player, "pet_food") < 1 then
+        return false, "You need pet food"
+    end
+    if not PlayerDataService.RemoveItem(player, "pet_food", 1) then
+        return false, "Could not consume pet food"
+    end
+
+    pet.Hunger = math.min(100, (pet.Hunger or 0) + 30)
+    pet.Happiness = math.min(100, (pet.Happiness or 0) + 10)
+    return true, "Pet fed"
 end
 
 function PetService.GetEquippedPet(player)
