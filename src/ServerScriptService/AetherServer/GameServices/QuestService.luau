@@ -4,6 +4,8 @@ local QuestService = {}
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local QuestsData = require(game.ReplicatedStorage.AetherShared.Data.Quests)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local QuestProgress = require(game.ReplicatedStorage.AetherShared.Modules.QuestProgress)
@@ -217,6 +219,10 @@ function QuestService.Initialize()
             if type(questId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "AcceptQuest", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, result = QuestService.AcceptQuest(player, questId)
             if not success then
                 local ErrorRemote = Remotes:FindFirstChild("Error")
@@ -233,6 +239,10 @@ function QuestService.Initialize()
             if type(questId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "CompleteQuest", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, result = QuestService.CompleteQuest(player, questId)
             if not success then
                 local ErrorRemote = Remotes:FindFirstChild("Error")
@@ -249,6 +259,10 @@ function QuestService.Initialize()
             if type(questId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "AbandonQuest", 0.5) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             QuestService.AbandonQuest(player, questId)
         end)
     end
