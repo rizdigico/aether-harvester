@@ -92,6 +92,40 @@ function QuestService.GetQuestData(questId)
     return QuestsData.Get(questId)
 end
 
+function QuestService.GetQuestCatalog(player)
+    local data = PlayerDataService.GetData(player)
+    local active = activeQuests[player.UserId] or {}
+    local catalog = {}
+    for questId, questDef in pairs(QuestsData.GetAll()) do
+        local saved = data and data.Quests and data.Quests[questId]
+        if not saved or saved.Status ~= "Completed" then
+            local current = active[questId]
+            table.insert(catalog, {
+                Id = questId,
+                Title = questDef.Title,
+                Description = questDef.Description,
+                Type = questDef.Type,
+                Difficulty = questDef.Difficulty,
+                LevelRequired = questDef.LevelRequired,
+                Objectives = questDef.Objectives,
+                Status = current and (current.Completed and "ReadyToTurnIn" or "Active") or "Available",
+                Progress = current and current.Progress or nil,
+            })
+        end
+    end
+    table.sort(catalog, function(left, right)
+        if left.Status ~= right.Status then
+            local rank = { Active = 1, ReadyToTurnIn = 1, Available = 2 }
+            return (rank[left.Status] or 3) < (rank[right.Status] or 3)
+        end
+        if (left.LevelRequired or 1) ~= (right.LevelRequired or 1) then
+            return (left.LevelRequired or 1) < (right.LevelRequired or 1)
+        end
+        return left.Title < right.Title
+    end)
+    return catalog
+end
+
 function QuestService.OnPlayerAdded(player)
     local data = PlayerDataService.GetData(player)
     local restored = {}
@@ -416,6 +450,13 @@ function QuestService.Initialize()
     if GetQuests then
         GetQuests.OnServerInvoke = function(player)
             return QuestService.GetActiveQuests(player)
+        end
+    end
+
+    local GetQuestCatalog = Remotes:FindFirstChild("GetQuestCatalog")
+    if GetQuestCatalog then
+        GetQuestCatalog.OnServerInvoke = function(player)
+            return QuestService.GetQuestCatalog(player)
         end
     end
 

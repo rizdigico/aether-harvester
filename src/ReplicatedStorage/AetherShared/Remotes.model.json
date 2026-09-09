@@ -369,10 +369,14 @@
                          "name":  "GetInventory",
                          "className":  "RemoteFunction"
                      },
-                     {
-                         "name":  "GetQuests",
-                         "className":  "RemoteFunction"
-                     },
+                      {
+                          "name":  "GetQuests",
+                          "className":  "RemoteFunction"
+                      },
+                      {
+                          "name":  "GetQuestCatalog",
+                          "className":  "RemoteFunction"
+                      },
                      {
                          "name":  "GetUpgrades",
                          "className":  "RemoteFunction"
