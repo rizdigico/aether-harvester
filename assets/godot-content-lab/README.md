@@ -8,5 +8,10 @@ Current slice:
 - `aether_node_factory.gd` — deterministic low-poly crystal-node assembly.
 - `ContentLab.tscn` — review scene with lighting, camera, overlay, and reference image.
 - `export_aether_node.gd` — headless GLB export script.
+- `../concepts/aether_portal_concept_v1.png` — original imagegen portal landmark reference.
+- `aether_portal_factory.gd` — deterministic low-poly portal landmark assembly.
+- `PortalExportRunner.tscn` — MCP-runnable portal export scene.
+- `portal_export_runner.gd` — exports the portal through the Godot runtime.
+- `export_aether_portal.gd` — standalone GLB export script for local tooling.
 
 Release rule: the GLB is only an intermediate. Before Roblox use, verify studs scale, pivot, collision, materials, triangle/texture budget, streaming behavior, and live Studio placement. Record the result in the autonomy asset registry.

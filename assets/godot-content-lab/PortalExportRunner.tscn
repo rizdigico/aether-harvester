@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://godot-content-lab/portal_export_runner.gd" id="1_export"]
+
+[node name="PortalExportRunner" type="Node3D"]
+script = ExtResource("1_export")
