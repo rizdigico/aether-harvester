@@ -186,6 +186,10 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "GetMailbox",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "MailReceived",
                          "className":  "RemoteEvent"
                      },

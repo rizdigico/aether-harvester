@@ -2,6 +2,7 @@ local MailService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 
 MailService.Mailboxes = {}
 
@@ -9,9 +10,19 @@ local MAX_ATTACHMENTS = 10
 local MAX_ATTACHMENT_AMOUNT = 9999
 local MAX_SUBJECT_LENGTH = 80
 local MAX_MESSAGE_LENGTH = 1000
+local ALLOWED_CURRENCIES = {
+    AetherShards = true,
+    AetherGems = true,
+    EventTokens = true,
+    FamePoints = true,
+}
 
 local function isPositiveInteger(value)
-    return type(value) == "number" and value >= 1 and value <= MAX_ATTACHMENT_AMOUNT and value == math.floor(value)
+    return type(value) == "number"
+        and value == value
+        and value >= 1
+        and value <= MAX_ATTACHMENT_AMOUNT
+        and value == math.floor(value)
 end
 
 local function rollbackEscrow(player, removedItems, removedCurrencies)
@@ -53,6 +64,7 @@ local function escrowAttachments(player, attachments)
             if
                 type(attachment.ItemId) ~= "string"
                 or attachment.ItemId == ""
+                or not ItemsData.GetItem(attachment.ItemId)
                 or not isPositiveInteger(attachment.Amount)
             then
                 return nil, "Invalid item attachment"
@@ -69,7 +81,7 @@ local function escrowAttachments(player, attachments)
             local currencyAttachment = {}
             local currencyCount = 0
             for currency, amount in pairs(attachment.Currency) do
-                if type(currency) ~= "string" or currency == "" or not isPositiveInteger(amount) then
+                if type(currency) ~= "string" or not ALLOWED_CURRENCIES[currency] or not isPositiveInteger(amount) then
                     return nil, "Invalid currency attachment"
                 end
                 requiredCurrencies[currency] = (requiredCurrencies[currency] or 0) + amount
@@ -136,7 +148,14 @@ function MailService.Initialize()
     local SendMail = Remotes:FindFirstChild("SendMail")
     if SendMail then
         SendMail.OnServerEvent:Connect(function(player, targetUserId, subject, message, attachments)
-            if type(targetUserId) ~= "number" or type(subject) ~= "string" or subject == "" then
+            if
+                type(targetUserId) ~= "number"
+                or targetUserId ~= targetUserId
+                or targetUserId < 1
+                or targetUserId ~= math.floor(targetUserId)
+                or type(subject) ~= "string"
+                or subject == ""
+            then
                 return
             end
             if not RateLimiter.Check(player, "SendMail", 2) then
@@ -151,8 +170,25 @@ function MailService.Initialize()
                 end
                 return
             end
-            MailService.SendMail(player, target, subject, message or "", attachments or {})
+            local success, sendMessage = MailService.SendMail(player, target, subject, message or "", attachments or {})
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, sendMessage or "Mail failed")
+                end
+            end
         end)
+    end
+
+    -- GetMailbox: expose only the requesting player's own mailbox.
+    local GetMailbox = Remotes:FindFirstChild("GetMailbox")
+    if GetMailbox then
+        GetMailbox.OnServerInvoke = function(player)
+            if not RateLimiter.Check(player, "GetMailbox", 0.5) then
+                return {}
+            end
+            return MailService.GetMailbox(player)
+        end
     end
 
     -- ReadMail: mark mail as read and claim attachments
@@ -166,7 +202,13 @@ function MailService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            MailService.ReadMail(player, mailId)
+            local success, message = MailService.ReadMail(player, mailId)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Mail could not be read")
+                end
+            end
         end)
     end
 
@@ -181,7 +223,13 @@ function MailService.Initialize()
                 return
             end
             AntiCheatService:CheckPlayer(player)
-            MailService.DeleteMail(player, mailId)
+            local success, message = MailService.DeleteMail(player, mailId)
+            if not success then
+                local Error = Remotes:FindFirstChild("Error")
+                if Error then
+                    Error:FireClient(player, message or "Mail could not be deleted")
+                end
+            end
         end)
     end
 
