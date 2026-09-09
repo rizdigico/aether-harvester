@@ -15,6 +15,7 @@ local playerData = {}
 local playerSaveEnabled = {}
 local saveLocks = {}
 local SAVE_INTERVAL = 300 -- 5 minutes
+local AUTOSAVE_SPACING = 0.1 -- Avoid bursting every active player into the DataStore budget at once.
 local SCHEMA_VERSION = 3
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
@@ -454,7 +455,7 @@ end
 
 -- Save with retry + backoff (P0: never silently drop a save)
 local function SaveProfile(userId, data, attempt)
-    if playerSaveEnabled[userId] == false then
+    if playerSaveEnabled[userId] == false or playerData[userId] ~= data then
         return false
     end
     attempt = attempt or 1
@@ -463,6 +464,11 @@ local function SaveProfile(userId, data, attempt)
     -- grant, and PlayerRemoving save cannot race and overwrite each other.
     while saveLocks[userId] do
         task.wait()
+    end
+    -- The profile may have been removed while this save waited for another
+    -- critical write. Never write a stale reference after a player leaves.
+    if playerSaveEnabled[userId] == false or playerData[userId] ~= data then
+        return false
     end
     saveLocks[userId] = true
     local snapshot = cloneProfile(data)
@@ -519,16 +525,26 @@ function PlayerDataService.Initialize()
         end
     end
 
-    -- Auto-save loop (background task so Initialize returns immediately). Pass
-    -- the live profile into SaveProfile; SaveProfile clones only after its
-    -- per-user lock is acquired, avoiding stale pre-loop snapshots.
+    -- Auto-save loop (background task so Initialize returns immediately). Take
+    -- a stable user-id snapshot, then save sequentially with a small spacing.
+    -- This keeps the live profile reference until SaveProfile acquires its
+    -- per-user lock while avoiding a burst of concurrent DataStore requests.
     task.spawn(function()
         while true do
             task.wait(SAVE_INTERVAL)
-            for uid, data in pairs(playerData) do
-                task.spawn(function()
+            local userIds = {}
+            for uid in pairs(playerData) do
+                table.insert(userIds, uid)
+            end
+            table.sort(userIds)
+            for index, uid in ipairs(userIds) do
+                local data = playerData[uid]
+                if data and playerSaveEnabled[uid] ~= false then
                     SaveProfile(uid, data, 1)
-                end)
+                end
+                if index < #userIds then
+                    task.wait(AUTOSAVE_SPACING)
+                end
             end
         end
     end)
@@ -571,6 +587,9 @@ function PlayerDataService.OnPlayerRemoving(player)
         SaveProfile(player.UserId, data, 1)
     end
 
+    -- Block an autosave that is waiting on this user's lock from writing the
+    -- removed profile after the final leave save completes.
+    playerSaveEnabled[player.UserId] = false
     playerData[player.UserId] = nil
     playerSaveEnabled[player.UserId] = nil
 end

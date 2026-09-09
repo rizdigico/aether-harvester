@@ -17,7 +17,7 @@ tree.
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
 | Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 66 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, and durable marketplace settlement |
+| Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, and bounded autosave |
 
 ## Implemented source surfaces
 
@@ -46,6 +46,11 @@ pending offers on disconnect.
 Leaderboards now persist category scores in isolated OrderedDataStores with a
 15-second cached top-100 read path and a local fallback when Studio API access
 is unavailable.
+Profile autosave now snapshots active user IDs and saves them sequentially with
+small request spacing instead of launching one concurrent task per player. Save
+locks are rechecked after waits and player removal blocks stale profile
+references, preventing a leaving player’s data from being written by a delayed
+autosave pass.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and
