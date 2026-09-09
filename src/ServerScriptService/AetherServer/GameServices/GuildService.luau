@@ -3,6 +3,7 @@ local DataStoreService = game:GetService("DataStoreService")
 local GuildDataStore = DataStoreService:GetDataStore("GuildData_v1")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 GuildService.Guilds = {}
 GuildService.GuildIdCounter = 1
@@ -13,6 +14,14 @@ function GuildService.LoadGuilds()
     end)
     if success and guilds then
         GuildService.Guilds = guilds or {}
+        local highestId = 0
+        for guildId in pairs(GuildService.Guilds) do
+            local numericId = tonumber(tostring(guildId):match("^GUILD_(%d+)$"))
+            if numericId and numericId > highestId then
+                highestId = numericId
+            end
+        end
+        GuildService.GuildIdCounter = highestId + 1
     end
 end
 
@@ -62,6 +71,10 @@ function GuildService.Initialize()
             if type(guildId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "JoinGuild", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = GuildService.JoinGuild(player, guildId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -76,6 +89,10 @@ function GuildService.Initialize()
     local LeaveGuild = Remotes:FindFirstChild("LeaveGuild")
     if LeaveGuild then
         LeaveGuild.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "LeaveGuild", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             GuildService.LeaveGuild(player)
         end)
     end
@@ -87,6 +104,10 @@ function GuildService.Initialize()
             if type(targetUserId) ~= "number" then
                 return
             end
+            if not RateLimiter.Check(player, "InviteToGuild", 2) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local target = game.Players:GetPlayerByUserId(targetUserId)
             if not target then
                 local Error = Remotes:FindFirstChild("Error")
@@ -135,6 +156,9 @@ function GuildService.CreateGuild(player, guildName, description)
     local existingGuild = GuildService.GetGuildByPlayer(player)
     if existingGuild then
         return nil, "Already in a guild"
+    end
+    if not PlayerDataService.GetData(player) then
+        return nil, "Player data not found"
     end
 
     local guildId = "GUILD_" .. GuildService.GuildIdCounter
@@ -210,6 +234,9 @@ end
 
 function GuildService.JoinGuild(player, guildId)
     local data = PlayerDataService.GetData(player)
+    if not data then
+        return false, "Player data not found"
+    end
     if data and data.GuildId then
         return false, "Already in a guild"
     end
@@ -217,6 +244,12 @@ function GuildService.JoinGuild(player, guildId)
     local guild = GuildService.Guilds[guildId]
     if not guild then
         return false, "Guild not found"
+    end
+
+    for _, memberId in ipairs(guild.Members) do
+        if memberId == player.UserId then
+            return false, "Already in guild"
+        end
     end
 
     -- Add member
@@ -248,7 +281,8 @@ function GuildService.LeaveGuild(player)
         return false, "Not in a guild"
     end
 
-    local guild = GuildService.Guilds[data.GuildId]
+    local guildId = data.GuildId
+    local guild = GuildService.Guilds[guildId]
     if not guild then
         return false, "Guild not found"
     end
@@ -270,14 +304,23 @@ function GuildService.LeaveGuild(player)
     if Remotes then
         local GuildMemberLeft = Remotes:FindFirstChild("GuildMemberLeft")
         if GuildMemberLeft then
-            GuildMemberLeft:FireAllClients(data.GuildId, player.UserId)
+            GuildMemberLeft:FireAllClients(guildId, player.UserId)
         end
     end
 
-    -- Delete guild if owner left and no members
-    if guild.OwnerId == player.UserId and #guild.Members == 0 then
-        GuildService.Guilds[data.GuildId] = nil
-        GuildService.SaveGuilds()
+    -- Delete empty guilds; otherwise transfer ownership so no guild is left
+    -- permanently ownerless when its original owner departs.
+    if guild.OwnerId == player.UserId then
+        if #guild.Members == 0 then
+            GuildService.Guilds[guildId] = nil
+        else
+            guild.OwnerId = guild.Members[1]
+            local newOwner = game.Players:GetPlayerByUserId(guild.OwnerId)
+            local newOwnerData = newOwner and PlayerDataService.GetData(newOwner)
+            if newOwnerData then
+                newOwnerData.GuildRank = "Owner"
+            end
+        end
     end
 
     print("[GuildService] " .. player.Name .. " left guild")
