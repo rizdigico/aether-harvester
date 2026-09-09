@@ -1,5 +1,7 @@
 local CraftingService = {}
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 
 CraftingService.Recipes = {
     ["crystal_pickaxe"] = {
@@ -75,6 +77,10 @@ function CraftingService.Initialize()
             if type(recipeId) ~= "string" then
                 return
             end
+            if not RateLimiter.Check(player, "CraftItem", 1) then
+                return
+            end
+            AntiCheatService:CheckPlayer(player)
             local success, message = CraftingService.CraftItem(player, recipeId)
             if not success then
                 local Error = Remotes:FindFirstChild("Error")
@@ -89,6 +95,9 @@ function CraftingService.Initialize()
     local RequestRecipes = Remotes:FindFirstChild("RequestRecipes")
     if RequestRecipes then
         RequestRecipes.OnServerEvent:Connect(function(player)
+            if not RateLimiter.Check(player, "RequestRecipes", 1) then
+                return
+            end
             local available = CraftingService.GetAvailableRecipes(player)
             local ItemCrafted = Remotes:FindFirstChild("ItemCrafted")
             if ItemCrafted then
@@ -164,13 +173,27 @@ function CraftingService.CraftItem(player, recipeId)
     local data = PlayerDataService.GetData(player)
     local recipe = CraftingService.Recipes[recipeId]
 
-    -- Remove ingredients
+    -- Remove ingredients transactionally. CanCraft performs the first
+    -- ownership check; this second check handles a mutation between checks or
+    -- a recipe containing repeated ingredients without minting a free result.
+    local removedIngredients = {}
     for _, ingredient in ipairs(recipe.Ingredients) do
-        PlayerDataService.RemoveItem(player, ingredient.ItemId, ingredient.Amount)
+        if not PlayerDataService.RemoveItem(player, ingredient.ItemId, ingredient.Amount) then
+            for itemId, amount in pairs(removedIngredients) do
+                PlayerDataService.AddItem(player, itemId, amount)
+            end
+            return false, "Could not remove crafting ingredients"
+        end
+        removedIngredients[ingredient.ItemId] = (removedIngredients[ingredient.ItemId] or 0) + ingredient.Amount
     end
 
     -- Add result item
-    PlayerDataService.AddItem(player, recipe.ResultItemId, 1)
+    if not PlayerDataService.AddItem(player, recipe.ResultItemId, 1) then
+        for itemId, amount in pairs(removedIngredients) do
+            PlayerDataService.AddItem(player, itemId, amount)
+        end
+        return false, "Could not add crafted item"
+    end
 
     -- Award XP
     local ProgressionService = require(game.ServerScriptService.AetherServer.GameServices.ProgressionService)
