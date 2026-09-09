@@ -42,6 +42,14 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "FusePets",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "PetFusionCompleted",
+                         "className":  "RemoteEvent"
+                     },
+                     {
                          "name":  "UnequipPet",
                          "className":  "RemoteEvent"
                      },

@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 49 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 55 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include persistence hardening and the pet-care flow |
 
@@ -23,9 +23,10 @@ tree.
 
 The branch now includes server-authoritative harvesting, progression, quests,
 crafting, upgrades, pets, guilds, player trading, marketplace listings, mail,
-scoped global/island/guild/party chat, achievements, cosmetics, leaderboards, daily rewards, events,
+scoped global/island/guild/party chat, achievements, cosmetics, leaderboards,
+daily rewards, events,
 analytics, monetization boundaries, battle-pass progression, prestige/ascension,
-persistence, session party lifecycle,
+persistence, session party lifecycle, deterministic pet fusion,
 sanitization, receipt journaling, save locking, accessibility/safe-area UI,
 and the rebuilt screen/controller layer.
 
@@ -47,6 +48,13 @@ up membership on disconnect. Party chat now routes only to the server-confirmed
 party membership and remains live-only rather than exposing unscoped history.
 It is intentionally not persisted into player profiles.
 
+The Fusion Lab adds deterministic, free-to-play recipes for owned pet instances.
+The server requires two distinct owned, un-equipped instances, removes them
+atomically, restores them if the result cannot be granted, and emits the new
+pet only after the server has completed the mutation. The client exposes the
+inventory selection and known-result preview; it never decides ownership or
+the result.
+
 ## Local MCP evidence
 
 ### Godot Local MCP
@@ -65,7 +73,7 @@ It is intentionally not persisted into player profiles.
 - Roblox Studio, Rojo 7.7.0, and Wally 0.3.2 are detected.
 - The Aesther Harvest Studio window is visible locally.
 - Project inspection passes for `default.project.json` and `src`.
-- Current MCP build output: `artifacts/mcp-party-current.rbxlx`.
+- Current MCP build output: `artifacts/fusion-slice-final.rbxlx`.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline
