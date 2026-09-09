@@ -297,6 +297,7 @@ local function CreateDefaultProfile(userId)
         SkillPoints = 0,
         Base = { Level = 1, Decorations = {} },
         Quests = {},
+        ClaimedRewards = {},
         Achievements = {},
         Cosmetics = {},
         EquippedCosmetic = nil,
@@ -315,6 +316,8 @@ local function CreateDefaultProfile(userId)
             ZonesDiscovered = 0,
         },
         VisitedIslands = {},
+        ActionCount = 0,
+        LastActionTime = 0,
         Settings = {
             MusicVolume = 0.5,
             SFXVolume = 0.7,
@@ -376,6 +379,7 @@ local function SanitizeProfile(userId, raw)
     merged.ProcessedReceipts = sanitizeReceiptJournal(merged.ProcessedReceipts)
     merged.Boosts = sanitizeBoosts(merged.Boosts)
     merged.Quests = type(merged.Quests) == "table" and merged.Quests or {}
+    merged.ClaimedRewards = sanitizeStringBooleanMap(merged.ClaimedRewards)
     merged.Skills = sanitizeNumberMap(merged.Skills, 0, 100)
     merged.Achievements = sanitizeStringBooleanMap(merged.Achievements)
     merged.Settings = {
@@ -396,6 +400,11 @@ local function SanitizeProfile(userId, raw)
             or default
     end
     merged.VisitedIslands = sanitizeStringBooleanMap(merged.VisitedIslands)
+    merged.ActionCount = isFiniteNumber(merged.ActionCount)
+            and math.clamp(math.floor(merged.ActionCount), 0, MAX_TRANSACTION_AMOUNT)
+        or base.ActionCount
+    merged.LastActionTime = isFiniteNumber(merged.LastActionTime) and math.max(0, math.floor(merged.LastActionTime))
+        or base.LastActionTime
     merged.Level = isFiniteNumber(merged.Level) and math.clamp(math.floor(merged.Level), 1, 1000) or base.Level
     merged.XP = isFiniteNumber(merged.XP) and math.clamp(math.floor(merged.XP), 0, MAX_TRANSACTION_AMOUNT) or base.XP
     merged.PrestigeLevel = isFiniteNumber(merged.PrestigeLevel)

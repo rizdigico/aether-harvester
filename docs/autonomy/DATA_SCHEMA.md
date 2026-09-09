@@ -66,6 +66,7 @@
             CompletedAt: number | nil
         }
     },
+    ClaimedRewards: { [rewardId: string]: boolean },
     Achievements: {
         [achievementId: string]: boolean
     },
