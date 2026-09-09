@@ -44,7 +44,7 @@ Aesther Harvest is a Rojo-managed, server-authoritative sky resource-management 
 
 `harvest floating islands → earn shards → upgrade tools/pets → unlock islands → collect creatures → expand social/economic systems`
 
-The current build has a strong foundation: dynamic world generation, core harvesting with server-owned energy spend/regeneration, consumable energy-potion use, quest/progression flows, pets, upgrades, portals, UI screens, and server/client boot orchestration. The repository’s own recovery documents also identify incomplete or weak areas that must not be hidden by a passing boot:
+The current build has a strong foundation: dynamic world generation, core harvesting with server-owned energy spend/regeneration, consumable energy-potion use, persisted equipped tools with durability and tool-driven harvest effects, quest/progression flows, pets, upgrades, portals, UI screens, and server/client boot orchestration. The repository’s own recovery documents also identify incomplete or weak areas that must not be hidden by a passing boot:
 
 - trading is server-authoritative with bounded payloads, rollback, and synchronous two-profile saves, but remains session-only without a durable cross-server trade journal;
 - marketplace settlement is durable and crash-resumable, but remains same-server by design until a cross-server settlement bus is added;
@@ -63,7 +63,7 @@ These are development priorities, not reasons to discard the project.
 |---|---:|---|
 | StyLua format check | PASS | Formatting is clean under the current CI exclusion. |
 | Selene lint | PASS | Exit 0; 0 errors, 0 warnings, 0 parse errors on the current checkout. |
-| Lune unit tests | PASS | 72 passed, 0 failed. |
+| Lune unit tests | PASS | 75 passed, 0 failed. |
 | Rojo production build | PASS | Place file generated. |
 | Rojo test build | PASS | Test place generated. |
 | Rojo sourcemap | PASS | Sourcemap generated. |
