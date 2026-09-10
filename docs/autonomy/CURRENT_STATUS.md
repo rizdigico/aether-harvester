@@ -117,6 +117,9 @@ server-controlled visit action. Base data is sanitized during profile load.
 - The installed plugin status probe is green for both Rojo and Wally; Rojo
   version detection uses its pinned Rokit binary when the shim is called
   outside a project manifest.
+- StudioMCP currently returns a connected instance id, but
+  `get_studio_state` reports `Place is not open`; live play-mode verification
+  therefore remains pending.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline

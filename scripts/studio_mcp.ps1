@@ -10,14 +10,30 @@ param(
 $versionsRoot = Join-Path $env:LOCALAPPDATA 'Roblox\Versions'
 $exe = $null
 
-# Roblox rotates the version directory on every Studio update. Resolve the
-# installed bridge instead of pinning a historical version hash.
-if (Test-Path $versionsRoot) {
-    $exe = Get-ChildItem -LiteralPath $versionsRoot -Directory -ErrorAction SilentlyContinue |
-        ForEach-Object { Join-Path $_.FullName 'StudioMCP.exe' } |
-        Where-Object { Test-Path $_ } |
-        Sort-Object { (Get-Item -LiteralPath $_).LastWriteTime } -Descending |
+# Roblox rotates the version directory on every Studio update. Prefer the
+# bridge beside an already-open Studio process so the proxy version matches
+# the session that needs to be attached; otherwise use the newest installed
+# bridge instead of pinning a historical version hash.
+try {
+    $runningStudio = Get-Process -Name 'RobloxStudioBeta' -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path } |
         Select-Object -First 1
+    if ($runningStudio) {
+        $matching = Join-Path (Split-Path -Parent $runningStudio.Path) 'StudioMCP.exe'
+        if (Test-Path -LiteralPath $matching) { $exe = $matching }
+    }
+} catch {
+    $exe = $null
+}
+
+if (Test-Path $versionsRoot) {
+    if (-not $exe) {
+        $exe = Get-ChildItem -LiteralPath $versionsRoot -Directory -ErrorAction SilentlyContinue |
+            ForEach-Object { Join-Path $_.FullName 'StudioMCP.exe' } |
+            Where-Object { Test-Path $_ } |
+            Sort-Object { (Get-Item -LiteralPath $_).LastWriteTime } -Descending |
+            Select-Object -First 1
+    }
 }
 
 if (-not $exe) {
