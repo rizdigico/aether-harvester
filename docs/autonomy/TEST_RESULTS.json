@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "a492362",
+  "commit": "f534e9f",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -51,6 +51,11 @@
       ]
     },
     "offlineStudioPersistenceAdapter": "pass",
+    "tutorialRules": {
+      "status": "pass",
+      "unitTests": 3,
+      "guidedSteps": 5
+    },
     "robloxBloomRuntimeCompanion": "pass",
     "robloxBloomGlbImport": "not_run",
     "studioPlayMode": "not_run",
