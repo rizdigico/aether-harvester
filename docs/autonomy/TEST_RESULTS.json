@@ -19,6 +19,7 @@
     "godotLocalPluginHandshake": "pass",
     "currencyMutationRules": "pass",
     "receiptCurrencyBound": "pass",
+    "economyFacadeCurrencyBound": "pass",
     "hudEventDrivenState": "pass",
     "godotBloomV2Export": {
       "status": "pass",

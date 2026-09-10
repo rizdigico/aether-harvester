@@ -2,6 +2,7 @@
 local EconomyService = {}
 
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+local CurrencyRules = require(game.ReplicatedStorage.AetherShared.Modules.CurrencyRules)
 
 -- Currency definitions
 EconomyService.Currencies = {
@@ -27,33 +28,32 @@ function EconomyService.GetBalance(player, currencyType)
 end
 
 function EconomyService.AddCurrency(player, currencyType, amount)
-    if amount <= 0 then
+    if type(amount) ~= "number" or amount <= 0 then
         return false, "Amount must be positive"
     end
-    local data = PlayerDataService.GetData(player)
-    if not data then
+    if not PlayerDataService.GetData(player) then
         return false, "No player data"
     end
-    data.Currency = data.Currency or {}
-    data.Currency[currencyType] = (data.Currency[currencyType] or 0) + amount
+    if not PlayerDataService.AddCurrency(player, currencyType, amount) then
+        return false, "Currency mutation rejected"
+    end
     EconomyService.LogTransaction(player, "ADD", currencyType, amount)
     return true
 end
 
 function EconomyService.SpendCurrency(player, currencyType, amount)
-    if amount <= 0 then
+    if type(amount) ~= "number" or amount <= 0 then
         return false, "Amount must be positive"
     end
-    local data = PlayerDataService.GetData(player)
-    if not data then
+    if not PlayerDataService.GetData(player) then
         return false, "No player data"
     end
-    data.Currency = data.Currency or {}
-    local balance = data.Currency[currencyType] or 0
-    if balance < amount then
+    if EconomyService.GetBalance(player, currencyType) < amount then
         return false, "Insufficient " .. currencyType
     end
-    data.Currency[currencyType] = balance - amount
+    if not PlayerDataService.RemoveCurrency(player, currencyType, amount) then
+        return false, "Currency mutation rejected"
+    end
     EconomyService.LogTransaction(player, "SPEND", currencyType, amount)
     return true
 end
@@ -64,13 +64,34 @@ function EconomyService.ConvertCurrency(player, fromCurrency, amount)
         return false, "No exchange rate for " .. fromCurrency
     end
 
+    if type(amount) ~= "number" or amount <= 0 then
+        return false, "Amount must be positive"
+    end
+
+    local data = PlayerDataService.GetData(player)
+    if not data then
+        return false, "No player data"
+    end
+
+    local converted = amount * rate.Rate
+    local definition = CurrencyRules.Definitions[rate.To]
+    local current = data.Currency and data.Currency[rate.To]
+    local canAdd = CurrencyRules.CanAdd(rate.To, converted, current, definition)
+    if not canAdd then
+        return false, "Conversion target rejected"
+    end
+
     local success, err = EconomyService.SpendCurrency(player, fromCurrency, amount)
     if not success then
         return false, err
     end
 
-    local converted = amount * rate.Rate
-    EconomyService.AddCurrency(player, rate.To, converted)
+    if not EconomyService.AddCurrency(player, rate.To, converted) then
+        -- The target was preflighted above; restore the source if a concurrent
+        -- mutation or a malformed profile still makes the final grant fail.
+        PlayerDataService.AddCurrency(player, fromCurrency, amount)
+        return false, "Conversion target rejected"
+    end
 
     return true, converted
 end

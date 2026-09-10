@@ -45,9 +45,10 @@ feed the server harvest yield and cooldown calculations. Marketplace listings
 now use a dedicated durable DataStore with bounded records, UpdateAsync-backed
 claims, expiring processing locks, saved escrow, same-server settlement, and a
 per-profile transaction journal for crash-safe retry of each side of a sale.
-Developer-product receipt grants now use the same canonical currency rules as
-ordinary server rewards, so receipt processing cannot bypass balance bounds or
-introduce an unknown currency key.
+Developer-product receipt grants and the legacy `EconomyService` facade now use
+the same canonical currency rules as ordinary server rewards, so receipt,
+conversion, and legacy economy calls cannot bypass balance bounds or introduce
+an unknown currency key.
 Trade acceptance likewise validates both inventories, rolls back failed item
 moves, persists both profiles before reporting success, and only cancels
 pending offers on disconnect.
@@ -67,7 +68,8 @@ The latest server-core hardening makes service initialization deterministic,
 prevents duplicate `ServerMain.Initialize()` wiring, rejects unknown or
 overflowing inventory and currency mutations, rejects unknown pet grants, and
 refuses to remove a tamed creature when its profile mutation cannot be
-committed.
+committed. The economy facade delegates balance changes to the canonical
+profile mutators and preflights conversion targets before spending.
 
 The client presentation layer now refreshes HUD elements on state/remote
 changes instead of running an unconditional per-frame polling loop. Zero-valued

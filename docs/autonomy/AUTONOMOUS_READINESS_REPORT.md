@@ -118,7 +118,7 @@ Roblox’s monetization documentation also requires correct receipt processing f
 1. Split or gate DataStore integration so local Edit-mode tests use deterministic mocks while a published staging experience tests real persistence.
 2. Add deterministic MCP smoke tests for harvesting, quest progression, pet equip/summon, travel, UI screens, and save/load in staging.
 3. Add multi-client/device-simulator coverage and a screenshot baseline workflow.
-4. Finish economy-critical systems before monetization: durable cross-server trade journaling, cross-server marketplace settlement, leaderboard multi-server soak, anti-cheat adversarial coverage, and receipt processing. Marketplace listings and per-profile settlement markers are durable; the current explicit boundary is same-server settlement with seller presence.
+4. Finish economy-critical systems before monetization: durable cross-server trade journaling, cross-server marketplace settlement, leaderboard multi-server soak, anti-cheat adversarial coverage, and staging verification of receipt processing. The authoritative currency boundary now covers ordinary rewards, developer-product grants, and the legacy economy facade; marketplace listings and per-profile settlement markers are durable, with same-server settlement and seller presence still the explicit boundary.
 5. Verify the sequential autosave path under DataStore throttling and player-removal races in staging.
 6. Only after those gates pass, prepare—not automatically execute—the production release checklist.
 
