@@ -17,6 +17,7 @@ local UpgradeService = require(game.ServerScriptService.AetherServer.GameService
 local PlayerVitalsService = require(game.ServerScriptService.AetherServer.GameServices.PlayerVitalsService)
 local ToolService = require(game.ServerScriptService.AetherServer.GameServices.ToolService)
 local SkillTreeService = require(game.ServerScriptService.AetherServer.GameServices.SkillTreeService)
+local TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
 local AetherWorld = Workspace:FindFirstChild("AetherWorld")
 local IslandsFolder = AetherWorld and AetherWorld:FindFirstChild("Islands")
 local MAX_HARVEST_DISTANCE = 30
@@ -233,6 +234,7 @@ function NodeManager.ProcessHarvest(player, node)
         QuestService.UpdateProgress(player, "Harvest", nodeType.ResourceId, yieldAmount)
         QuestService.UpdateProgress(player, "Collect", nodeType.ResourceId, yieldAmount)
     end
+    TutorialService.MarkAction(player, "Harvest")
 
     -- Set cooldown
     activeNodes[node] = {

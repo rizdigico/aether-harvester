@@ -7,6 +7,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local SkillTreeRules = require(ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
+local TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
 
 local SkillTreeService = {}
 local initialized = false
@@ -56,6 +57,7 @@ function SkillTreeService.PurchaseSkill(player: Player, skillId: string): (boole
     local definition = SkillTreeRules.GetDefinition(skillId)
     local nextLevel = (data.Skills[skillId] or 0) + 1
     data.Skills[skillId] = math.min(definition.MaxLevel, nextLevel)
+    TutorialService.MarkAction(player, "Upgrade")
     return true, "Skill purchased", data.Skills[skillId]
 end
 

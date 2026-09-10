@@ -73,6 +73,14 @@ refuses to remove a tamed creature when its profile mutation cannot be
 committed. The economy facade delegates balance changes to the canonical
 profile mutators and preflights conversion targets before spending.
 
+The first-five-minutes vertical slice now has server-owned, persisted tutorial
+state with five ordered actions: move, harvest, upgrade, travel, and pet. A
+small cross-platform client overlay requests the snapshot through a
+`RemoteFunction`, listens for server updates, and reports movement through a
+progress-only action. Upgrade and skill purchases, successful harvests, travel
+to another island, and pet equip all advance the same validated state machine;
+the tutorial never grants currency or items by itself.
+
 The imagegen → Godot v2 Bloom pipeline now also has a deterministic Roblox
 runtime companion: the generated model is installed on Crystal Spires at boot
 with source-artifact/version attributes and the same cyan/violet petal palette.

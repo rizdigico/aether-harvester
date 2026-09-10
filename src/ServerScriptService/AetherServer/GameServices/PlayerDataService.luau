@@ -8,6 +8,7 @@ local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
 local SkillTreeRules = require(game.ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
 local InventoryRules = require(game.ReplicatedStorage.AetherShared.Modules.InventoryRules)
 local CurrencyRules = require(game.ReplicatedStorage.AetherShared.Modules.CurrencyRules)
+local TutorialRules = require(game.ReplicatedStorage.AetherShared.Modules.TutorialRules)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -21,7 +22,7 @@ local SAVE_INTERVAL = 300 -- 5 minutes
 local AUTOSAVE_SPACING = 0.1 -- Avoid bursting every active player into the DataStore budget at once.
 local DEFAULT_MAX_ENERGY = 100
 local DEFAULT_TOOL_ID = "basic_pickaxe"
-local SCHEMA_VERSION = 4
+local SCHEMA_VERSION = 5
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
 
@@ -380,6 +381,7 @@ local function CreateDefaultProfile(userId)
         LastDailyReward = nil,
         LastDailyRewardAt = 0,
         LastDailyRewardDay = nil,
+        Tutorial = TutorialRules.CreateState(),
     }
 end
 
@@ -487,6 +489,7 @@ local function SanitizeProfile(userId, raw)
         or base.ActionCount
     merged.LastActionTime = isFiniteNumber(merged.LastActionTime) and math.max(0, math.floor(merged.LastActionTime))
         or base.LastActionTime
+    merged.Tutorial = TutorialRules.NormalizeState(merged.Tutorial)
     merged.Level = isFiniteNumber(merged.Level) and math.clamp(math.floor(merged.Level), 1, 1000) or base.Level
     merged.XP = isFiniteNumber(merged.XP) and math.clamp(math.floor(merged.XP), 0, MAX_TRANSACTION_AMOUNT) or base.XP
     merged.PrestigeLevel = isFiniteNumber(merged.PrestigeLevel)

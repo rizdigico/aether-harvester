@@ -3,6 +3,7 @@ local WorldManager = {}
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local QuestService = require(game.ServerScriptService.AetherServer.GameServices.QuestService)
+local TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
 
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -76,6 +77,9 @@ function WorldManager.TeleportPlayerToIsland(player, islandId)
     )
 
     playerIslands[player.UserId] = islandId
+    if islandId ~= "SkySanctum" then
+        TutorialService.MarkAction(player, "Travel")
+    end
 
     -- Discovery is durable and unique per island. Respawns and repeated
     -- teleports must not inflate the explorer quest or zone statistic.

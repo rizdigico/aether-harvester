@@ -3,6 +3,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
+local TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
 
 local activePets = {}
 local petFollowers = {}
@@ -167,6 +168,7 @@ function PetService.Initialize()
                     Error:FireClient(player, message or "Failed to equip pet")
                 end
             else
+                TutorialService.MarkAction(player, "Pet")
                 local PetUpdated = Remotes:FindFirstChild("PetUpdated")
                 if PetUpdated then
                     PetUpdated:FireClient(player)

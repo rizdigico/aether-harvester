@@ -3,6 +3,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 local AntiCheatService = require(game.ServerScriptService.AetherServer.GameServices.AntiCheatService)
 local UpgradeMath = require(game.ReplicatedStorage.AetherShared.Modules.UpgradeMath)
+local TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
 
 UpgradeService.Database = {
     ["pickaxe_power_1"] = {
@@ -170,6 +171,7 @@ function UpgradeService.PurchaseUpgrade(player, upgradeId)
         data.Upgrades = {}
     end
     data.Upgrades[upgradeId] = (data.Upgrades[upgradeId] or 0) + 1
+    TutorialService.MarkAction(player, "Upgrade")
 
     print("[UpgradeService] " .. player.Name .. " upgraded " .. upgradeId .. " to level " .. data.Upgrades[upgradeId])
 

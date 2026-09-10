@@ -11,6 +11,7 @@ local SERVICE_INIT_ORDER = {
     "WorldManager",
     "NodeManager",
     "PlayerDataService",
+    "TutorialService",
     "PlayerVitalsService",
     "ToolService",
     "BaseService",
@@ -52,6 +53,7 @@ function ServerMain.Initialize()
     Services.WorldManager = require(game.ServerScriptService.AetherServer.GameServices.WorldManager)
     Services.NodeManager = require(game.ServerScriptService.AetherServer.GameServices.NodeManager)
     Services.PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
+    Services.TutorialService = require(game.ServerScriptService.AetherServer.GameServices.TutorialService)
     Services.PlayerVitalsService = require(game.ServerScriptService.AetherServer.GameServices.PlayerVitalsService)
     Services.ToolService = require(game.ServerScriptService.AetherServer.GameServices.ToolService)
     Services.BaseService = require(game.ServerScriptService.AetherServer.GameServices.BaseService)
@@ -107,6 +109,7 @@ function ServerMain.Initialize()
     -- Setup player joining
     game.Players.PlayerAdded:Connect(function(player)
         Services.PlayerDataService.OnPlayerAdded(player)
+        Services.TutorialService.OnPlayerAdded(player)
         Services.BaseService.OnPlayerAdded(player)
         Services.MonetizationService.OnPlayerAdded(player)
         Services.QuestService.OnPlayerAdded(player)
@@ -117,6 +120,7 @@ function ServerMain.Initialize()
     -- Process players already in the game (Studio play mode, script reloads)
     for _, player in ipairs(game.Players:GetPlayers()) do
         Services.PlayerDataService.OnPlayerAdded(player)
+        Services.TutorialService.OnPlayerAdded(player)
         Services.BaseService.OnPlayerAdded(player)
         Services.MonetizationService.OnPlayerAdded(player)
         Services.QuestService.OnPlayerAdded(player)
@@ -134,6 +138,7 @@ function ServerMain.Initialize()
         Services.PetService.OnPlayerRemoving(player)
         Services.QuestService.OnPlayerRemoving(player)
         Services.AnalyticsService.OnPlayerRemoving(player)
+        Services.TutorialService.OnPlayerRemoving(player)
         Services.PlayerDataService.OnPlayerRemoving(player)
         Services.AntiCheatService.ClearViolations(player.UserId)
         RateLimiter.Cleanup(player)

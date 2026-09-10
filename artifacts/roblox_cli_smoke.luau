@@ -34,8 +34,29 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerMain = require(ReplicatedStorage.AetherShared.Modules.ServerMain)
 ServerMain.Initialize()
 
+local tutorialService = ServerMain.GetService("TutorialService")
+assert(tutorialService, "TutorialService was not registered")
+assert(ReplicatedStorage.AetherShared.Remotes:FindFirstChild("TutorialUpdated"), "TutorialUpdated remote is missing")
+assert(ReplicatedStorage.AetherShared.Remotes:FindFirstChild("GetTutorial"), "GetTutorial remote is missing")
+
+local nodeManager = ServerMain.GetService("NodeManager")
+assert(nodeManager, "NodeManager was not registered")
+local nodes = nodeManager.GetAllNodes()
+local nodeCount = #nodes
+local promptCount = 0
+for _, node in ipairs(nodes) do
+	assert(node:GetAttribute("NodeId") == node.Name, "node id marker missing: " .. node.Name)
+	if node:FindFirstChild("HarvestPrompt", true) then
+		promptCount += 1
+	end
+end
+assert(nodeCount == 29, "unexpected resource node count: " .. tostring(nodeCount))
+assert(promptCount == nodeCount, "not every resource node has a harvest prompt")
+
 print("[CLI_SMOKE] PASS AetherWorld built")
 print("[CLI_SMOKE] PASS CrystalSpires generated content installed")
 print("[CLI_SMOKE] PASS Bloom source=" .. tostring(bloom:GetAttribute("SourceArtifact")))
 print("[CLI_SMOKE] PASS Bloom version=" .. tostring(bloom:GetAttribute("AssetVersion")))
 print("[CLI_SMOKE] PASS ServerMain initialized all services")
+print("[CLI_SMOKE] PASS TutorialService and tutorial remotes wired")
+print("[CLI_SMOKE] PASS " .. tostring(nodeCount) .. " harvest prompts wired")

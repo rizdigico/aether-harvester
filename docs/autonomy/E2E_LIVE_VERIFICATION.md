@@ -14,6 +14,8 @@ OrderedDataStore services.
   assertions.
 - `ServerMain` initialized all 32 services, including guild, marketplace, and
   leaderboard persistence consumers.
+- `TutorialService` initialized its five-step server-owned guide, and all 29
+  resource nodes received a server `HarvestPrompt` plus a `NodeId` marker.
 - No DataStore, module-load, CreatorError, or runtime error was emitted.
 - The world and `AetherBloom_GodotV2` companion assertions still pass.
 

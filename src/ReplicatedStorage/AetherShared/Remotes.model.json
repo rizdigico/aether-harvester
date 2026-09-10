@@ -18,6 +18,18 @@
                          "className":  "RemoteEvent"
                      },
                      {
+                         "name":  "TutorialUpdated",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "TutorialAction",
+                         "className":  "RemoteEvent"
+                     },
+                     {
+                         "name":  "GetTutorial",
+                         "className":  "RemoteFunction"
+                     },
+                     {
                          "name":  "RequestPlayerData",
                          "className":  "RemoteEvent"
                      },
