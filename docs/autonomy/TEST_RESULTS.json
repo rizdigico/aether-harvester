@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "998ad68",
+  "commit": "fbd1f28",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
