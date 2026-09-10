@@ -199,7 +199,7 @@ Status: **BUILD-VERIFIED / LIVE E2E PENDING** — the source passes formatting, 
 
 ```
 ServerScriptService/AetherServer/
-├── GameServices/          # 24 services (PlayerData, Node, Quest, Pet, Creature,
+├── GameServices/          # 32 services (PlayerData, Node, Quest, Pet, Creature,
 │                          #   Upgrade, Progression, Achievement, Economy, ...)
 └── (ServerMain boot)
 

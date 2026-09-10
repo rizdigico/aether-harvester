@@ -22,14 +22,14 @@ The following observations were made from the current checkout and local toolcha
 | Repository | Git checkout on `reforge/full-autonomous-rebuild` | Correct source of truth located and preserved |
 | Main build | `rojo build` passed | Main place serializes successfully |
 | Test build | `rojo build test.project.json` passed | Test place serializes successfully |
-| Pure logic | 49 passed, 0 failed via Lune | PureMath, QuestProgress, DailyRewardProgress, and PrestigeMath coverage exists |
+| Pure logic | 82 passed, 0 failed via Lune | PureMath, QuestProgress, DailyRewardProgress, PrestigeMath, receipt, tool, pet-fusion, party, guild, marketplace, and inventory boundary coverage exists |
 | Formatting | `stylua --check src tests` passed | Formatting is currently clean |
 | Lint | `selene src tests` passed: 0 errors, 0 warnings, 0 parse errors | Static-analysis gate is green for the current checkout |
 | Studio | A local Studio place and the Roblox bridge are available | Studio verification is possible, but must be rerun against this checkout |
 | Assets | Blender-authored source and FBX exports exist | Imported assets still require scale, pivot, material, collision, and performance checks |
 | External release | Not verified in this audit | Publishing and monetization remain gated behind human approval |
 
-The checkout contains uncommitted user work, including accessibility/safe-area scripts, imported models, and autonomy documentation. That work is preserved; future commits must stage only files intentionally changed for the current slice.
+The checkout is clean after focused commits. Future commits must still stage only files intentionally changed for the current slice.
 
 ## Product pillars
 

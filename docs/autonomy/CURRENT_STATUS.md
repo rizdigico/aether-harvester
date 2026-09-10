@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 79 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 82 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |
 
@@ -58,6 +58,11 @@ small request spacing instead of launching one concurrent task per player. Save
 locks are rechecked after waits and player removal blocks stale profile
 references, preventing a leaving player’s data from being written by a delayed
 autosave pass.
+
+The latest server-core hardening makes service initialization deterministic,
+prevents duplicate `ServerMain.Initialize()` wiring, rejects unknown or
+overflowing inventory grants, rejects unknown pet grants, and refuses to remove
+a tamed creature when its profile mutation cannot be committed.
 
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and

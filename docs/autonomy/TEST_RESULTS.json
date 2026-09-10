@@ -1,0 +1,36 @@
+{
+  "project": "Aether Harvester",
+  "branch": "reforge/full-autonomous-rebuild",
+  "commit": "3a00c22",
+  "capturedOn": "2026-09-10",
+  "gates": {
+    "stylua": "pass",
+    "selene": "pass",
+    "luauLsp": "pass",
+    "unitTests": {
+      "status": "pass",
+      "passed": 82,
+      "failed": 0
+    },
+    "rojoMainBuild": "pass",
+    "rojoTestBuild": "pass",
+    "godotStatus": "pass",
+    "godotHeadlessCheck": "pass",
+    "robloxProjectCheck": "pass",
+    "robloxRojoBuild": "pass",
+    "studioPlayMode": "not_run",
+    "robloxAssetImport": "not_run",
+    "creatorHubProducts": "not_configured",
+    "stagingPublish": "not_run",
+    "humanPlaytest": "not_run"
+  },
+  "studioConnection": {
+    "status": "not_connected",
+    "reason": "StudioMCP get_studio_state reported no connected Roblox Studio instance"
+  },
+  "policy": {
+    "productionPublish": "human_gated",
+    "realRobuxProducts": "human_gated",
+    "paidRandomItems": "excluded_from_release_1"
+  }
+}

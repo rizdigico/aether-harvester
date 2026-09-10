@@ -95,8 +95,11 @@ function CreatureService.TameCreature(creature, player)
         return false, "Level " .. def.Level .. " required to tame"
     end
 
-    -- Success - add to pet inventory
-    PlayerDataService.AddPet(player, def.Id)
+    -- Success - add to pet inventory. Do not remove the world creature if the
+    -- profile mutation is rejected or the pet definition is not registered.
+    if not PlayerDataService.AddPet(player, def.Id) then
+        return false, "Could not add pet to inventory"
+    end
 
     -- Update quests
     if QuestService.UpdateProgress then

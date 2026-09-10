@@ -1,5 +1,12 @@
 # E2E LIVE VERIFICATION — Aether Harvester
 
+> **Current attempt (2026-09-10):** The local Roblox bridge can launch Studio,
+> inspect the project, and build the current place. `list_roblox_studios`
+> returned a stale-looking instance identifier, but `get_studio_state` then
+> reported that no Studio instance was connected to StudioMCP. Therefore the
+> live Luau, play-mode, console, and screenshot steps below remain **NOT RUN**;
+> this is an environmental connection gate, not a passing gameplay claim.
+
 **Date:** 2026-08-04 (19:07 SGT)
 **Engineer:** Studio Test Automation Engineer (worker-a)
 **Target:** Live Studio place ("Aesther Harvest") via Studio MCP bridge
