@@ -17,6 +17,7 @@ tree.
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
 | Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 82 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
+| Local engine plugins | PASS | Installed Godot Local MCP `0.1.0+codex.20260910004615` and Roblox Local MCP `0.1.0+codex.20260910004948` both completed direct stdio handshakes |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |
 
 ## Implemented source surfaces
@@ -113,18 +114,21 @@ server-controlled visit action. Base data is sanitized during profile load.
 - The Aesther Harvest Studio window is visible locally.
 - Project inspection passes for `default.project.json` and `src`.
 - Current MCP build output: `artifacts/mcp-base-current.rbxlx`.
+- The installed plugin status probe is green for both Rojo and Wally; Rojo
+  version detection uses its pinned Rokit binary when the shim is called
+  outside a project manifest.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline
 
 The governed imagegen → Godot → Roblox workflow has concept PNGs, deterministic
-Godot GLB exports, and a generated asset registry. The latest imagegen bloom
-concept is checked into `assets/concepts/aether_bloom_concept_v1.png` and was
-turned into `AetherBloom_Godot_v1.glb` through the Godot local bridge; the GLB
-contains 11 nodes, 10 meshes/primitives, 768 triangles, and 10 materials. The
-registry records the Godot export as verified. Roblox import status remains
-`not_run` until the assets are imported into Studio and inspected in a
-connected play-mode/session.
+Godot GLB exports, and a generated asset registry. The latest production
+reference is `assets/concepts/aether_bloom_concept_v2.png`; it was assembled
+and exported as `AetherBloom_Godot_v2.glb` through the corrected Godot local
+bridge. The v2 GLB contains 12 nodes, 11 meshes/primitives, 840 triangles, and
+11 materials. The registry records the Godot export and image provenance as
+verified. Roblox import status remains `not_run` until the model is imported
+into Studio and inspected in a connected play-mode/session.
 
 ## Remaining release gates
 

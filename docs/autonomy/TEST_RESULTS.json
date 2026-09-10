@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "902793f",
+  "commit": "pending-asset-and-plugin-verification-commit",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -16,8 +16,22 @@
     "rojoTestBuild": "pass",
     "godotStatus": "pass",
     "godotHeadlessCheck": "pass",
+    "godotLocalPluginHandshake": "pass",
+    "godotBloomV2Export": {
+      "status": "pass",
+      "path": "assets/godot-content-lab/exports/AetherBloom_Godot_v2.glb",
+      "fileBytes": 22852,
+      "sha256": "a3599c87f955e42cac993503153271bcddfb80f43135b69790e6dfb85616f05b",
+      "sceneNodes": 12,
+      "meshes": 11,
+      "primitives": 11,
+      "triangles": 840,
+      "materials": 11
+    },
     "robloxProjectCheck": "pass",
     "robloxRojoBuild": "pass",
+    "robloxLocalPluginHandshake": "pass",
+    "robloxStatus": "pass",
     "studioPlayMode": "not_run",
     "robloxAssetImport": "not_run",
     "creatorHubProducts": "not_configured",
