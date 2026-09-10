@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "915a168",
+  "commit": "4bd268f",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -9,7 +9,7 @@
     "luauLsp": "pass",
     "unitTests": {
       "status": "pass",
-      "passed": 84,
+      "passed": 87,
       "failed": 0
     },
     "rojoMainBuild": "pass",
@@ -17,6 +17,7 @@
     "godotStatus": "pass",
     "godotHeadlessCheck": "pass",
     "godotLocalPluginHandshake": "pass",
+    "currencyMutationRules": "pass",
     "godotBloomV2Export": {
       "status": "pass",
       "path": "assets/godot-content-lab/exports/AetherBloom_Godot_v2.glb",
