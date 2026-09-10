@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "4bd268f",
+  "commit": "c230889",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -18,6 +18,7 @@
     "godotHeadlessCheck": "pass",
     "godotLocalPluginHandshake": "pass",
     "currencyMutationRules": "pass",
+    "hudEventDrivenState": "pass",
     "godotBloomV2Export": {
       "status": "pass",
       "path": "assets/godot-content-lab/exports/AetherBloom_Godot_v2.glb",
