@@ -11,6 +11,7 @@ local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServ
 local AnalyticsService = require(game.ServerScriptService.AetherServer.GameServices.AnalyticsService)
 local Monetization = require(ReplicatedStorage.AetherShared.Data.Monetization)
 local ReceiptJournal = require(ReplicatedStorage.AetherShared.Modules.ReceiptJournal)
+local CurrencyRules = require(ReplicatedStorage.AetherShared.Modules.CurrencyRules)
 
 local initialized = false
 local processingReceipts = {}
@@ -34,10 +35,13 @@ local function applyProduct(data, product)
             return false, "Invalid currency grant"
         end
         data.Currency = data.Currency or {}
-        if data.Currency[product.Currency] == nil then
-            return false, "Unknown currency"
+        local definition = CurrencyRules.Definitions[product.Currency]
+        local ok, nextBalance, reason =
+            CurrencyRules.CanAdd(product.Currency, product.Amount, data.Currency[product.Currency], definition)
+        if not ok then
+            return false, reason
         end
-        data.Currency[product.Currency] += math.floor(product.Amount)
+        data.Currency[product.Currency] = nextBalance
         return true
     end
 

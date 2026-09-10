@@ -25,13 +25,6 @@ local SCHEMA_VERSION = 4
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
 
-local CURRENCY_DEFINITIONS = {
-    AetherShards = { Id = "AetherShards" },
-    AetherGems = { Id = "AetherGems" },
-    EventTokens = { Id = "EventTokens" },
-    FamePoints = { Id = "FamePoints" },
-}
-
 local function isPositiveInteger(value)
     return type(value) == "number"
         and value == value
@@ -671,7 +664,7 @@ function PlayerDataService.AddCurrency(player, currencyType, amount)
     if not data then
         return false
     end
-    local definition = CURRENCY_DEFINITIONS[currencyType]
+    local definition = CurrencyRules.Definitions[currencyType]
     local current = data.Currency and data.Currency[currencyType]
     local ok, nextBalance = CurrencyRules.CanAdd(currencyType, amount, current, definition)
     if not ok then
@@ -686,7 +679,7 @@ function PlayerDataService.RemoveCurrency(player, currencyType, amount)
     if not data then
         return false
     end
-    local definition = CURRENCY_DEFINITIONS[currencyType]
+    local definition = CurrencyRules.Definitions[currencyType]
     local current = data.Currency and data.Currency[currencyType]
     local ok, nextBalance = CurrencyRules.CanRemove(currencyType, amount, current, definition)
     if not ok then

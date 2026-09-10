@@ -7,6 +7,13 @@ local CurrencyRules = {}
 
 local MAX_BALANCE = 1000000000
 
+CurrencyRules.Definitions = {
+    AetherShards = { Id = "AetherShards" },
+    AetherGems = { Id = "AetherGems" },
+    EventTokens = { Id = "EventTokens" },
+    FamePoints = { Id = "FamePoints" },
+}
+
 local function isFiniteInteger(value: any): boolean
     return type(value) == "number"
         and value == value

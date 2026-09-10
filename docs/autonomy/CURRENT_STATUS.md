@@ -45,6 +45,9 @@ feed the server harvest yield and cooldown calculations. Marketplace listings
 now use a dedicated durable DataStore with bounded records, UpdateAsync-backed
 claims, expiring processing locks, saved escrow, same-server settlement, and a
 per-profile transaction journal for crash-safe retry of each side of a sale.
+Developer-product receipt grants now use the same canonical currency rules as
+ordinary server rewards, so receipt processing cannot bypass balance bounds or
+introduce an unknown currency key.
 Trade acceptance likewise validates both inventories, rolls back failed item
 moves, persists both profiles before reporting success, and only cancels
 pending offers on disconnect.
