@@ -1,7 +1,6 @@
 extends Node3D
 
 const AetherNodeFactory = preload("res://godot-content-lab/aether_node_factory.gd")
-const CONCEPT_TEXTURE = preload("res://concepts/aether_node_concept_v1.png")
 
 func _ready() -> void:
 	AetherNodeFactory.build(self)
@@ -72,8 +71,11 @@ func _build_review_panel() -> void:
 	var reference := TextureRect.new()
 	reference.position = Vector2(1010, 40)
 	reference.size = Vector2(230, 230)
-	reference.texture = CONCEPT_TEXTURE
 	reference.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	reference.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	reference.modulate = Color(1, 1, 1, 0.72)
+	if DisplayServer.get_name() != "headless":
+		var reference_texture = load("res://concepts/aether_node_concept_v1.png")
+		if reference_texture is Texture2D:
+			reference.texture = reference_texture
 	layer.add_child(reference)

@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "fbd1f28",
+  "commit": "dfc4a5a",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -37,6 +37,17 @@
     "robloxRojoBuild": "pass",
     "robloxLocalPluginHandshake": "pass",
     "robloxStatus": "pass",
+    "robloxCliStudioSmoke": {
+      "status": "pass",
+      "place": "artifacts/mcp-bloom-current.rbxlx",
+      "script": "artifacts/roblox_cli_smoke.luau",
+      "evidence": "artifacts/roblox_cli_smoke.log",
+      "checks": [
+        "AetherWorld built in Roblox Studio",
+        "CrystalSpires.GeneratedContent installed",
+        "AetherBloom_GodotV2 source/version markers verified"
+      ]
+    },
     "robloxBloomRuntimeCompanion": "pass",
     "robloxBloomGlbImport": "not_run",
     "studioPlayMode": "not_run",

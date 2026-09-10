@@ -1,5 +1,25 @@
 # E2E LIVE VERIFICATION — Aether Harvester
 
+## Direct local Studio command verification — 2026-09-10
+
+The plugin-only desktop control path is still unavailable in this session:
+the native StudioMCP server returns `studios: []`. The local executable path
+was therefore verified independently using Roblox Studio's supported
+`RunScript` command-line task against `artifacts/mcp-bloom-current.rbxlx`.
+
+- `RobloxStudioBeta.exe --task RunScript ... --quitAfterExecution` exited 0.
+- The recorded output is `artifacts/roblox_cli_smoke.log`.
+- Studio executed the real `WorldBuilder` and `AetherBloomRuntime` modules.
+- The assertions passed for `AetherWorld`, `CrystalSpires.GeneratedContent`,
+  `AetherBloom_GodotV2`, `SourceArtifact=AetherBloom_Godot_v2.glb`, and
+  `AssetVersion=2`.
+- A visible Studio review session is open on the same generated place while
+  the repo's Rojo server listens on `localhost:34872`.
+
+This is a real local Studio execution and visible review-state check. It is
+not a substitute for connected StudioMCP play mode: client spawn, input,
+server/client remotes, screenshots, and multi-client behavior remain pending.
+
 > **Current attempt (2026-09-10):** The local Roblox bridge can launch Studio,
 > inspect the project, and build the current place. The corrected wrapper now
 > targets the bridge beside the already-open Studio version, and

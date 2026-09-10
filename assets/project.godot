@@ -1,13 +1,18 @@
-; Aether Harvester content-lab project.
-; The project root intentionally is assets/ so the generated source concept and
-; exported model stay in one auditable, repo-local Godot workspace.
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
 [application]
 
 config/name="Aether Harvester Content Lab"
-run/main_scene="res://godot-content-lab/ContentLab.tscn"
+run/main_scene="res://godot-content-lab/AetherWorldPreview.tscn"
+config/features=PackedStringArray("4.7")
 
 [display]
 

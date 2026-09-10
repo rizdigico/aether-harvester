@@ -138,9 +138,11 @@ server-controlled visit action. Base data is sanitized during profile load.
   outside a project manifest.
 - The companion native `roblox-studio` MCP server exposes 29 StudioMCP tools
   through a persistent stdio passthrough and selects the active Studio version.
-- StudioMCP currently returns a connected instance id, but
-  `get_studio_state` reports `Place is not open`; live play-mode verification
-  therefore remains pending.
+- The native StudioMCP probe currently returns `studios: []`, so connected
+  play-mode control remains pending.
+- The independent Roblox Studio CLI smoke path passes against the generated
+  place and verifies the real Bloom runtime companion; see
+  `docs/autonomy/E2E_LIVE_VERIFICATION.md`.
 - Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
 
 ## Asset pipeline
