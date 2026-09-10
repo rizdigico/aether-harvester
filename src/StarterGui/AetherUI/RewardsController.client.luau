@@ -120,6 +120,9 @@ local function rewardText(reward: any): string
     if type(reward.Item) == "string" then
         table.insert(parts, tostring(reward.Amount or 1) .. " × " .. reward.Item)
     end
+    if type(reward.Pet) == "string" then
+        table.insert(parts, "Pet: " .. reward.Pet)
+    end
     if type(reward.Bonus) == "string" then
         table.insert(parts, reward.Bonus)
     end

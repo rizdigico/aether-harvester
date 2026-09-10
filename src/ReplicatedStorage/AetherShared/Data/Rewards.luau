@@ -31,7 +31,7 @@ Rewards.DailyCalendar = {
     Day27 = { Currency = 8000, Item = "aether_shard", Amount = 100 },
     Day28 = { Currency = 10000, Item = "crystal_pickaxe", Amount = 1, Bonus = "Streak bonus!" },
     Day29 = { Currency = 15000, XP = 20000 },
-    Day30 = { Currency = 50000, Item = "ancient_dragon_pet", Amount = 1, Bonus = "MONTHLY REWARD!" },
+    Day30 = { Currency = 50000, Pet = "ancient_dragon_pet", Bonus = "MONTHLY REWARD!" },
 }
 
 Rewards.ExtraRewards = {

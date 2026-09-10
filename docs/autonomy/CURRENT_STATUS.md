@@ -48,7 +48,9 @@ per-profile transaction journal for crash-safe retry of each side of a sale.
 Developer-product receipt grants and the legacy `EconomyService` facade now use
 the same canonical currency rules as ordinary server rewards, so receipt,
 conversion, and legacy economy calls cannot bypass balance bounds or introduce
-an unknown currency key.
+an unknown currency key. Daily and extra reward claims now preflight every
+currency, item, XP, and pet component before marking the claim consumed; the
+30-day reward is represented as a real pet grant rather than an invalid item id.
 Trade acceptance likewise validates both inventories, rolls back failed item
 moves, persists both profiles before reporting success, and only cancels
 pending offers on disconnect.

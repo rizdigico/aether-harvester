@@ -20,6 +20,7 @@
     "currencyMutationRules": "pass",
     "receiptCurrencyBound": "pass",
     "economyFacadeCurrencyBound": "pass",
+    "rewardClaimGrantValidation": "pass",
     "hudEventDrivenState": "pass",
     "godotBloomV2Export": {
       "status": "pass",

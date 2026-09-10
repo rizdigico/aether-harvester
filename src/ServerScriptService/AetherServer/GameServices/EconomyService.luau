@@ -24,7 +24,11 @@ function EconomyService.GetBalance(player, currencyType)
     if not data or not data.Currency then
         return 0
     end
-    return data.Currency[currencyType] or 0
+    local balance = data.Currency[currencyType]
+    if type(balance) ~= "number" or balance ~= balance or balance < 0 or balance > 1000000000 then
+        return 0
+    end
+    return balance
 end
 
 function EconomyService.AddCurrency(player, currencyType, amount)
@@ -97,7 +101,7 @@ function EconomyService.ConvertCurrency(player, fromCurrency, amount)
 end
 
 function EconomyService.CanAfford(player, currencyType, amount)
-    return EconomyService.GetBalance(player, currencyType) >= amount
+    return type(amount) == "number" and amount >= 0 and EconomyService.GetBalance(player, currencyType) >= amount
 end
 
 function EconomyService.LogTransaction(player, action, currencyType, amount)

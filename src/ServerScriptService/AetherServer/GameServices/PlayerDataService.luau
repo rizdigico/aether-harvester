@@ -670,6 +670,7 @@ function PlayerDataService.AddCurrency(player, currencyType, amount)
     if not ok then
         return false
     end
+    data.Currency = data.Currency or {}
     data.Currency[currencyType] = nextBalance
     return true
 end

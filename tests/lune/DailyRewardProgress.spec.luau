@@ -68,7 +68,7 @@ return {
             {
                 name = "day thirty resolves the monthly reward",
                 fn = function()
-                    expectEqual(Rewards.GetDailyReward(30).Item, "ancient_dragon_pet", "day thirty item")
+                    expectEqual(Rewards.GetDailyReward(30).Pet, "ancient_dragon_pet", "day thirty pet")
                 end,
             },
             {
