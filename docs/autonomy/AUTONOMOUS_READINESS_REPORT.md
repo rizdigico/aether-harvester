@@ -7,7 +7,7 @@
 
 ## Executive result
 
-The development harness is operational. The local Roblox and Godot MCP plugins validate, the Roblox Studio MCP bridge is now resolving the installed Studio version dynamically, and a real Aesther Harvest Studio play session was started, inspected, screenshot-captured, and stopped through MCP.
+The development harness is operational. The local Roblox and Godot MCP plugins validate, the Roblox Studio MCP bridge now resolves the installed Studio version dynamically, and the native StudioMCP passthrough is available as a persistent MCP server. The current Studio process is visible, but its live bridge state currently reports `Place is not open`, so a fresh play session is not claimed in this audit.
 
 The game itself is not yet “100% ready for unattended production development.” The current checkout’s source gates are green, but connected runtime acceptance, real Studio DataStore validation, final visual/gameplay acceptance, and production publishing remain separate gates. The correct readiness label is:
 
@@ -18,14 +18,14 @@ The game itself is not yet “100% ready for unattended production development.�
 ### Local control surface
 
 - `roblox-local-mcp` and `godot-local-mcp` exist in the personal marketplace, have valid manifests, and passed plugin validation.
-- Both local stdio MCP servers were previously handshaken directly and expose 12 bounded local tools each.
-- The Roblox bridge wrapper now discovers the newest installed `StudioMCP.exe` instead of depending on a stale version hash.
-- The wrapper now sends MCP initialization in phases, allowing Studio time to reconnect to the bridge.
-- Roblox Studio MCP returned one live instance: **Aesther Harvest (placeId: 97649669204650)**.
+- The bounded local servers expose 12 tools each and passed direct stdio handshakes; the companion native `roblox-studio` server exposes 29 StudioMCP tools through a persistent passthrough.
+- The Roblox bridge wrapper prefers the `StudioMCP.exe` beside an already-open Studio process, then falls back to the newest installed bridge.
+- The wrapper sends MCP initialization in phases, allowing Studio time to reconnect to the bridge.
+- The current proxy can start and respond, but the current Studio state is not usable for DataModel calls until a place is open and registered.
 
 ### Live Studio workflow
 
-The following workflow passed through the live Studio MCP bridge:
+An earlier run recorded the following workflow through the live Studio MCP bridge; it is retained as historical evidence and is not re-counted as current verification:
 
 1. `list_roblox_studios` — registered the open Aesther Harvest session.
 2. `get_studio_state` — Edit mode available.
@@ -63,12 +63,12 @@ These are development priorities, not reasons to discard the project.
 |---|---:|---|
 | StyLua format check | PASS | Formatting is clean under the current CI exclusion. |
 | Selene lint | PASS | Exit 0; 0 errors, 0 warnings, 0 parse errors on the current checkout. |
-| Lune unit tests | PASS | 75 passed, 0 failed. |
+| Lune unit tests | PASS | 82 passed, 0 failed. |
 | Rojo production build | PASS | Place file generated. |
 | Rojo test build | PASS | Test place generated. |
 | Rojo sourcemap | PASS | Sourcemap generated. |
 | Luau typecheck | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings on the current source tree. |
-| Live Studio boot/playtest | PASS with environmental warning | Boot and play mode work; DataStore API access is disabled. |
+| Live Studio boot/playtest | NOT RUN in current audit | Current StudioMCP state reports `Place is not open`; see `E2E_LIVE_VERIFICATION.md`. |
 
 The repository’s current local verification is green; CI configuration still needs a hosted-run confirmation before it is treated as an independent release gate.
 
