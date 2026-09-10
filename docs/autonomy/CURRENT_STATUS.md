@@ -15,7 +15,7 @@ tree.
 | Luau formatting | PASS | `stylua --check` on touched services/controllers |
 | Luau language analysis | PASS | `luau-lsp analyze` returned 0 errors and 0 warnings; only the file-watch capability info line is emitted |
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
-| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 82 passed, 0 failed |
+| Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 84 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
 | Local engine plugins | PASS | Installed Godot Local MCP `0.1.0+codex.20260910004615` and Roblox Local MCP `0.1.0+codex.20260910010125` both completed direct stdio handshakes |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |

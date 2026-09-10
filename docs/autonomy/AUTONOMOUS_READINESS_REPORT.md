@@ -50,7 +50,7 @@ The current build has a strong foundation: dynamic world generation, core harves
 - marketplace settlement is durable and crash-resumable, but remains same-server by design until a cross-server settlement bus is added;
 - anti-cheat checks are wired into the current state-changing service paths, but adversarial multi-client coverage and policy tuning remain;
 - leaderboard scores now use isolated OrderedDataStores with cached top-100 reads, but still need multi-server soak and ranking-policy review;
-- analytics are in-memory only;
+- analytics event history is in-memory, while server-measured session minutes are now persisted in the player profile;
 - cosmetic equip is not fully visual;
 - rewards overlap between two services;
 - roadmap systems such as battle, breeding, base building, and deeper world layers are not finished.
@@ -63,7 +63,7 @@ These are development priorities, not reasons to discard the project.
 |---|---:|---|
 | StyLua format check | PASS | Formatting is clean under the current CI exclusion. |
 | Selene lint | PASS | Exit 0; 0 errors, 0 warnings, 0 parse errors on the current checkout. |
-| Lune unit tests | PASS | 82 passed, 0 failed. |
+| Lune unit tests | PASS | 84 passed, 0 failed. |
 | Rojo production build | PASS | Place file generated. |
 | Rojo test build | PASS | Test place generated. |
 | Rojo sourcemap | PASS | Sourcemap generated. |
