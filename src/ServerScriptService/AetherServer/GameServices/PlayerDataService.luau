@@ -7,6 +7,7 @@ local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
 local SkillTreeRules = require(game.ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
 local InventoryRules = require(game.ReplicatedStorage.AetherShared.Modules.InventoryRules)
+local CurrencyRules = require(game.ReplicatedStorage.AetherShared.Modules.CurrencyRules)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -23,6 +24,13 @@ local DEFAULT_TOOL_ID = "basic_pickaxe"
 local SCHEMA_VERSION = 4
 local MAX_TRANSACTION_AMOUNT = 1000000000
 local MAX_MARKETPLACE_TRANSACTIONS = 500
+
+local CURRENCY_DEFINITIONS = {
+    AetherShards = { Id = "AetherShards" },
+    AetherGems = { Id = "AetherGems" },
+    EventTokens = { Id = "EventTokens" },
+    FamePoints = { Id = "FamePoints" },
+}
 
 local function isPositiveInteger(value)
     return type(value) == "number"
@@ -659,27 +667,33 @@ function PlayerDataService.UpdateData(player, key, value)
 end
 
 function PlayerDataService.AddCurrency(player, currencyType, amount)
-    if type(currencyType) ~= "string" or not isPositiveInteger(amount) then
+    local data = playerData[player.UserId]
+    if not data then
         return false
     end
-    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] ~= nil then
-        playerData[player.UserId].Currency[currencyType] += amount
-        return true
+    local definition = CURRENCY_DEFINITIONS[currencyType]
+    local current = data.Currency and data.Currency[currencyType]
+    local ok, nextBalance = CurrencyRules.CanAdd(currencyType, amount, current, definition)
+    if not ok then
+        return false
     end
-    return false
+    data.Currency[currencyType] = nextBalance
+    return true
 end
 
 function PlayerDataService.RemoveCurrency(player, currencyType, amount)
-    if type(currencyType) ~= "string" or not isPositiveInteger(amount) then
+    local data = playerData[player.UserId]
+    if not data then
         return false
     end
-    if playerData[player.UserId] and playerData[player.UserId].Currency[currencyType] ~= nil then
-        if playerData[player.UserId].Currency[currencyType] >= amount then
-            playerData[player.UserId].Currency[currencyType] -= amount
-            return true
-        end
+    local definition = CURRENCY_DEFINITIONS[currencyType]
+    local current = data.Currency and data.Currency[currencyType]
+    local ok, nextBalance = CurrencyRules.CanRemove(currencyType, amount, current, definition)
+    if not ok then
+        return false
     end
-    return false
+    data.Currency[currencyType] = nextBalance
+    return true
 end
 
 function PlayerDataService.AddItem(player, itemId, amount)

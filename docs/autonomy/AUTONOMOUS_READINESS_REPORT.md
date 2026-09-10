@@ -63,7 +63,7 @@ These are development priorities, not reasons to discard the project.
 |---|---:|---|
 | StyLua format check | PASS | Formatting is clean under the current CI exclusion. |
 | Selene lint | PASS | Exit 0; 0 errors, 0 warnings, 0 parse errors on the current checkout. |
-| Lune unit tests | PASS | 84 passed, 0 failed. |
+| Lune unit tests | PASS | 87 passed, 0 failed. |
 | Rojo production build | PASS | Place file generated. |
 | Rojo test build | PASS | Test place generated. |
 | Rojo sourcemap | PASS | Sourcemap generated. |

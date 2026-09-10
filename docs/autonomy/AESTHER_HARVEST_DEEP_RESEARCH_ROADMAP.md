@@ -22,7 +22,7 @@ The following observations were made from the current checkout and local toolcha
 | Repository | Git checkout on `reforge/full-autonomous-rebuild` | Correct source of truth located and preserved |
 | Main build | `rojo build` passed | Main place serializes successfully |
 | Test build | `rojo build test.project.json` passed | Test place serializes successfully |
-| Pure logic | 84 passed, 0 failed via Lune | PureMath, QuestProgress, DailyRewardProgress, PrestigeMath, receipt, tool, pet-fusion, party, guild, marketplace, inventory, and session-metrics boundary coverage exists |
+| Pure logic | 87 passed, 0 failed via Lune | PureMath, QuestProgress, DailyRewardProgress, PrestigeMath, receipt, tool, pet-fusion, party, guild, marketplace, inventory, currency, and session-metrics boundary coverage exists |
 | Formatting | `stylua --check src tests` passed | Formatting is currently clean |
 | Lint | `selene src tests` passed: 0 errors, 0 warnings, 0 parse errors | Static-analysis gate is green for the current checkout |
 | Studio | A local Studio place and the Roblox bridge are available | Studio verification is possible, but must be rerun against this checkout |
