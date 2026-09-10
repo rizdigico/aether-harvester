@@ -1,6 +1,18 @@
 local GameClient = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- A client-only signal lets presentation layers render on actual state changes
+-- instead of polling every frame. Server-originated remotes remain the source
+-- of truth; this only coordinates local presentation.
+GameClient.StateChanged = Instance.new("BindableEvent")
+GameClient.StateRevision = 0
+
+function GameClient:NotifyStateChanged()
+    self.StateRevision += 1
+    self.StateChanged:Fire(self.StateRevision)
+end
+
 -- Client state
 GameClient.State = {
     CurrentIsland = "CloudGardens",
@@ -99,6 +111,7 @@ function GameClient:ConnectRemotes()
             local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
             local def = PetsData.GetPet(petId)
             self.State.ActivePet = def and { Name = def.Name, PetId = petId } or { Name = petId, PetId = petId }
+            self:NotifyStateChanged()
         end)
     end
 
@@ -107,6 +120,7 @@ function GameClient:ConnectRemotes()
     if PetReleased then
         PetReleased.OnClientEvent:Connect(function()
             self.State.ActivePet = nil
+            self:NotifyStateChanged()
         end)
     end
 
@@ -119,6 +133,7 @@ function GameClient:ConnectRemotes()
             if currency then
                 self.State.Currency = currency
             end
+            self:NotifyStateChanged()
         end)
     end
 
@@ -181,8 +196,10 @@ function GameClient:OnNodeHarvested(nodeId, rewards)
     -- Show rewards popup
     local rewardText = "Harvested: "
     local items = {}
-    for itemId, amount in pairs(rewards or {}) do
-        table.insert(items, tostring(itemId) .. " x" .. tostring(amount))
+    if type(rewards) == "table" then
+        for itemId, amount in pairs(rewards) do
+            table.insert(items, tostring(itemId) .. " x" .. tostring(amount))
+        end
     end
     rewardText = rewardText .. table.concat(items, ", ")
 
@@ -198,9 +215,13 @@ function GameClient:OnNodeHarvested(nodeId, rewards)
             end)
         end
     end
+    self:NotifyStateChanged()
 end
 
 function GameClient:OnPlayerDataLoaded(data)
+    if type(data) ~= "table" then
+        return
+    end
     print("[GameClient] Player data loaded")
     GameClient.State.Level = data.Level or 1
     GameClient.State.XP = data.XP or 0
@@ -209,8 +230,12 @@ function GameClient:OnPlayerDataLoaded(data)
     GameClient.State.PetInventory = data.PetInventory or {}
     GameClient.State.Quests = data.Quests or {}
     GameClient.State.Settings = data.Settings or GameClient.State.Settings
-    GameClient.State.Energy = data.Energy or GameClient.State.Energy
-    GameClient.State.MaxEnergy = data.MaxEnergy or GameClient.State.MaxEnergy
+    if type(data.Energy) == "number" then
+        GameClient.State.Energy = data.Energy
+    end
+    if type(data.MaxEnergy) == "number" then
+        GameClient.State.MaxEnergy = data.MaxEnergy
+    end
     GameClient.State.CurrentTool = data.EquippedTool or GameClient.State.CurrentTool
     if type(data.ToolDurability) == "table" and GameClient.State.CurrentTool then
         GameClient.State.ToolDurability = data.ToolDurability[GameClient.State.CurrentTool]
@@ -221,6 +246,7 @@ function GameClient:OnPlayerDataLoaded(data)
     if self.OnDataUpdated then
         self:OnDataUpdated()
     end
+    self:NotifyStateChanged()
 end
 
 function GameClient:OnItemUsed(itemId, remainingCount, vitals)
@@ -233,9 +259,14 @@ function GameClient:OnItemUsed(itemId, remainingCount, vitals)
         end
     end
     if type(vitals) == "table" then
-        self.State.Energy = vitals.Energy or self.State.Energy
-        self.State.MaxEnergy = vitals.MaxEnergy or self.State.MaxEnergy
+        if type(vitals.Energy) == "number" then
+            self.State.Energy = vitals.Energy
+        end
+        if type(vitals.MaxEnergy) == "number" then
+            self.State.MaxEnergy = vitals.MaxEnergy
+        end
     end
+    self:NotifyStateChanged()
 end
 
 function GameClient:OnToolUpdated(snapshot)
@@ -243,8 +274,13 @@ function GameClient:OnToolUpdated(snapshot)
         return
     end
     self.State.CurrentTool = snapshot.EquippedTool or self.State.CurrentTool
-    self.State.ToolDurability = snapshot.Durability or self.State.ToolDurability
-    self.State.MaxToolDurability = snapshot.MaxDurability or self.State.MaxToolDurability
+    if type(snapshot.Durability) == "number" then
+        self.State.ToolDurability = snapshot.Durability
+    end
+    if type(snapshot.MaxDurability) == "number" then
+        self.State.MaxToolDurability = snapshot.MaxDurability
+    end
+    self:NotifyStateChanged()
 end
 
 function GameClient:OnQuestUpdated(questData)
@@ -257,6 +293,10 @@ function GameClient:OnQuestUpdated(questData)
 end
 
 function GameClient:OnPlayerLeveledUp(newLevel, _skillPoints)
+    if type(newLevel) == "number" then
+        self.State.Level = newLevel
+        self:NotifyStateChanged()
+    end
     print("[GameClient] Level up! New level: " .. newLevel)
 
     -- Show level up notification

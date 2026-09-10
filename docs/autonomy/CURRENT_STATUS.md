@@ -66,6 +66,11 @@ overflowing inventory and currency mutations, rejects unknown pet grants, and
 refuses to remove a tamed creature when its profile mutation cannot be
 committed.
 
+The client presentation layer now refreshes HUD elements on state/remote
+changes instead of running an unconditional per-frame polling loop. Zero-valued
+server states (empty energy, depleted durability, or zero inventory counts) are
+preserved rather than being replaced by stale local fallbacks.
+
 The pet flow specifically preserves duplicate pet instances, validates ownership
 on the server, consumes `pet_food`, updates only the selected player record, and
 exposes working Equip/Unequip/Feed controls.

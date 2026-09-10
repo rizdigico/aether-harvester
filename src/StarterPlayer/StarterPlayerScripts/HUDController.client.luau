@@ -1,5 +1,4 @@
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 local playerGui = player.PlayerGui
@@ -47,10 +46,13 @@ function HUDController:Initialize()
 end
 
 function HUDController:ConnectEvents()
-    -- Update HUD every frame
-    RunService.Heartbeat:Connect(function()
-        self:UpdateHUD()
-    end)
+    -- Render only when the client state actually changes. Server vitals
+    -- updates arrive through UpdateHUD and are rendered in OnHUDUpdate.
+    if GameClient.StateChanged and GameClient.StateChanged:IsA("BindableEvent") then
+        GameClient.StateChanged.Event:Connect(function()
+            self:UpdateHUD()
+        end)
+    end
 
     -- Connect to remote events for updates
     local Remotes = game.ReplicatedStorage.AetherShared.Remotes
