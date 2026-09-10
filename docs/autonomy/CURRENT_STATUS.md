@@ -17,7 +17,7 @@ tree.
 | Static lint | PASS | `selene src tests` returned 0 errors, 0 warnings, 0 parse errors |
 | Unit tests | PASS | `lune run scripts/run-unit-tests.luau`: 82 passed, 0 failed |
 | Rojo assembly | PASS | `roblox_rojo_build` and local `rojo build` produce `.rbxlx` places |
-| Local engine plugins | PASS | Installed Godot Local MCP `0.1.0+codex.20260910004615` and Roblox Local MCP `0.1.0+codex.20260910004948` both completed direct stdio handshakes |
+| Local engine plugins | PASS | Installed Godot Local MCP `0.1.0+codex.20260910004615` and Roblox Local MCP `0.1.0+codex.20260910010125` both completed direct stdio handshakes |
 | Git delivery | PASS | Latest pushed commits include personal bases, pet fusion, party flow, prestige, quest progression, upgrade effects, durable marketplace settlement, durable leaderboards, bounded autosave, and player energy/tool state |
 
 ## Implemented source surfaces
@@ -117,6 +117,8 @@ server-controlled visit action. Base data is sanitized during profile load.
 - The installed plugin status probe is green for both Rojo and Wally; Rojo
   version detection uses its pinned Rokit binary when the shim is called
   outside a project manifest.
+- The companion native `roblox-studio` MCP server exposes 29 StudioMCP tools
+  through a persistent stdio passthrough and selects the active Studio version.
 - StudioMCP currently returns a connected instance id, but
   `get_studio_state` reports `Place is not open`; live play-mode verification
   therefore remains pending.
