@@ -1,9 +1,9 @@
 local LeaderboardService = {}
-local DataStoreService = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local PlayerDataService = require(game.ServerScriptService.AetherServer.GameServices.PlayerDataService)
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local PersistenceAdapter = require(game.ServerScriptService.AetherServer.Security.PersistenceAdapter)
 
 LeaderboardService.Leaderboards = {
     ["Level"] = {},
@@ -22,7 +22,8 @@ local persistAttemptAt = {}
 local cachedAt = {}
 
 for _, category in ipairs(CATEGORIES) do
-    orderedStores[category] = DataStoreService:GetOrderedDataStore("AetherLeaderboard_" .. category .. DATASTORE_SUFFIX)
+    orderedStores[category] =
+        PersistenceAdapter.GetOrderedDataStore("AetherLeaderboard_" .. category .. DATASTORE_SUFFIX)
     persistentValues[category] = {}
     persistAttemptAt[category] = {}
     cachedAt[category] = 0

@@ -1,7 +1,7 @@
 {
   "project": "Aether Harvester",
   "branch": "reforge/full-autonomous-rebuild",
-  "commit": "1b42874",
+  "commit": "pending-local-persistence-commit",
   "capturedOn": "2026-09-10",
   "gates": {
     "stylua": "pass",
@@ -45,9 +45,12 @@
       "checks": [
         "AetherWorld built in Roblox Studio",
         "CrystalSpires.GeneratedContent installed",
-        "AetherBloom_GodotV2 source/version markers verified"
+        "AetherBloom_GodotV2 source/version markers verified",
+        "ServerMain initialized all services in deterministic order",
+        "Unpublished Studio used bounded in-memory persistence adapter"
       ]
     },
+    "offlineStudioPersistenceAdapter": "pass",
     "robloxBloomRuntimeCompanion": "pass",
     "robloxBloomGlbImport": "not_run",
     "studioPlayMode": "not_run",

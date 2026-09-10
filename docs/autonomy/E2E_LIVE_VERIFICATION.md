@@ -1,5 +1,28 @@
 # E2E LIVE VERIFICATION — Aether Harvester
 
+## Latest direct Studio boot — 2026-09-10
+
+The full server boot now passes through the supported local Roblox Studio CLI
+path. The place is intentionally unpublished, so the run uses the explicit
+`PersistenceAdapter` only when `RunService:IsStudio()` and `game.PlaceId == 0`.
+Published Studio and production servers still request the real DataStore and
+OrderedDataStore services.
+
+- Rojo built `artifacts/mcp-bloom-current.rbxlx` successfully.
+- `RobloxStudioBeta.exe --task RunScript ... --quitAfterExecution` exited 0.
+- `artifacts/roblox_cli_smoke.log` contains the complete service boot and all
+  assertions.
+- `ServerMain` initialized all 32 services, including guild, marketplace, and
+  leaderboard persistence consumers.
+- No DataStore, module-load, CreatorError, or runtime error was emitted.
+- The world and `AetherBloom_GodotV2` companion assertions still pass.
+
+The native StudioMCP bridge remains a separate environmental gate: its
+`list_roblox_studios` probe still returns no attached Studio. Client play mode,
+screenshots, input, multi-client behavior, publishing, and monetization remain
+unverified until that bridge attaches or an interactive Studio session is
+available through the local computer-use surface.
+
 ## Direct local Studio command verification — 2026-09-10
 
 The plugin-only desktop control path is still unavailable in this session:

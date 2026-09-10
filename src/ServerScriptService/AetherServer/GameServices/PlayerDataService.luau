@@ -1,7 +1,7 @@
 local PlayerDataService = {}
-local DataStoreService = game:GetService("DataStoreService")
 local RunService = game:GetService("RunService")
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
+local PersistenceAdapter = require(game.ServerScriptService.AetherServer.Security.PersistenceAdapter)
 local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
@@ -12,7 +12,7 @@ local CurrencyRules = require(game.ReplicatedStorage.AetherShared.Modules.Curren
 -- production key stable for published servers until an explicit migration is
 -- performed.
 local DATASTORE_NAME = RunService:IsStudio() and "PlayerData_Studio_v1" or "PlayerData_v1"
-local PlayerDataStore = DataStoreService:GetDataStore(DATASTORE_NAME)
+local PlayerDataStore = PersistenceAdapter.GetDataStore(DATASTORE_NAME)
 
 local playerData = {}
 local playerSaveEnabled = {}

@@ -30,7 +30,12 @@ assert(bloom, "AetherBloom_GodotV2 is missing")
 assert(bloom:GetAttribute("SourceArtifact") == "AetherBloom_Godot_v2.glb", "source artifact marker mismatch")
 assert(bloom:GetAttribute("ImportStatus") == "native-runtime-companion", "import status marker mismatch")
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerMain = require(ReplicatedStorage.AetherShared.Modules.ServerMain)
+ServerMain.Initialize()
+
 print("[CLI_SMOKE] PASS AetherWorld built")
 print("[CLI_SMOKE] PASS CrystalSpires generated content installed")
 print("[CLI_SMOKE] PASS Bloom source=" .. tostring(bloom:GetAttribute("SourceArtifact")))
 print("[CLI_SMOKE] PASS Bloom version=" .. tostring(bloom:GetAttribute("AssetVersion")))
+print("[CLI_SMOKE] PASS ServerMain initialized all services")

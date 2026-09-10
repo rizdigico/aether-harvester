@@ -123,7 +123,8 @@ server-controlled visit action. Base data is sanitized during profile load.
 - Headless import/parse check returned exit code 0.
 - The content lab is intentionally custom; it does not use the conventional
   `scenes/`, `scripts/`, `addons/`, or `export_presets.cfg` layout.
-- No Godot process is left running after verification.
+- Godot 4.7.2 editor is currently running through the local MCP bridge against
+  the content project for active development/review.
 - The headless command emits Godot’s harmless `Scan thread aborted` shutdown
   warning after the successful scan; the exit code remains 0.
 
@@ -141,9 +142,13 @@ server-controlled visit action. Base data is sanitized during profile load.
 - The native StudioMCP probe currently returns `studios: []`, so connected
   play-mode control remains pending.
 - The independent Roblox Studio CLI smoke path passes against the generated
-  place and verifies the real Bloom runtime companion; see
-  `docs/autonomy/E2E_LIVE_VERIFICATION.md`.
-- Studio RSS was approximately 1.88 GB at the last probe; Godot RSS was 0.
+  place, boots all 32 server services, and verifies the real Bloom runtime
+  companion. Unpublished local Studio persistence is provided by the explicit
+  bounded in-memory adapter; published/prod DataStore routing is unchanged.
+  See `docs/autonomy/E2E_LIVE_VERIFICATION.md`.
+- Studio RSS was approximately 2.36 GB at the latest probe and Godot was
+  approximately 1.01 GB. These are the active editor processes, not background
+  duplicates.
 
 ## Asset pipeline
 
