@@ -17,19 +17,25 @@ local function waitFor(fn: () -> any, timeout: number)
     return value
 end
 
--- Names of the 24 services ServerMain.Initialize() registers in dependency order.
+-- Names of every service ServerMain.Initialize() registers in dependency order.
 local EXPECTED_SERVICES = {
     "WorldManager",
     "NodeManager",
     "PlayerDataService",
+    "PlayerVitalsService",
+    "ToolService",
+    "BaseService",
     "QuestService",
     "CreatureService",
     "EconomyService",
     "PetService",
+    "PetFusionService",
     "AchievementService",
     "UpgradeService",
+    "SkillTreeService",
     "TradingService",
     "GuildService",
+    "PartyService",
     "EventService",
     "CraftingService",
     "DailyRewardsService",
@@ -40,9 +46,11 @@ local EXPECTED_SERVICES = {
     "CosmeticService",
     "BattlePassService",
     "MarketplaceService",
+    "MonetizationService",
     "LeaderboardService",
     "ProgressionService",
     "RewardService",
+    "PrestigeService",
 }
 
 return function()
@@ -98,7 +106,7 @@ return function()
     end)
 
     describe("server services", function()
-        it("all 24 services are registered after boot", function()
+        it("all registered services are available after boot", function()
             local ServerMain = require(ReplicatedStorage.AetherShared.Modules.ServerMain)
             -- Poll until every expected service is resolvable (Initialize ran).
             local allReady = waitFor(function()

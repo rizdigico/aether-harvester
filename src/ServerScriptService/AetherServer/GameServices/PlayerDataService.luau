@@ -6,6 +6,7 @@ local ItemsData = require(game.ReplicatedStorage.AetherShared.Data.Items)
 local PetsData = require(game.ReplicatedStorage.AetherShared.Data.Pets)
 local BaseRules = require(game.ReplicatedStorage.AetherShared.Modules.BaseRules)
 local SkillTreeRules = require(game.ReplicatedStorage.AetherShared.Modules.SkillTreeRules)
+local InventoryRules = require(game.ReplicatedStorage.AetherShared.Modules.InventoryRules)
 -- Studio must never point at the production profile namespace. Keep the
 -- production key stable for published servers until an explicit migration is
 -- performed.
@@ -684,27 +685,33 @@ end
 function PlayerDataService.AddItem(player, itemId, amount)
     local data = playerData[player.UserId]
     amount = amount or 1
-    if not data or type(itemId) ~= "string" or itemId == "" or not isPositiveInteger(amount) then
+    if not data then
         return false
     end
     data.Inventory = data.Inventory or {}
-    data.Inventory[itemId] = (data.Inventory[itemId] or 0) + amount
+    local definition = ItemsData.GetItem(itemId)
+    local ok, nextCount = InventoryRules.CanAdd(itemId, amount, data.Inventory[itemId], definition)
+    if not ok then
+        return false
+    end
+    data.Inventory[itemId] = nextCount
     return true
 end
 
 function PlayerDataService.RemoveItem(player, itemId, amount)
     local data = playerData[player.UserId]
     amount = amount or 1
-    if not data or type(itemId) ~= "string" or itemId == "" or not isPositiveInteger(amount) then
+    if not data then
         return false
     end
     data.Inventory = data.Inventory or {}
-    local current = data.Inventory[itemId] or 0
-    if current < amount then
+    local definition = ItemsData.GetItem(itemId)
+    local ok, nextCount = InventoryRules.CanRemove(itemId, amount, data.Inventory[itemId] or 0, definition)
+    if not ok then
         return false
     end
-    data.Inventory[itemId] = current - amount
-    if data.Inventory[itemId] <= 0 then
+    data.Inventory[itemId] = nextCount
+    if nextCount <= 0 then
         data.Inventory[itemId] = nil
     end
     return true
@@ -776,6 +783,9 @@ function PlayerDataService.AddPet(player, petId)
     data.PetInventory = data.PetInventory or {}
     -- Normalize: accept a string PetId or an existing pet record
     if type(petId) == "string" then
+        if not PetsData.GetPet(petId) then
+            return false
+        end
         local highestInstanceId = 0
         for _, existingPet in ipairs(data.PetInventory) do
             if type(existingPet) == "table" and type(existingPet.InstanceId) == "number" then
@@ -796,8 +806,10 @@ function PlayerDataService.AddPet(player, petId)
             IsEquipped = false,
         }
         table.insert(data.PetInventory, newPet)
-    else
+    elseif type(petId) == "table" then
         table.insert(data.PetInventory, petId)
+    else
+        return false
     end
     return true
 end

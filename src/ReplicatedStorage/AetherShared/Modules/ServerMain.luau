@@ -5,8 +5,47 @@ local ServerMain = {}
 local RateLimiter = require(game.ServerScriptService.AetherServer.Security.RateLimiter)
 
 local Services = {}
+local initialized = false
+
+local SERVICE_INIT_ORDER = {
+    "WorldManager",
+    "NodeManager",
+    "PlayerDataService",
+    "PlayerVitalsService",
+    "ToolService",
+    "BaseService",
+    "QuestService",
+    "CreatureService",
+    "EconomyService",
+    "PetService",
+    "PetFusionService",
+    "AchievementService",
+    "UpgradeService",
+    "SkillTreeService",
+    "TradingService",
+    "GuildService",
+    "PartyService",
+    "EventService",
+    "CraftingService",
+    "DailyRewardsService",
+    "MailService",
+    "ChatService",
+    "AnalyticsService",
+    "AntiCheatService",
+    "CosmeticService",
+    "BattlePassService",
+    "MarketplaceService",
+    "MonetizationService",
+    "LeaderboardService",
+    "ProgressionService",
+    "RewardService",
+    "PrestigeService",
+}
 
 function ServerMain.Initialize()
+    if initialized then
+        return
+    end
     print("[ServerMain] Initializing Aether Harvester Simulator...")
 
     -- Initialize services in dependency order
@@ -53,12 +92,17 @@ function ServerMain.Initialize()
         return Services.ProgressionService.AddXPWithoutBattlePass(player, amount)
     end)
 
-    -- Initialize each service
-    for _, service in pairs(Services) do
+    -- Initialize each service in the explicit dependency order above. Using
+    -- pairs here makes boot order undefined and can race remote wiring or
+    -- cross-service callbacks in Studio and live servers.
+    for _, serviceName in ipairs(SERVICE_INIT_ORDER) do
+        local service = Services[serviceName]
         if service.Initialize then
             service.Initialize()
         end
     end
+
+    initialized = true
 
     -- Setup player joining
     game.Players.PlayerAdded:Connect(function(player)
