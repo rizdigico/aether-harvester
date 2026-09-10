@@ -37,6 +37,8 @@
     "robloxRojoBuild": "pass",
     "robloxLocalPluginHandshake": "pass",
     "robloxStatus": "pass",
+    "robloxBloomRuntimeCompanion": "pass",
+    "robloxBloomGlbImport": "not_run",
     "studioPlayMode": "not_run",
     "robloxAssetImport": "not_run",
     "creatorHubProducts": "not_configured",

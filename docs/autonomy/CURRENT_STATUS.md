@@ -73,6 +73,12 @@ refuses to remove a tamed creature when its profile mutation cannot be
 committed. The economy facade delegates balance changes to the canonical
 profile mutators and preflights conversion targets before spending.
 
+The imagegen → Godot v2 Bloom pipeline now also has a deterministic Roblox
+runtime companion: the generated model is installed on Crystal Spires at boot
+with source-artifact/version attributes and the same cyan/violet petal palette.
+This is a real in-game native companion, not a claim that Roblox has imported
+the GLB; the binary Studio import and live playtest remain separate gates.
+
 The client presentation layer now refreshes HUD elements on state/remote
 changes instead of running an unconditional per-frame polling loop. Zero-valued
 server states (empty energy, depleted durability, or zero inventory counts) are
